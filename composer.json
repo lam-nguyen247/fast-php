@@ -1,0 +1,37 @@
+{
+  "name": "fast-php/fast",
+  "type": "framework",
+  "description": "fastPHP framework is a simple framework for develop web application",
+  "keywords": [
+    "fastPHP",
+    "framework",
+    "simple"
+  ],
+  "homepage": "https://github.com/lnguyen24794",
+  "license": "None",
+  "authors": [
+    {
+      "name": "Nguyen Thanh Lam",
+      "email": "lnguyen24794@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "firebase/php-jwt": "@dev",
+    "ext-pdo": "*",
+    "ext-readline": "*",
+    "ext-json": "*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "files": [
+      "src/Fast/Helpers/common.php",
+      "src/Fast/Helpers/view.php"
+    ],
+    "psr-4": {
+      "Fast\\": "src/Fast/",
+      "App\\": "app/"
+    }
+  }
+}
