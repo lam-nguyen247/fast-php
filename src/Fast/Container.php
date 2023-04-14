@@ -1,6 +1,8 @@
 <?php
 namespace Fast;
 
+use ReflectionException;
+use Midun\Eloquent\Model;
 use Fast\Http\Exceptions\AppException;
 
 class Container
@@ -146,6 +148,48 @@ class Container
 		return $this->instances[$entity] ?? $this->resolve($entity);
 	}
 
+
+	/**
+	 * Register a concrete to abstract
+	 * @param string $abstract
+	 * @param mixed $concrete
+	 * @return void
+	 */
+	public function singleton(string $abstract, mixed $concrete): void
+	{
+		$this->bind($abstract, $concrete, true);
+	}
+
+	/**
+	 * Binding abstract to classes
+	 * @param string $abstract
+	 * @param string|null $concrete
+	 * @param bool $shared
+	 *
+	 * @return void
+	 */
+	public function bind(string $abstract, string $concrete = null, bool $shared = false): void
+	{
+		if(is_null($concrete)) {
+			$concrete = $abstract;
+		}
+		if(!$concrete instanceof  \Closure) {
+			$concrete = $this->getCourse($concrete);
+		}
+		$this->bindings[$abstract] = compact('concrete', 'shared');
+	}
+
+	/**
+	 * @param string $concrete
+	 * @return \Closure
+	 */
+	public function getCourse(string $concrete): \Closure
+	{
+		return function() use ($concrete) {
+			return $this->build($concrete);
+		};
+	}
+
 	/**
 	 * The resolve() method takes a string $entity representing the class or interface to be resolved.
 	 * It checks whether the entity can be resolved, and if so, it creates a new instance of the entity by calling the build() method.
@@ -153,7 +197,7 @@ class Container
 	 * The method returns the resolved object.
 	 * @param string $entity
 	 * @return object|null
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	public function resolve(string $entity): null|object
 	{
@@ -208,7 +252,7 @@ class Container
 	 * The method then returns a new instance of the concrete class with its resolved dependencies.
 	 * @param mixed $concrete
 	 * @return null|object
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 * @throws AppException
 	 */
 	public function build(mixed $concrete): null|object
@@ -254,6 +298,84 @@ class Container
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Resolve list of dependencies from options
+	 *
+	 * @param string $controller
+	 * @param string $methodName
+	 * @param array $params
+	 *
+	 * @return array
+	 *
+	 * @throws \Fast\Http\Exceptions\AppException
+	 */
+	public function resolveMethodDependencyWithParameters(string $controller, string $methodName, array $params): array
+	{
+		try {
+			$ref = new \ReflectionMethod($controller, $methodName);
+			$listParameters = $ref->getParameters();
+			$array = [];
+			foreach ($listParameters as  $parameter) {
+				switch(true) {
+					case $parameter->getClass() instanceof \ReflectionClass:
+						$object = $this->buildStacks(
+							$parameter->getClass()->getName()
+						);
+						if($object instanceof \Fast\Eloquent\Model) {
+							$arg = array_shift($params);
+							if (!$arg) {
+								throw new AppException("Missing parameter `{$parameter->getName()}` for initial model `{$parameter->getClass()->getName()}`");
+							}
+							$object = $object->findOrFail($arg);
+						}
+						$array = [...$array, $object];
+						break;
+					case is_null($parameter->getClass()):
+						$param = array_shift($params);
+						try {
+							$default = $parameter->getDefaultValue();
+						}catch(\ReflectionException $e) {
+							$default = null;
+						}
+
+						if(!is_null($parameter->getType())) {
+							switch($parameter->getType()->getName()) {
+								case 'int':
+								case 'integer':
+									$param = (int) $param ?: (is_numeric($default) ? $default : $default);
+									break;
+								case 'array':
+									$param = (array) $param ?: $default;
+									break;
+								case 'object':
+									$param = (object) $param ?: $default;
+									break;
+								case 'float':
+									$param = (float) $param ?: $default;
+									break;
+								case 'string':
+									$param = (string) $param ?: $default;
+									break;
+								case 'boolean':
+								case 'bool':
+									$param = (bool) $param ?: $default;
+									break;
+							}
+						}
+
+						$array = [...$array, $param];
+						break;
+					default:
+						throw new AppException("Invalid type of parameter");
+
+				}
+			}
+			return $array;
+		} catch (ReflectionException $e) {
+			throw new AppException($e->getMessage());
+		}
 	}
 
 	private function isResolved(string $abstract): bool

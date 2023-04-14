@@ -10,19 +10,33 @@ class AppException extends Exception
 {
 	public function __construct($message = "", $code = 0, Throwable $previous = null)
 	{
+		$this->writeLog($message);
+
 		parent::__construct($message, $code, $previous);
-	}
 
-	private function writeLog(string $message): void
-	{
-		if(app()->make(Application::class)->isLoaded()) {
-
+		if(PHP_SAPI === 'cli'){
+			die($message);
 		}
+
+		set_exception_handler([$this, 'render']);
 	}
 
 	public function render(\Exception $exception){
 		if(request()->isAjax()) {
-			return response()->json([]);
+			return response()->json([
+				'status'  => false,
+				'message' => $exception->getMessage()
+			], $this->code);
+		}
+	}
+
+	public function writeLog(string $message): void
+	{
+		if(app()->make(Application::class)->isLoaded()) {
+			app()->make('log')->error(
+				(new \ReflectionClass(static::class))
+					->getShortName(). "throws $message from". $this->getFile(). 'line '. $this->getLine()
+			);
 		}
 	}
 }

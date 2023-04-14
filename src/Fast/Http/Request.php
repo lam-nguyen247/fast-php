@@ -4,7 +4,7 @@ namespace Fast\Http;
 
 use Fast\Services\File;
 use Fast\Enums\MethodType;
-
+use Auth;
 class Request
 {
 	public function __construct() {

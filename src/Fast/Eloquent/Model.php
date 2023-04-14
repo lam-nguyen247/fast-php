@@ -108,7 +108,7 @@ abstract class Model
      * 
      * @return void
      */
-    public function __set(string $property, $value): void
+    public function __set(string $property, mixed $value): void
     {
         $this->$property = $value;
     }
@@ -144,7 +144,7 @@ abstract class Model
      * 
      * @return mixed
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args)
     {
         $static = new static;
         $table = $static->table();
@@ -197,13 +197,11 @@ abstract class Model
                 case 'object':
                     $this->{$key} = isset($this->{$key}) ? (object) $this->{$key} : null;
                     break;
-                case 'float':
+				case 'double':
+				case 'float':
                     $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
                     break;
-                case 'double':
-                    $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
-                    break;
-                case 'string':
+				case 'string':
                     $this->{$key} = isset($this->{$key}) ? (string) $this->{$key} : null;
                     break;
                 case 'boolean':
@@ -221,7 +219,7 @@ abstract class Model
     private function callServiceGetAttributes(): void
     {
         foreach (get_class_methods($this) as $key => $value) {
-            if (strpos($value, 'get') !== false && strpos($value, 'Attribute') !== false) {
+            if (str_contains($value, 'get') && str_contains($value, 'Attribute')) {
                 $this->handleServiceGetAttribute($value);
             }
         }

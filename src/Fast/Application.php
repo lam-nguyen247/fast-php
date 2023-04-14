@@ -25,7 +25,7 @@ class Application
 	}
 
 	/**
-	 * Register initial configuration provider
+	 * Register initial configuration providerisLoaded
 	 *
 	 * @return void
 	 */
@@ -47,5 +47,15 @@ class Application
 
 			return $handler->errorHandler(...func_get_args());
 		});
+	}
+
+	/**
+	 * Get status load provider
+	 *
+	 * @return bool
+	 */
+	public function isLoaded(): bool
+	{
+		return $this->loaded;
 	}
 }
