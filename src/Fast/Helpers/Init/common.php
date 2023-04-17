@@ -1,5 +1,6 @@
 <?php
 
+use Fast\Container;
 use Fast\Http\Request;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
@@ -14,14 +15,14 @@ if(!function_exists('app'))
 	 * If an entity is specified as the function parameter,
 	 * this function returns the specified entity from the container by calling the 'make()' method of the Fast\Container class and passing the entity name as the parameter.
 	 * @param string $entity Optional. The name of the entity to retrieve from the container. Default is an empty string, which returns the container instance.
-	 * @return \Fast\Container|\Fast\Container::make() An instance of the Fast\Container class or a specified entity from the container.
+	 * @return Container|Container::make() An instance of the Fast\Container class or a specified entity from the container.
 	 * @throws AppException
 	 */
 	function app(string $entity = ''){
 		if(empty($entity)){
-			return \Fast\Container::getInstance();
+			return Container::getInstance();
 		}
-		return \Fast\Container::getInstance()->make($entity);
+		return Container::getInstance()->make($entity);
 	}
 }
 
@@ -129,5 +130,62 @@ if (!function_exists('objectToArray')) {
 		}
 
 		return $array;
+	}
+}
+
+if (!function_exists('trans')) {
+	/**
+	 * Get translate value
+	 *
+	 * @param string $variable
+	 * @param array $params
+	 * @param string $lang
+	 *
+	 * @return string
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function trans(string $variable, array $params = [], string $lang = 'en'): string
+	{
+		return app()->make('translator')->trans($variable, $params, $lang);
+	}
+}
+
+if (!function_exists('items_in_folder')) {
+	/**
+	 * Get all items in folder
+	 *
+	 * @param string $folder
+	 * @param bool $included
+	 *
+	 * @return array
+	 */
+	function items_in_folder(string $folder, bool $included = true): array
+	{
+		$dir = new \RecursiveIteratorIterator(
+			$folder,
+			\FilesystemIterator::SKIP_DOTS
+		);
+
+		$iterators = new \RecursiveIteratorIterator(
+			$dir,
+			\RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		$items = [];
+		foreach ($iterators as $file_info) {
+			if (
+				$file_info->isFile()
+				&& $file_info !== basename(__FILE__)
+				&& $file_info->getFilename() != '.gitignore'
+			) {
+				$path = !empty($iterators->getSubPath())
+					? $iterators->getSubPath() . DIRECTORY_SEPARATOR . $file_info->getFilename()
+					: $file_info->getFilename();
+				$items[] = ($included ? $folder . DIRECTORY_SEPARATOR : '') . $path;
+			}
+		}
+
+		return $items;
 	}
 }

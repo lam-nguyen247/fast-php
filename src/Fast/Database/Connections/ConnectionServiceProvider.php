@@ -13,7 +13,7 @@ class ConnectionServiceProvider extends ServiceProvider
 				return match (true) {
 					$default === 'mysql' => new \Fast\Database\Connections\Mysql\Connection(),
 					$default === 'pgsql' => new \Fast\Database\Connections\PostgresSQL\Connection(),
-					default => throw new RuntimeException("Fast framework still do not support the driver {$default}"),
+					default => throw new RuntimeException("Fast framework do not support the driver {$default} yet"),
 				};
 			}catch (RuntimeException $e) {
 				throw new RuntimeException($e->getMessage());

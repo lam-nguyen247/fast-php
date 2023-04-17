@@ -46,6 +46,9 @@ class HasOneRelation extends Relation
 		return $this->remoteKey;
 	}
 
+	/**
+	 * @throws AppException
+	 */
 	public function getModelObject(string $value, ?Closure $callback = null): mixed {
 		$builder = $this->buildWhereCondition($value);
 
@@ -58,9 +61,11 @@ class HasOneRelation extends Relation
 
 	/**
 	 * @throws AppException
-	 */public function __cal(string $method, array $args) {
+	 */
+	public function __call(string $method, array $args) {
 		return $this->buildWhereCondition($this->getLocalValue())->$method(...$args);
 	}
+
 	/**
 	 * @throws AppException
 	 */public function buildWhereCondition(string $value): QueryBuilder {

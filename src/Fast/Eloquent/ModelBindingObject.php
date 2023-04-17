@@ -304,11 +304,12 @@ final class ModelBindingObject
         }
     }
 
-    /**
-     * Execute condition and directional
-     *
-     * @return mixed
-     */
+	/**
+	 * Execute condition and directional
+	 *
+	 * @return mixed
+	 * @throws EloquentException
+	 */
     public function handle()
     {
         switch (true) {

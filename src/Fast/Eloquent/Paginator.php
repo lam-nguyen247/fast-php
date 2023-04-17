@@ -10,7 +10,7 @@ final class Paginator
 	 */
 	public static function resolveCurrentPage(): int
 	{
-		return request()->get('page') ?: 1;
+		return request()->get('page') ?? 1;
 	}
 
 	/**

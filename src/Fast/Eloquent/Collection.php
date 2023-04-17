@@ -24,8 +24,6 @@ class Collection extends \ArrayObject
      */
     public function toArray(): array
     {
-        $array = objectToArray($this);
-
-        return $array;
+		return objectToArray($this);
     }
 }

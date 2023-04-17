@@ -35,28 +35,28 @@ trait CommitQueryMethod
 	}
 
 	public function passe(): string{
-		if (!isset($this->table) || empty($this->table)) {
+		if (empty($this->table)) {
 			return false;
 		}
 		$sql = $this->compile->compileSelect($this->distinct);
 		$sql .= $this->compile->compileColumns($this->columns);
 		$sql .= $this->compile->compileFrom($this->table);
-		if (isset($this->joins) && is_array($this->joins)) {
+		if (isset($this->joins)) {
 			$sql .= $this->compile->compileJoins($this->joins);
 		}
-		if (isset($this->wheres) && is_array($this->wheres)) {
+		if (isset($this->wheres)) {
 			$sql .= $this->compile->compileWheres($this->wheres);
 		}
 		if (isset($this->wherein)) {
 			$sql .= $this->compile->compileWhereIn($this->wherein);
 		}
-		if (isset($this->groups) && is_array($this->groups)) {
+		if (isset($this->groups)) {
 			$sql .= $this->compile->compileGroups($this->groups);
 		}
-		if (isset($this->havings) && is_array($this->havings)) {
+		if (isset($this->havings)) {
 			$sql .= $this->compile->compileHaving($this->havings);
 		}
-		if (isset($this->orders) && is_array($this->orders)) {
+		if (isset($this->orders)) {
 			$sql .= $this->compile->compileOrders($this->orders);
 		}
 		if (isset($this->limit)) {

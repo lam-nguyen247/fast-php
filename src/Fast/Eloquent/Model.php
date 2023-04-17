@@ -75,9 +75,10 @@ abstract class Model
      */
     const UPDATED_AT = 'updated_at';
 
-    /**
-     * Initial constructor
-     */
+	/**
+	 * Initial constructor
+	 * @throws EloquentException
+	 */
     public function __construct()
     {
         $this->callServiceAppends();

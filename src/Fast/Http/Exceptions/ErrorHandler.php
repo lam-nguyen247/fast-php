@@ -3,6 +3,7 @@ namespace Fast\Http\Exceptions;
 
 use Fast\Container;
 use Fast\Application;
+use JetBrains\PhpStorm\NoReturn;
 use Fast\Http\Exceptions\UnknownException;
 
 class ErrorHandler
@@ -34,7 +35,7 @@ class ErrorHandler
 	 * @return void
 	 * @throws AppException
 	 */
-	public function errorHandler(int $errorNo, string $errStr, string $file, int $line): void
+	#[NoReturn] public function errorHandler(int $errorNo, string $errStr, string $file, int $line): void
 	{
 		$msg = "{$errStr} on line {$line} in file {$file}";
 

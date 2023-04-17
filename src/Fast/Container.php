@@ -3,6 +3,7 @@ namespace Fast;
 
 use ReflectionException;
 use Midun\Eloquent\Model;
+use Fast\Http\FormRequest;
 use Fast\Http\Exceptions\AppException;
 
 class Container
@@ -137,11 +138,12 @@ class Container
 
 	/**
 	 * The make method in this class is used to either retrieve an already instantiated instance of the requested entity or to build a new instance by calling the resolve method.
-	 * First, it checks if an instance of the requested entity already exists in the $instances array, and if so, it returns it. Otherwise, it calls the resolve method to create a new instance of the entity and returns it.
+	 * First, it checks if an instance of the requested entity already exists in the $instances array, and if so, it returns it.
+	 * Otherwise, it calls the resolve method to create a new instance of the entity and returns it.
 	 * This method allows the user to easily obtain an instance of any registered entity, whether it is a bound instance or a resolved instance.
 	 * @param string $entity
 	 * @return null|object
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	public function make(string $entity): null|object
 	{
@@ -225,10 +227,13 @@ class Container
 		return $this->bound($entity) || class_exists($entity) || $this->hasInstance($entity);
 	}
 
+	/**
+	 * @throws AppException
+	 */
 	private function addResolve(string $abstract, mixed $concrete): void
 	{
 		if ($this->isResolved($abstract)) {
-			throw new \Fast\Http\Exceptions\AppException("Duplicated abstract resolve `{$abstract}`");
+			throw new AppException("Duplicated abstract resolve `{$abstract}`");
 		}
 
 		$this->resolves[$abstract] = $concrete;
@@ -309,7 +314,7 @@ class Container
 	 *
 	 * @return array
 	 *
-	 * @throws \Fast\Http\Exceptions\AppException
+	 * @throws AppException
 	 */
 	public function resolveMethodDependencyWithParameters(string $controller, string $methodName, array $params): array
 	{
@@ -391,5 +396,106 @@ class Container
 	private function takeBound(string $concrete)
 	{
 		return $this->bindings[$concrete];
+	}
+
+	/**
+	 * @throws ReflectionException
+	 * @throws AppException
+	 */
+	private function buildStacks(mixed $object): object
+	{
+		try {
+			$object = $this->build($object);
+			if($object instanceof  FormRequest) {
+				$object->executeValidate();
+			}
+			return $object;
+		}catch (\ArgumentCountError $e){
+			throw new AppException($e->getMessage());
+		}
+	}
+
+	/**
+	 * Get list of bindings
+	 *
+	 * @return array
+	 */
+	public function getBindings(): array
+	{
+		return $this->bindings;
+	}
+
+	/**
+	 * Check is down for maintenance
+	 *
+	 * @return bool
+	 */
+	public function isDownForMaintenance(): bool {
+		return false;
+	}
+
+	/**
+	 * Should skip global middlewares
+	 *
+	 * @return bool
+	 */
+	public function skipMiddleware(): bool
+	{
+		return $this->skipMiddleware;
+	}
+
+	/**
+	 * Get OS specific
+	 *
+	 * @return string
+	 */
+	public function getOS(): string
+	{
+		return match (true) {
+			stristr(PHP_OS, 'DAR') => 'macosx',
+			stristr(PHP_OS, 'WIN') => 'windows',
+			stristr(PHP_OS, 'LINUX') => 'linux',
+			default => 'unknown',
+		};
+	}
+
+	/**
+	 * Check is Windows system
+	 *
+	 * @return bool
+	 */
+	public function isWindows(): bool
+	{
+		return "windows" === $this->getOs();
+	}
+
+	/**
+	 * Check is MocOS system
+	 *
+	 * @return bool
+	 */
+	public function isMacos(): bool
+	{
+		return "macosx" === $this->getOs();
+	}
+
+	/**
+	 * Check is Linux system
+	 *
+	 * @return bool
+	 */
+	public function isLinux(): bool
+	{
+		return "linux" === $this->getOs();
+	}
+
+	/**
+	 * Check is Unknown system
+	 *
+	 * @return bool
+	 */
+	public function unknownOs(): bool
+	{
+		return "unknown" === $this->getOs();
 	}
 }
