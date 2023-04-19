@@ -19,8 +19,7 @@ class Config
      * 
      * @return self
      */
-    public function setConfig(string $key, $value)
-    {
+    public function setConfig(string $key, mixed $value): Config {
         $this->storage[$key] = $value;
         return $this;
     }

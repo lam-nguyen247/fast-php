@@ -102,4 +102,29 @@ class Request
 			|| isset($headers['x-requested-with'])
 			&& $headers['x-requested-with'] == 'XMLHttpRequest';
 	}
+
+	/**
+	 * Get request server
+	 */
+	public function server(): array {
+		return $_SERVER;
+	}
+
+	/**
+	 * Get method
+	 */
+	public function method(): string
+	{
+		return $_SERVER['REQUEST_METHOD'];
+	}
+
+	public function __set($name, $value)
+	{
+		$this->$name = $value;
+	}
+
+	public function __get($name)
+	{
+		return isset($this->$name) ? $this->name : null;
+	}
 }

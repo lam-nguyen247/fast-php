@@ -11,6 +11,7 @@ use Fast\Http\Exceptions\UnknownException;
 use Fast\Http\Validation\ValidationException;
 use Fast\Database\QueryBuilder\QueryException;
 use Fast\Configuration\ConfigurationException;
+use Fast\Http\Middlewares\MiddlewareException;
 use Fast\Http\Exceptions\UnauthorizedException;
 use Fast\Database\DatabaseBuilder\DatabaseBuilderException;
 use Fast\Database\Connections\Mysql\MysqlConnectionException;
