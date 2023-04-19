@@ -1,7 +1,7 @@
 <?php
 namespace Fast\Contracts\Hashing;
 
-interface Hasher
+interface Hashes
 {
 	/**
 	 * Hash the given value.

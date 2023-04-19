@@ -1,9 +1,9 @@
 <?php
 namespace Fast\Hashing;
 
-use Fast\Contracts\Hashing\Hasher;
+use Fast\Contracts\Hashing\Hashes;
 
-class BcryptHasher implements Hasher
+class BcryptHashes implements Hashes
 {
 	/**
 	 * Hash the given value.
@@ -12,22 +12,15 @@ class BcryptHasher implements Hasher
 	 * @param  array   $options
 	 * @return string
 	 *
-	 * @throws HashException
 	 */
 	public function make(string $value, array $options = []): string {
-		$hash = password_hash($value, PASSWORD_BCRYPT, $options);
-		if($hash === false) {
-			throw new HashException('Bcrypt hashing not supported.');
-		}
-
-		return $hash;
+		return password_hash($value, PASSWORD_BCRYPT, $options);
 	}
 
 	public function check(string $value, string $hashedValue, array $options = []): bool {
 		if(strlen($hashedValue) === 0) {
 			return false;
 		}
-
 		return password_verify($value, $hashedValue);
 	}
 }

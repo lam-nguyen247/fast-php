@@ -2,6 +2,8 @@
 
 namespace Fast;
 
+use Fast\Http\Exceptions\AppException;
+
 Class AliasLoader
 {
 	/**
@@ -18,6 +20,7 @@ Class AliasLoader
 	 * Listen loading classes
 	 * @param string $class
 	 * @return bool
+	 * @throws AppException
 	 */
 	public function aliasLoader(string $class): bool
 	{

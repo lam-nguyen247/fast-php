@@ -1,6 +1,7 @@
 <?php
 namespace Fast;
 
+use Closure;
 use ReflectionException;
 use Midun\Eloquent\Model;
 use Fast\Http\FormRequest;
@@ -175,21 +176,10 @@ class Container
 		if(is_null($concrete)) {
 			$concrete = $abstract;
 		}
-		if(!$concrete instanceof  \Closure) {
-			$concrete = $this->getCourse($concrete);
+		if(!$concrete instanceof  Closure) {
+			$concrete = $this->getClosure($concrete);
 		}
 		$this->bindings[$abstract] = compact('concrete', 'shared');
-	}
-
-	/**
-	 * @param string $concrete
-	 * @return \Closure
-	 */
-	public function getCourse(string $concrete): \Closure
-	{
-		return function() use ($concrete) {
-			return $this->build($concrete);
-		};
 	}
 
 	/**
@@ -280,9 +270,9 @@ class Container
 		}
 
 		$dependencies = $constructor->getParameters();
-		$intances = $this->resolveContractorHaveDependencies($dependencies);
+		$instances = $this->resolveContractorHaveDependencies($dependencies);
 
-		return $reflector->newInstanceArgs($intances);
+		return $reflector->newInstanceArgs($instances);
 
 	}
 
@@ -331,7 +321,8 @@ class Container
 						if($object instanceof \Fast\Eloquent\Model) {
 							$arg = array_shift($params);
 							if (!$arg) {
-								throw new AppException("Missing parameter `{$parameter->getName()}` for initial model `{$parameter->getClass()->getName()}`");
+								throw new AppException("Missing parameter `{$parameter->getName()}` 
+								for initial model `{$parameter->getClass()->getName()}`");
 							}
 							$object = $object->findOrFail($arg);
 						}
@@ -497,5 +488,18 @@ class Container
 	public function unknownOs(): bool
 	{
 		return "unknown" === $this->getOs();
+	}
+
+	/**
+	 * Get the Closure to be used when building a type.
+	 *
+	 * @param  string  $concrete
+	 * @return Closure
+	 */
+	private function getClosure(string $concrete): Closure
+	{
+		return function () use ($concrete) {
+			return $this->build($concrete);
+		};
 	}
 }

@@ -56,7 +56,7 @@ abstract class Enum
 
 	public static function toArray(): array
 	{
-		$ref = new \ReflectionClass(statis::class);
+		$ref = new \ReflectionClass(static::class);
 		return $ref->getConstants();
 	}
 
@@ -68,7 +68,7 @@ abstract class Enum
 	 */
 	public static function isValidValue(mixed $value): bool
 	{
-		$ref = new \ReflectionClass(static:: class);
+		$ref = new \ReflectionClass(static::class);
 		$values = array_values($ref->getConstants());
 		return in_array($value, $values, true);
 	}

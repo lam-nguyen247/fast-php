@@ -91,14 +91,12 @@ class Str
 			if (preg_match($pattern, $string)) {
 				return preg_replace($pattern, $result, $string);
 			}
-
 		}
 
 		foreach ($this->plural as $pattern => $result) {
 			if (preg_match($pattern, $string)) {
 				return preg_replace($pattern, $result, $string);
 			}
-
 		}
 
 		return $string;
@@ -108,7 +106,7 @@ class Str
 	 * @param $string
 	 * @return array|mixed|string|string[]|null
 	 */
-	public function singularize($string): mixed {
+	public function singular($string): mixed {
 		if (in_array(strtolower($string), $this->uncountable)) {
 			return $string;
 		}
@@ -119,14 +117,12 @@ class Str
 			if (preg_match($pattern, $string)) {
 				return preg_replace($pattern, $result, $string);
 			}
-
 		}
 
 		foreach ($this->singular as $pattern => $result) {
 			if (preg_match($pattern, $string)) {
 				return preg_replace($pattern, $result, $string);
 			}
-
 		}
 
 		return $string;
@@ -143,6 +139,5 @@ class Str
 		} else {
 			return $count . " " . $this->pluralize($string);
 		}
-
 	}
 }

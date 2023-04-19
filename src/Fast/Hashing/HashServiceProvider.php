@@ -3,7 +3,7 @@
 namespace Fast\Hashing;
 
 use Fast\ServiceProvider;
-use Fast\Hashing\BcryptHasher;
+use Fast\Hashing\BcryptHashes;
 
 class HashServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class HashServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('hash', function () {
-            return new BcryptHasher;
+            return new BcryptHashes;
         });
     }
 }

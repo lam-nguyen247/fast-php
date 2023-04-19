@@ -2,6 +2,7 @@
 
 use Fast\Container;
 use Fast\Http\Request;
+use Fast\Session\Session;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 
@@ -187,5 +188,107 @@ if (!function_exists('items_in_folder')) {
 		}
 
 		return $items;
+	}
+}
+
+if (!function_exists('session')) {
+	/**
+	 * Working on session
+	 *
+	 * @return Session
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function session(): Session
+	{
+		return app()->make(__FUNCTION__);
+	}
+}
+
+if (!function_exists('unset_session')) {
+	/**
+	 * Calling unset_session method in Session
+	 *
+	 * @param string $key
+	 *
+	 * @return void
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function unset_session(string $key): void
+	{
+		app()->make('session')->unset($key);
+	}
+}
+
+if (!function_exists('route')) {
+	/**
+	 * Get uri of route from name
+	 *
+	 * @param string $name
+	 *
+	 * @return string
+	 *
+	 * @throws Exception
+	 */
+	function route(string $name): string {
+		$routes = app()->make(__FUNCTION__)->collect();
+		$flag = false;
+		$uri = '';
+		foreach ($routes as $key => $route) {
+			if (strtolower($name) === strtolower($route->getName())) {
+				$flag = true;
+				$uri = $route->getUri();
+			}
+		}
+		if ($flag === true) {
+			return $uri;
+		} else {
+			throw new Exception('The route ' . '"' . $name . '"' . " doesn't exists");
+		}
+	}
+}
+
+if (!function_exists('action')) {
+	/**
+	 * Return action to controller method
+	 *
+	 * @param mixed $action
+	 * @param array $params
+	 *
+	 * @return mixed
+	 * @throws AppException|ReflectionException
+	 */
+	function action(array $action, array $params = []): mixed {
+		return app()->make('route')->callableAction($action, $params);
+	}
+}
+
+if (!function_exists('__')) {
+	/**
+	 * Get translate value without params
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function __(string $variable, string $lang = 'en'): string {
+		return trans($variable, [], $lang);
+	}
+}
+
+if (!function_exists('trans')) {
+	/**
+	 * Get translate value
+	 *
+	 * @param string $variable
+	 * @param array $params
+	 * @param string $lang
+	 *
+	 * @return string
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function trans(string $variable, array $params = [], string $lang = 'en'): string
+	{
+		return app()->make('translator')->trans($variable, $params, $lang);
 	}
 }

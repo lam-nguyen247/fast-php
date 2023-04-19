@@ -1,7 +1,9 @@
 <?php
 namespace Fast;
 
+use ReflectionException;
 use Fast\Traits\Instance;
+use Fast\Configuration\Config;
 use Fast\Http\Exceptions\ErrorHandler;
 use Fast\Http\Exceptions\AppException;
 use Fast\Http\Exceptions\RuntimeException;
@@ -69,7 +71,7 @@ class Application
 
 	/**
 	 * Register service providers
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 * @throws AppException
 	 */
 	public function registerServiceProvider(): void
@@ -101,7 +103,7 @@ class Application
 	}
 
 	/**
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 * @throws AppException
 	 */
 	public function loadConfiguration(): void{
@@ -122,7 +124,7 @@ class Application
 	 *
 	 * @return void
 	 * @throws AppException
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	public function run(): void
 	{
@@ -149,7 +151,7 @@ class Application
 	{
 		$last_error = error_get_last();
 		if (!is_null($last_error)) {
-			ob_clean();
+			if (ob_get_contents()) ob_end_clean();
 			$handler = new ErrorHandler();
 
 			$handler->errorHandler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);
