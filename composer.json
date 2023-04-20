@@ -4,10 +4,11 @@
   "description": "fastPHP framework is a simple framework for develop web application",
   "keywords": [
     "fastPHP",
+    "Core PHP",
     "framework",
     "simple"
   ],
-  "homepage": "https://github.com/lnguyen24794",
+  "homepage": "https://github.com/lam-nguyen247/fast-php",
   "license": "None",
   "authors": [
     {
@@ -16,11 +17,12 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.1",
     "firebase/php-jwt": "@dev",
     "ext-pdo": "*",
     "ext-readline": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+	  "ext-fileinfo": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
