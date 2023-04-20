@@ -3,7 +3,7 @@ namespace Fast;
 
 use Closure;
 use ReflectionException;
-use Midun\Eloquent\Model;
+use Fast\Eloquent\Model;
 use Fast\Http\FormRequest;
 use Fast\Http\Exceptions\AppException;
 
