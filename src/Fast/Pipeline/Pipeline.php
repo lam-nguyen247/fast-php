@@ -6,7 +6,7 @@ use Fast\Container;
 use Fast\Http\Request;
 use Fast\Contracts\Pipeline\Pipeline as IPipeline;
 
-class Pipeline implements IPipelinepublic
+class Pipeline implements IPipeline
 {
 	protected Container $container;
 

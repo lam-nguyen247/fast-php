@@ -497,3 +497,18 @@ if (!function_exists('public_path')) {
 		return app('path.public') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
+
+if (!function_exists('check_dir')) {
+	/**
+	 * Check exists directory
+	 *
+	 * @param string $dir
+	 *
+	 * @return boolean
+	 * @throws AppException
+	 */
+	function check_dir(string $dir): bool
+	{
+		return is_dir(base_path($dir));
+	}
+}

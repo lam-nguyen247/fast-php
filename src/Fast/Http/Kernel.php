@@ -4,20 +4,21 @@ namespace Fast\Http;
 use Closure;
 use Fast\Application;
 use Fast\Container;
+use ReflectionException;
 use Fast\Pipeline\Pipeline;
 use Route;
 use Fast\Http\Exceptions\AppException;
+use Fast\Contracts\Http\Kernel as HttpKernel;
 
-class Kernel
+class Kernel implements HttpKernel
 {
 	private Container $app;
-
 	public array $routeMiddlewares = [];
 
 	protected array $middlewares = [];
 
 	/**
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 * @throws AppException
 	 */
 	public function __construct()

@@ -131,4 +131,24 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	{
 		return config('database.default');
 	}
+
+	/**
+	 * Make instance
+	 *
+	 * @return void
+	 */
+	abstract function makeInstance(): void;
+
+	/**
+	 * Get the connection
+	 *
+	 * @return PDO
+	 */
+	public function getConnection(): PDO
+	{
+		if (!$this->instance) {
+			$this->makeInstance();
+		}
+		return $this->instance;
+	}
 }
