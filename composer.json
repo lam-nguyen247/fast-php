@@ -28,8 +28,7 @@
   "prefer-stable": true,
   "autoload": {
     "files": [
-      "src/Fast/Helpers/common.php",
-      "src/Fast/Helpers/view.php"
+      "src/Fast/Helpers/common.php"
     ],
     "psr-4": {
       "Fast\\": "src/Fast/",
