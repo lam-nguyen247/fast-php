@@ -1,7 +1,7 @@
 ## Installation
 
 ```bash
-   composer create-project lnguyen24794/fast-php:dev-master your-project-folder
+   composer create-project lam.nguyen247/fast-php:dev-master your-project-folder
 ```
 
 ## About fastPHP Framework
