@@ -3,19 +3,21 @@
 namespace Fast\Configuration;
 
 use Fast\ServiceProvider;
+use Fast\Http\Exceptions\AppException;
 
 class ConfigurationServiceProvider extends ServiceProvider
 {
     /**
      * Register 3rd-party services
-     */
+	 * @throws AppException
+	 */
     public function boot(): void
     {
         date_default_timezone_set(config('app.timezone'));
     }
 
     /**
-     * Register all of the service providers that you
+     * Register all the service providers that you
      * import in config/app.php -> providers
      * 
      * @return void

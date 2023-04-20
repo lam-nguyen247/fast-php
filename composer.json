@@ -20,7 +20,8 @@
     "firebase/php-jwt": "@dev",
     "ext-pdo": "*",
     "ext-readline": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+	  "ext-fileinfo": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

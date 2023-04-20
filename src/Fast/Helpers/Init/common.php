@@ -2,6 +2,7 @@
 
 use Fast\Container;
 use Fast\Http\Request;
+use Fast\Logger\Logger;
 use Fast\Session\Session;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
@@ -290,5 +291,209 @@ if (!function_exists('trans')) {
 	function trans(string $variable, array $params = [], string $lang = 'en'): string
 	{
 		return app()->make('translator')->trans($variable, $params, $lang);
+	}
+}
+
+if (!function_exists('storage_path')) {
+	/**
+	 * Return storage path
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function storage_path(string $path = ''): string
+	{
+		return app('path.storage') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
+
+if (!function_exists('database_path')) {
+	/**
+	 * Get database path
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function database_path(string $path = ''): string
+	{
+		return app('path.database') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
+
+if (!function_exists('delete_directory')) {
+	/**
+	 * Empty and remove a directory
+	 *
+	 * @param string $dir
+	 *
+	 * @return boolean
+	 */
+	function delete_directory(string $dir): bool
+	{
+		if (!file_exists($dir)) {
+			return true;
+		}
+
+		if (!is_dir($dir)) {
+			return unlink($dir);
+		}
+
+		foreach (scandir($dir) as $item) {
+			if ($item == '.' || $item == '..') {
+				continue;
+			}
+
+			if (!delete_directory($dir . DIRECTORY_SEPARATOR . $item)) {
+				return false;
+			}
+		}
+
+		return rmdir($dir);
+	}
+}
+
+if (!function_exists('env')) {
+	/**
+	 * Get value from environments
+	 *
+	 * @param string $variable
+	 * @param string $ndvalue
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function env(string $variable, string $ndvalue = ''): string {
+		$path = cache_path('environments.php');
+		if (!file_exists($path)) {
+			die('Missing cache environment file');
+		}
+		$env = include $path;
+
+		return $env[$variable] ?? $ndvalue;
+	}
+}
+
+if (!function_exists('cache_path')) {
+	/**
+	 * Get cache path
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function cache_path(string $path = ''): string
+	{
+		return app('path.cache') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
+
+if (!function_exists('config_path')) {
+	/**
+	 * Get config path
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function config_path(string $path = ''): string
+	{
+		return app('path.config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
+
+if (!function_exists('readDotENV')) {
+	/**
+	 * Reading .env file
+	 *
+	 * @return array
+	 * @throws AppException
+	 */
+	function readDotENV(): array {
+		$path = base_path('.env');
+		if (!file_exists($path)) {
+			system('echo ' . 'Missing .env file.');
+			exit;
+		}
+		return parse_ini_file($path);
+	}
+}
+
+if (!function_exists('generateRandomString')) {
+	/**
+	 * Random string generator
+	 *
+	 * @param int $length = 10
+	 *
+	 * @return string
+	 */
+	function generateRandomString(int $length = 10): string
+	{
+		$characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $randomString;
+	}
+}
+
+if (!function_exists('check_file')) {
+	/**
+	 * Check file exists in project
+	 *
+	 * @param string $file
+	 *
+	 * @return boolean
+	 * @throws AppException
+	 */
+	function check_file(string $file): bool
+	{
+		return file_exists(base_path($file));
+	}
+}
+
+if (!function_exists('cacheExists')) {
+	/**
+	 * Check exists caching
+	 *
+	 * @param string $cacheFile
+	 *
+	 * @return bool
+	 * @throws AppException
+	 */
+	function cacheExists(string $cacheFile): bool
+	{
+		return check_file('storage/cache/' . $cacheFile);
+	}
+}
+
+if (!function_exists('logger')) {
+	/**
+	 * Get instance of logger
+	 *
+	 * @return Logger
+	 * @throws AppException|ReflectionException
+	 */
+	function logger(): Logger
+	{
+		return app()->make('log');
+	}
+}
+
+if (!function_exists('public_path')) {
+	/**
+	 * Get public path
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function public_path(string $path = ''): string
+	{
+		return app('path.public') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
