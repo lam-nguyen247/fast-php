@@ -116,8 +116,8 @@ Example using in `App\Console\Kernel`
 namespace App\Console;
 
 use App\Console\Commands\ExampleCommand;
-use Midun\Console\Kernel as ConsoleKernel;
-use Midun\Console\Scheduling\Schedule;
+use Fast\Console\Kernel as ConsoleKernel;
+use Fast\Console\Scheduling\Schedule;
 
 class Kernel extends ConsoleKernel
 {
