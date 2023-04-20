@@ -160,7 +160,7 @@ cp .env.example .env
 or run with ip and port custom
 
 ```bash
-   php creator serve --host=192.168.1.1 --port=1997
+   php creator serve --host=192.168.1.1 --port=2407
 ```
 
 _Note: you can use argument --open to open it up on browser_
