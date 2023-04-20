@@ -4,13 +4,13 @@
    composer create-project lam.nguyen247/fast-php:dev-master your-project-folder
 ```
 
-## About fastPHP Framework
+## About FastPHP Framework
 
-fastPHP is a web application framework designed with a focus on speed and efficiency. We believe that development should be a seamless and satisfying experience, where coding is a joy, not a burden. Our goal is to streamline the web development process by simplifying common tasks that are required in most web projects, such as:
+FastPHP is a web application framework designed with a focus on speed and efficiency. We believe that development should be a seamless and satisfying experience, where coding is a joy, not a burden. Our goal is to streamline the web development process by simplifying common tasks that are required in most web projects, such as:
 
-fastPHP is a powerful yet accessible framework that provides all the necessary tools for building large and robust applications. With its elegant and innovative design, it combines simplicity and functionality to give you the tools you need to create any type of web application you can imagine. Whether you're working on a personal project or a complex enterprise application, fastPHP makes the process fast, efficient, and enjoyable.
+FastPHP is a powerful yet accessible framework that provides all the necessary tools for building large and robust applications. With its elegant and innovative design, it combines simplicity and functionality to give you the tools you need to create any type of web application you can imagine. Whether you're working on a personal project or a complex enterprise application, FastPHP makes the process fast, efficient, and enjoyable.
 
-## Features from fastPHP Framework
+## Features from FastPHP Framework
 
 _Require PHP Version >= `8.0`_
 
@@ -106,7 +106,7 @@ _Don't be worry, we're known that, please choose your command and give argument 
 
 Just add to your crontab
 
-`* * * * * cd fastPHP && php creator schedule:run >> /dev/null 2>&1`
+`* * * * * cd FastPHP && php creator schedule:run >> /dev/null 2>&1`
 
 Example using in `App\Console\Kernel`
 
@@ -169,7 +169,7 @@ _Note: you can use argument --open to open it up on browser_
 
 ## License
 
-The fastPHP Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The FastPHP Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
 So, this is the fake framework from the laravel framework idea.
 
