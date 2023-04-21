@@ -494,3 +494,18 @@ if (!function_exists('check_dir')) {
 		return is_dir(base_path($dir));
 	}
 }
+
+if (!function_exists('route_path')) {
+	/**
+	 * Return storage path
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws AppException
+	 */
+	function route_path(string $path = ''): string
+	{
+		return app('path.route') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
