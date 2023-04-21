@@ -1,7 +1,7 @@
 ## Installation
 
 ```bash
-   composer create-project lam.nguyen247/fast-php:dev-master your-project-folder
+   composer create-project lam.nguyen247/fast-framework:dev-master your-project-folder
 ```
 
 ## About FastPHP Framework
@@ -151,7 +151,7 @@ class Kernel extends ConsoleKernel
 ## How to start ?
 
 ```bash
-cp .env.example .env
+   cp .env.example .env
    php creator key:generate
    php creator config:cache
    php creator serve

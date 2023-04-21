@@ -153,14 +153,9 @@ class Logger
      */
     public function __call(string $method, array $args)
     {
-        switch ($method) {
-            case 'info':
-            case 'error':
-            case 'debug':
-            case 'warning':
-                return $this->writeLog(strtoupper($method), ...$args);
-            default:
-                throw new LoggerException("Logger method {$method} is not supported.");
-        }
+		return match ($method) {
+			'info', 'error', 'debug', 'warning' => $this->writeLog(strtoupper($method), ...$args),
+			default => throw new LoggerException("Logger method {$method} is not supported."),
+		};
     }
 }
