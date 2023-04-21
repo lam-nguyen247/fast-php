@@ -135,24 +135,6 @@ if (!function_exists('objectToArray')) {
 	}
 }
 
-if (!function_exists('trans')) {
-	/**
-	 * Get translate value
-	 *
-	 * @param string $variable
-	 * @param array $params
-	 * @param string $lang
-	 *
-	 * @return string
-	 * @throws AppException
-	 * @throws ReflectionException
-	 */
-	function trans(string $variable, array $params = [], string $lang = 'en'): string
-	{
-		return app()->make('translator')->trans($variable, $params, $lang);
-	}
-}
-
 if (!function_exists('items_in_folder')) {
 	/**
 	 * Get all items in folder
