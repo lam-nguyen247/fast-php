@@ -60,7 +60,7 @@ class ScheduleRunCommand extends Command
         $base = base_path();
 
         foreach ($tasks as $task) {
-            $crontabs[] = "{$task['expression']} cd {$base} && {$task['cli']} hustle {$task['command']} {$task['output']}";
+            $crontabs[] = "{$task['expression']} cd {$base} && {$task['cli']} creator {$task['command']} {$task['output']}";
         }
 
         $cacheFile = storage_path('framework/crontab.txt');
