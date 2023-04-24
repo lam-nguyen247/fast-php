@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Console\Commands:namespace
+
+use Fast\Console\Command;
+
+class :command extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected string $signature = 'hello:world';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected string $description = 'Example command';
+
+    /**
+     * Get true format for command
+     * 
+     * @var string
+     */
+    protected string $format = 'fast hello:world --abc=123 --xyz=456';
+
+    /**
+     * User guide helper
+     */
+    protected string $helper = "Step 1: Making some abc\nStep 2: Setting crontab abc\nStep 3: Run xyz";
+
+    /**
+     * Require options
+     */
+    protected array $required = [
+        'abc', 'xyz'
+    ];
+
+    /**
+     * Other called signatures
+     */
+    protected array $otherSignatures = [
+        'he:wo',
+        'world:hello'
+    ];
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle(): void
+    {
+        dd($this->getOptions());
+    }
+}

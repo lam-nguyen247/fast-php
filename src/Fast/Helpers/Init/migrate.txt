@@ -1,0 +1,29 @@
+<?php
+
+use Fast\Database\Migrations\Migration;
+use Fast\Database\DatabaseBuilder\Schema;
+use Fast\Database\DatabaseBuilder\ColumnBuilder;
+
+class Create:TableTable extends Migration
+{
+    /** 
+    * Run the migration.
+    * @return void
+    */
+    public function up()
+    {
+        Schema::create(':table', function (ColumnBuilder $table) {
+            $table->increments('id')->comment('this is comment');
+            $table->timestamps();
+        });
+    }
+
+    /** 
+    * Rollback the migration
+    * @return void
+    */
+    public function down()
+    {
+        Schema::dropIfExists(':table');
+    }
+}

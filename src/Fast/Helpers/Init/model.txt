@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models:namespace
+
+use Fast\Eloquent\Model;
+
+class :model extends Model
+{
+    protected string $table = '';
+    protected string $primaryKey = '';
+
+    protected array $fillable = [];
+
+    protected array $hidden = [
+      'password'
+    ];
+
+    protected array $appends = ['appended'];
+
+    protected array $casts = [];
+
+    public function getAppendedAttribute()
+    {
+        return 'value added';
+    }
+}
