@@ -2,8 +2,10 @@
 
 use Fast\Container;
 use Fast\Http\Request;
+use Fast\Queues\Queue;
 use Fast\Logger\Logger;
 use Fast\Session\Session;
+use Fast\Auth\Authenticatable;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 
@@ -507,5 +509,255 @@ if (!function_exists('route_path')) {
 	function route_path(string $path = ''): string
 	{
 		return app('path.route') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+	}
+}
+
+if (!function_exists('dd')) {
+	/**
+	 * @return void
+	 */
+	function dd(): void
+	{
+		array_map(static function ($x) {
+			var_dump($x);
+		}, func_get_args());
+		die;
+	}
+}
+
+if (!function_exists('assets')) {
+	/**
+	 * Get path for resources
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	function assets(string $path): string
+	{
+		if (php_sapi_name() == 'cli-server') {
+			return "/public/$path";
+		} else {
+			return $path;
+		}
+	}
+}
+
+if (!function_exists('auth')) {
+	/**
+	 * Get instance of auth
+	 *
+	 * @return Authenticatable
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function auth(): Authenticatable
+	{
+		return app()->make(__FUNCTION__);
+	}
+}
+
+if (!function_exists('get_all_headers')) {
+	/**
+	 * Get all headers
+	 *
+	 * @return array
+	 */
+	function get_all_headers(): array
+	{
+		$headers = [];
+		foreach ($_SERVER as $name => $value) {
+			if (str_starts_with($name, 'HTTP_')) {
+				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			}
+		}
+		return $headers;
+	}
+}
+
+if (!function_exists('writeCache')) {
+	/**
+	 * Write caching
+	 *
+	 * @param string $folder
+	 * @param string $file
+	 *
+	 * @return void
+	 * @throws AppException
+	 */
+	function writeCache(string $folder, string $file): void {
+		$cacheDir = 'storage/cache/';
+
+		if (!check_dir($cacheDir)) {
+			make_dir($cacheDir);
+		}
+		$filePath = base_path("$folder/$file");
+		$data = file_get_contents($filePath);
+		$data = str_replace('{{', '<?php', $data);
+		$data = str_replace('}}', '?>', $data);
+		foreach (explode('/', $folder) as $f) {
+			if ($f != '') {
+				$cacheDir .= $f . DIRECTORY_SEPARATOR;
+			}
+			if (!check_dir($cacheDir)) {
+				make_dir($cacheDir);
+				$cacheDir .= '/';
+			}
+		}
+		if (!check_dir($cacheDir)) {
+			make_dir($cacheDir);
+		}
+		$cacheFilePath = base_path("$cacheDir/$file");
+		$cacheFile = fopen($cacheFilePath, 'w') or die('Unable to open file!');
+		fwrite($cacheFile, $data);
+		fclose($cacheFile);
+	}
+}
+
+
+if (!function_exists('make_dir')) {
+	/**
+	 * Make directory from base
+	 *
+	 * @param string $dir
+	 * @param int $mode
+	 * @param bool $recursive
+	 *
+	 * @return bool
+	 * @throws AppException
+	 */
+	function make_dir(string $dir, int $mode = 0777, bool $recursive = false): bool
+	{
+		return mkdir(base_path($dir), $mode, $recursive);
+	}
+}
+
+if (!function_exists('dispatch')) {
+	/**
+	 * Dispatch a job
+	 *
+	 * @param Queue $queue
+	 *
+	 * @return mixed
+	 * @throws AppException
+	 * @throws ReflectionException
+	 */
+	function dispatch(Queue $queue): mixed {
+		return app()->make(\Fast\Contracts\Bus\Dispatcher::class)->dispatch($queue);
+	}
+}
+
+if (!function_exists('realTimeOutput')) {
+	/**
+	 * @link https://www.hashbangcode.com/article/overwriting-command-line-output-php
+	 *
+	 * @param array $output
+	 *
+	 * @return void
+	 */
+	function realTimeOutput(array $output): void {
+		static $oldLines = 0;
+		$numNewLines = count($output) - 1;
+
+		if ($oldLines == 0) {
+			$oldLines = $numNewLines;
+		}
+
+		echo implode(PHP_EOL, $output);
+		echo chr(27) . '[0G';
+		echo chr(27) . '[' . $oldLines . 'A';
+
+		$numNewLines = $oldLines;
+	}
+}
+
+if (!function_exists('stringToKeywords')) {
+	/**
+	 * Parse a string to list keywords
+	 *
+	 * @param string $str
+	 * @param int $min
+	 * minimum length of word
+	 * @param int|null $max
+	 * maximum length of word
+	 *
+	 * @return array
+	 */
+	function stringToKeywords(string $str, int $min = 1, ?int $max = null): array {
+		$array = explode(' ', $str);
+
+		$init = $array;
+
+		if ($min === 1) {
+			$all = $array;
+		} else {
+			$all = [];
+		}
+
+		if (is_null($max)) {
+			$max = count($array);
+		}
+
+		for ($i = $min; $i <= $max; $i++) {
+			$words = [];
+
+			$unshift = $i - 1;
+
+			$array = $init;
+
+			while (!empty($array) && !is_null($array[0])) {
+				$cCollect = [];
+				for ($j = 1; $j <= $i; $j++) {
+					$cCollect[] = array_shift($array);
+					if ($j == $i) {
+						$collectSize = count($cCollect);
+
+						for ($k = 1; $k <= $unshift; $k++) {
+							array_unshift($array, $cCollect[$collectSize - $k]);
+						}
+					}
+				}
+
+				$cCollect = array_filter($cCollect, function ($collect) {
+					return !empty($collect);
+				});
+
+				if (count($cCollect) < $i) {
+					continue;
+				}
+				$words[] = implode(' ', $cCollect);
+			}
+			$all = array_merge($all, $words);
+		}
+
+		return array_reverse($all);
+	}
+}
+
+if (!function_exists('get_client_ip')) {
+	/**
+	 * Get client ip
+	 *
+	 * @return string|array|bool
+	 */
+	function get_client_ip(): string|array|bool {
+		$ip = '';
+		if (getenv('HTTP_CLIENT_IP')) {
+			$ip = getenv('HTTP_CLIENT_IP');
+		} else if (getenv('HTTP_X_FORWARDED_FOR')) {
+			$ip = getenv('HTTP_X_FORWARDED_FOR');
+		} else if (getenv('HTTP_X_FORWARDED')) {
+			$ip = getenv('HTTP_X_FORWARDED');
+		} else if (getenv('HTTP_FORWARDED_FOR')) {
+			$ip = getenv('HTTP_FORWARDED_FOR');
+		} else if (getenv('HTTP_FORWARDED')) {
+			$ip = getenv('HTTP_FORWARDED');
+		} else if (getenv('REMOTE_ADDR')) {
+			$ip = getenv('REMOTE_ADDR');
+		} else {
+			$ip = 'UNKNOWN';
+		}
+
+		return $ip;
 	}
 }

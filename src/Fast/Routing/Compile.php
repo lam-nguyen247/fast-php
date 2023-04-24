@@ -3,11 +3,17 @@ namespace Fast\Routing;
 
 use Fast\Container;
 use Fast\Hashing\HashException;
+use Fast\Logger\LoggerException;
+use Fast\Bus\DispatcherException;
+use Fast\Console\ConsoleException;
+use Fast\Storage\StorageException;
 use Fast\Eloquent\EloquentException;
 use Fast\Http\Exceptions\AppException;
 use Fast\Auth\AuthenticationException;
+use Fast\FileSystem\FileSystemException;
 use Fast\Translator\TranslationException;
 use Fast\Http\Exceptions\UnknownException;
+use Fast\Http\Exceptions\RuntimeException;
 use Fast\Http\Validation\ValidationException;
 use Fast\Database\QueryBuilder\QueryException;
 use Fast\Configuration\ConfigurationException;
@@ -68,7 +74,6 @@ class Compile
 			throw match (true) {
 				$e instanceof AppException,
 				$e instanceof HashException,
-				$e instanceof ViewException,
 				$e instanceof RouteException,
 				$e instanceof QueryException,
 				$e instanceof LoggerException,
