@@ -21,6 +21,7 @@ if(!function_exists('app'))
 	 * @param string $entity Optional. The name of the entity to retrieve from the container. Default is an empty string, which returns the container instance.
 	 * @return Container|Container::make() An instance of the Fast\Container class or a specified entity from the container.
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	function app(string $entity = ''){
 		if(empty($entity)){
