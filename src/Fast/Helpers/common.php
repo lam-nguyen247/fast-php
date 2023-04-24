@@ -39,6 +39,7 @@ if (!function_exists('config')) {
 	 *
 	 * @return mixed
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	function config(string $variable): mixed {
 		return app()->make(__FUNCTION__)->getConfig($variable);
@@ -52,7 +53,7 @@ if (!function_exists('base_path')) {
 	 * @param string $path
 	 *
 	 * @return string
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function base_path(string $path = ''): string
 	{
@@ -97,7 +98,7 @@ if (!function_exists('request')) {
 	 * Get instance of request
 	 *
 	 * @return Request
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function request(): Request
 	{
@@ -110,7 +111,7 @@ if (!function_exists('response')) {
 	 * Make instance of response
 	 *
 	 * @return Response
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function response(): Response
 	{

@@ -68,14 +68,64 @@ class Container
 	{
 		$this->basePath = $basePath;
 
-		$this->instance('path.route', $this->getPathFor('routes'));
-		$this->instance('path.cache', $this->getPathFor('cache'));
-		$this->instance('path.config', $this->getPathFor('config'));
-		$this->instance('path.public', $this->getPathFor('public'));
-		$this->instance('path.storage', $this->getPathFor('storage'));
-		$this->instance('path.database', $this->getPathFor('database'));
+		$this->instance('path.route', $this->getRoutePath());
+		$this->instance('path.cache', $this->getCachePath());
+		$this->instance('path.config', $this->getConfigPath());
+		$this->instance('path.public', $this->getPublicPath());
+		$this->instance('path.storage', $this->getStoragePath());
+		$this->instance('path.database', $this->getDatabasePath());
 
 		self::$instance = $this;
+	}
+
+	/**
+	 * Get database path
+	 *
+	 * @return string
+	 */
+	private function getDatabasePath(): string
+	{
+		return $this->basePath() . DIRECTORY_SEPARATOR . 'database';
+	}
+
+	/**
+	 * Get public path
+	 *
+	 * @return string
+	 */
+	private function getPublicPath(): string
+	{
+		return $this->basePath() . DIRECTORY_SEPARATOR . 'public';
+	}
+
+	/**
+	 * Get routing path
+	 *
+	 * @return string
+	 */
+	private function getRoutePath(): string
+	{
+		return $this->basePath() . DIRECTORY_SEPARATOR . 'routes';
+	}
+
+	/**
+	 * Get config path
+	 *
+	 * @return string
+	 */
+	private function getConfigPath(): string
+	{
+		return $this->basePath() . DIRECTORY_SEPARATOR . 'config';
+	}
+
+	/**
+	 * Get cache path
+	 *
+	 * @return string
+	 */
+	private function getCachePath(): string
+	{
+		return $this->getStoragePath() . DIRECTORY_SEPARATOR . 'cache';;
 	}
 
 	/**
@@ -84,7 +134,7 @@ class Container
 	 * @param string $key
 	 * @param mixed $instance
 	 */
-	private function instance(string $key, $instance): void
+	private function instance(string $key, mixed $instance): void
 	{
 		$this->instances[$key] = $instance;
 	}
@@ -107,19 +157,25 @@ class Container
 	}
 
 
+	/**
+	 * Get base path of installation
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function basePath(string $path = ''): string
+	{
+		return !$path ? $this->basePath : $this->basePath . (DIRECTORY_SEPARATOR . $path);
+	}
 
 	/**
-	Returns the absolute path to a file or directory within the application directory structure.
-	This method takes a string parameter representing the name of the file or directory, and returns the absolute path
-	to that file or directory within the application directory structure. The method uses the getBasePath() method to
-	determine the base path of the application, and then joins the provided name with the base path using the appropriate
-	directory separator to form the absolute path.
-	* @param string $name The name of the file or directory.
-	* @return string The absolute path to the file or directory within the application directory structure.
+	 * Get storage path
+	 *
+	 * @return string
 	 */
-	private function getPathFor(string $name): string
+	private function getStoragePath(): string
 	{
-		return $this->getBasePath() . DIRECTORY_SEPARATOR . $name;
+		return $this->basePath() . DIRECTORY_SEPARATOR . 'storage';
 	}
 
 	/**

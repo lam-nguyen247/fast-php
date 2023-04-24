@@ -83,7 +83,6 @@ class ConfigClearCommand extends Command
     {
         $env = readDotENV();
         $cacheEnvironmentPath = cache_path('environments.php');
-
         $myFile = fopen($cacheEnvironmentPath, "w") or die("Unable to open file!");
         fwrite($myFile, "<?php\n");
         fwrite($myFile, "return array(\n");
