@@ -58,9 +58,5 @@ class ConfigCacheCommand extends Command
     public function handle(): void
     {
         (new ConfigClearCommand)->handle();
-
-        (new Kernel)->handle([
-            (new ViewClearCommand)->getSignature()
-        ]);
     }
 }
