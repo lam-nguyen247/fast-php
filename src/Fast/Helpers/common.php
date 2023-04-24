@@ -148,7 +148,7 @@ if (!function_exists('items_in_folder')) {
 	 */
 	function items_in_folder(string $folder, bool $included = true): array
 	{
-		$dir = new \RecursiveIteratorIterator(
+		$dir = new \RecursiveDirectoryIterator(
 			$folder,
 			\FilesystemIterator::SKIP_DOTS
 		);

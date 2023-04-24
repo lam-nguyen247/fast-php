@@ -143,10 +143,10 @@ class Container
 	 * Otherwise, it calls the resolve method to create a new instance of the entity and returns it.
 	 * This method allows the user to easily obtain an instance of any registered entity, whether it is a bound instance or a resolved instance.
 	 * @param string $entity
-	 * @return null|object
+	 * @return mixed
 	 * @throws AppException|ReflectionException
 	 */
-	public function make(string $entity): null|object
+	public function make(string $entity): mixed
 	{
 		return $this->instances[$entity] ?? $this->resolve($entity);
 	}
