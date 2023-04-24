@@ -256,6 +256,10 @@ class Container
 			return $this->takeResolved($concrete);
 		}
 
+		if ($concrete instanceof Closure) {
+			return call_user_func($concrete, $this);
+		}
+
 		if($this->bound($concrete)){
 			return $this->build($this->takeBound($concrete)['concrete']);
 		}
