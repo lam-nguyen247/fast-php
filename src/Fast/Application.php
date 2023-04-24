@@ -76,7 +76,7 @@ class Application
 	 */
 	public function registerServiceProvider(): void
 	{
-		$providers = $this->container->make('config')->getConfig('app>providers');
+		$providers = $this->container->make('config')->getConfig('app.providers');
 
 		if(!empty($providers)) {
 			foreach ($providers as $provider) {

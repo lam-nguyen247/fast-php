@@ -4,6 +4,7 @@ namespace Fast\Console;
 
 use Fast\Container;
 use Fast\Application;
+use ReflectionException;
 use Fast\Supports\ConsoleOutput;
 use Fast\Console\ConsoleException;
 use Fast\Http\Exceptions\AppException;
@@ -109,6 +110,9 @@ class Kernel implements KernelContract
 
     /**
      * Constructor of Kernel
+	 * @throws AppException
+	 * @throws ConsoleException
+	 * @throws ReflectionException
      */
     public function __construct()
     {
@@ -139,7 +143,7 @@ class Kernel implements KernelContract
 	 *
 	 * @throws AppException
 	 * @throws ConsoleException
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
     public function handle(array $argv = []): void
     {
@@ -198,7 +202,7 @@ class Kernel implements KernelContract
 	 *
 	 * @throws AppException
 	 * @throws ConsoleException
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
     public function call(string $command, array $options = []): void
     {
