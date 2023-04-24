@@ -166,12 +166,12 @@ class Container
 	/**
 	 * Binding abstract to classes
 	 * @param string $abstract
-	 * @param string|null $concrete
+	 * @param mixed $concrete
 	 * @param bool $shared
 	 *
 	 * @return void
 	 */
-	public function bind(string $abstract, string $concrete = null, bool $shared = false): void
+	public function bind(string $abstract, mixed $concrete = null, bool $shared = false): void
 	{
 		if(is_null($concrete)) {
 			$concrete = $abstract;
