@@ -60,6 +60,8 @@ class ConfigCacheCommand extends Command
     public function handle(): void
     {
         (new ConfigClearCommand)->handle();
-		(new ViewClearCommand())->handle();
+		(new \Fast\Console\Kernel)->handle([
+			(new \Fast\Console\Commands\View\ViewClearCommand)->getSignature()
+		]);
     }
 }
