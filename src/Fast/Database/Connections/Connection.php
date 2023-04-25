@@ -2,6 +2,7 @@
 namespace Fast\Database\Connections;
 
 use PDO;
+use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
 abstract class Connection implements \Fast\Contracts\Database\Connection
@@ -12,6 +13,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 
 	/**
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function __construct()
 	{
@@ -20,6 +22,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 
 	/**
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function getConfig(): array
 	{
@@ -50,6 +53,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getDriverConnection(string $driver): string
 	{
@@ -59,10 +63,10 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	/**
 	 * Get host connection
 	 *
-	 * @param string $host
-	 *
+	 * @param string $driver
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getHostConnection(string $driver): string
 	{
@@ -76,6 +80,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getPortConnection(string $driver): string
 	{
@@ -89,6 +94,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getDatabaseConnection(string $driver): string
 	{
@@ -102,6 +108,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getUsernameConnection(string $driver): string
 	{
@@ -115,6 +122,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getPasswordConnection(string $driver): string
 	{
@@ -126,6 +134,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getDefaultDriver(): string
 	{
@@ -146,9 +155,6 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 */
 	public function getConnection(): PDO
 	{
-		if (!$this->instance) {
-			$this->makeInstance();
-		}
 		return $this->instance;
 	}
 }
