@@ -11,9 +11,9 @@ interface Kernel
 	 * Handle an incoming HTTP request.
 	 *
 	 * @param Request $request
-	 * @return void
+	 * @return mixed
 	 */
-    public function handle(Request $request): void;
+    public function handle(Request $request): mixed;
 
     /**
      * Get the FastPHP application instance.
