@@ -14,7 +14,7 @@ trait Resource
 	public function makeIndex(array $resources): ?RouteCollection
 	{
 		if(!in_array('index', $this->except)) {
-			return $this->createRoute('GET', "/{$resources['uri']}", $this->name . "{$resources['uri']}.index", "{$resources['action']}.index", $this->middlewares, $this->prefix, $this->namespaces);
+			return $this->createRoute('GET', "/{$resources['uri']}", $this->name . "{$resources['uri']}.index", "{$resources['action']}@index", $this->middlewares, $this->prefix, $this->namespaces);
 		}
 		return null;
 	}

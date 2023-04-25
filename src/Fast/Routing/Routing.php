@@ -52,7 +52,7 @@ class Routing
 	public function getRequestURL(): string
 	{
 		$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-		return empty($url) ? Routing::ROUTING_SEPARATOR : $uri;
+		return empty($uri) ? Routing::ROUTING_SEPARATOR : $uri;
 	}
 
 	private function getRequestMethod(): string

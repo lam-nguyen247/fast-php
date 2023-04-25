@@ -7,7 +7,7 @@ class RouteCollection
 
 	private string $uri;
 
-	private string $action;
+	private mixed $action;
 
 	private string $name;
 

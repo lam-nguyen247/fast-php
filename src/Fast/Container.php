@@ -346,8 +346,8 @@ class Container
 	{
 		$array = [];
 		foreach ($dependencies as $dependency) {
-			if ($dependency->getClass() instanceof \ReflectionClass) {
-				$object = $dependency->getClass()->getName();
+			if ($dependency->getDeclaringClass() instanceof \ReflectionClass) {
+				$object = $dependency->getDeclaringClass()->getName();
 				$array[$dependency->getName()] = $this->make($object);
 			}
 		}
@@ -374,21 +374,21 @@ class Container
 			$array = [];
 			foreach ($listParameters as  $parameter) {
 				switch(true) {
-					case $parameter->getClass() instanceof \ReflectionClass:
+					case $parameter->getDeclaringClass() instanceof \ReflectionClass:
 						$object = $this->buildStacks(
-							$parameter->getClass()->getName()
+							$parameter->getDeclaringClass()->getName()
 						);
 						if($object instanceof \Fast\Eloquent\Model) {
 							$arg = array_shift($params);
 							if (!$arg) {
 								throw new AppException("Missing parameter `{$parameter->getName()}` 
-								for initial model `{$parameter->getClass()->getName()}`");
+								for initial model `{$parameter->getDeclaringClass()->getName()}`");
 							}
 							$object = $object->findOrFail($arg);
 						}
 						$array = [...$array, $object];
 						break;
-					case is_null($parameter->getClass()):
+					case is_null($parameter->getDeclaringClass()):
 						$param = array_shift($params);
 						try {
 							$default = $parameter->getDefaultValue();
