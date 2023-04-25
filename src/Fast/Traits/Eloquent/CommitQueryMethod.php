@@ -2,7 +2,6 @@
 namespace Fast\Traits\Eloquent;
 
 use ReflectionException;
-use JetBrains\PhpStorm\NoReturn;
 use Fast\Http\Exceptions\AppException;
 use Fast\Database\QueryBuilder\QueryException;
 
