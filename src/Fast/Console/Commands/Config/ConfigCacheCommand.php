@@ -2,6 +2,7 @@
 
 namespace Fast\Console\Commands\Config;
 
+use ReflectionException;
 use Fast\Console\Command;
 use Fast\Http\Exceptions\AppException;
 use Fast\Console\Commands\View\ViewClearCommand;
@@ -54,9 +55,11 @@ class ConfigCacheCommand extends Command
 	 *
 	 * @throws ConsoleException
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
     public function handle(): void
     {
         (new ConfigClearCommand)->handle();
+		(new ViewClearCommand())->handle();
     }
 }
