@@ -19,7 +19,7 @@ class :model extends Model
 
     protected array $casts = [];
 
-    public function getAppendedAttribute()
+    public function getAppendedAttribute(): mixed
     {
         return 'value added';
     }
