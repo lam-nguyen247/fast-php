@@ -9,6 +9,10 @@ use ReflectionException;
 
 class AppException extends Exception
 {
+	/**
+	 * @throws ReflectionException
+	 * @throws AppException
+	 */
 	public function __construct($message = "", $code = 0, Throwable $previous = null)
 	{
 		$this->writeLog($message);
@@ -36,6 +40,10 @@ class AppException extends Exception
 		return app('view')->render('exception', compact('exception'));
 	}
 
+	/**
+	 * @throws ReflectionException
+	 * @throws AppException
+	 */
 	public function writeLog(string $message): void
 	{
 		if(app()->make(Application::class)->isLoaded()) {

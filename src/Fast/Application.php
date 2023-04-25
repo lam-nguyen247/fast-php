@@ -49,7 +49,7 @@ class Application
 	 * Set error handler
 	 *
 	 * @return void
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	public function setErrorHandler(): void {
 		set_error_handler(function () {
@@ -146,6 +146,7 @@ class Application
 	 *
 	 * @throws RuntimeException
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function whenShutDown(): void
 	{
