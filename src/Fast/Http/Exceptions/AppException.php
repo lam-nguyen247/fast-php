@@ -5,6 +5,7 @@ namespace Fast\Http\Exceptions;
 use Exception;
 use Fast\Application;
 use Throwable;
+use ReflectionException;
 
 class AppException extends Exception
 {
@@ -21,13 +22,18 @@ class AppException extends Exception
 		set_exception_handler([$this, 'render']);
 	}
 
-	public function render(\Exception $exception){
+	/**
+	 * @throws ReflectionException
+	 * @throws AppException
+	 */
+	public function render(Exception $exception){
 		if(request()->isAjax()) {
 			return response()->json([
 				'status'  => false,
 				'message' => $exception->getMessage()
 			], $this->code);
 		}
+		return app('view')->render('exception', compact('exception'));
 	}
 
 	public function writeLog(string $message): void
