@@ -57,7 +57,7 @@ class MakeRequestCommand extends Command
                 $fullDir .= '/';
             }
         }
-        $defaultRequestPath = base_path('vendor/faker/faker/src/Fast/Helpers/Init/request.txt');
+        $defaultRequestPath = base_path('vendor/fast-php/fast/src/Fast/Helpers/Init/request.txt');
         $defaultRequest = file_get_contents($defaultRequestPath);
         $defaultRequest = str_replace(':request', $request, $defaultRequest);
         $defaultRequest = str_replace(':namespace', $namespace, $defaultRequest);

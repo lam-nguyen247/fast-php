@@ -46,7 +46,7 @@ class MakeMigrationCommand extends Command
             exit(1);
         }
 
-        $defaultMigratePath = base_path('vendor/faker/faker/src/Fast/Helpers/Init/migrate.txt');
+        $defaultMigratePath = base_path('vendor/fast-php/fast/src/Fast/Helpers/Init/migrate.txt');
         $defaultMigrate = file_get_contents($defaultMigratePath);
         $defaultMigrate = str_replace(':table', $table, $defaultMigrate);
         $defaultMigrate = str_replace(':Table', ucfirst($table), $defaultMigrate);

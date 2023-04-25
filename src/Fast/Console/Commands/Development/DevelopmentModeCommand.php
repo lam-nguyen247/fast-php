@@ -50,16 +50,16 @@ class DevelopmentModeCommand extends Command
     public function handle(): void
     {
         if (file_exists(base_path('Fast'))) {
-        	$this->output->printError('The `{faker}/Fast` directory already exists.');
+        	$this->output->printError('The `{fast-php}/fast` directory already exists.');
         	exit(1);
         }
 
         $this->app->make('fileSystem')->link(
-            base_path('vendor/faker/faker/src/Fast'),
+            base_path('vendor/fast-php/fast/src/Fast'),
             base_path('Fast')
         );
 
-        $this->output->printSuccess('The [{faker}/Fast] directory has been linked.');
+        $this->output->printSuccess('The [{fast-php}/Fast] directory has been linked.');
     }
 }
 

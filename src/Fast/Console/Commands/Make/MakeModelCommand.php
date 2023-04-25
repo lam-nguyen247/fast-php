@@ -59,7 +59,7 @@ class MakeModelCommand extends Command
         } else {
             $model = $name;
         }
-        $defaultModelPath = base_path('vendor/faker/faker/src/Fast/Helpers/Init/model.txt');
+        $defaultModelPath = base_path('vendor/fast-php/fast/src/Fast/Helpers/Init/model.txt');
         $defaultModel = file_get_contents($defaultModelPath);
         $defaultModel = str_replace(':namespace', $namespace, $defaultModel);
         $defaultModel = str_replace(':model', $model, $defaultModel);

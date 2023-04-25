@@ -56,7 +56,7 @@ class SyncCoreToFramework extends Command
     public function handle(): void
     {
         $frameworkDir = $this->getOption('dir') ?: config('develop.framework_dir');
-        $developDir = base_path('vendor/faker/faker/src/Fast');
+        $developDir = base_path('vendor/fast-php/fast/src/Fast');
 
         if(!file_exists($frameworkDir)) {
         	$this->output->printError("Wrong given framework directory. Please check your configuration.\nThe given directory: `{$frameworkDir}`");

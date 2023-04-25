@@ -57,7 +57,7 @@ class MakeControllerCommand extends Command
         } else {
             $controller = $name;
         }
-        $defaultControllerPath = base_path('vendor/faker/faker/src/Fast/Helpers/Init/controller.txt');
+        $defaultControllerPath = base_path('vendor/fast-php/fast/src/Fast/Helpers/Init/controller.txt');
         $defaultController = file_get_contents($defaultControllerPath);
         $defaultController = str_replace(':namespace', $namespace, $defaultController);
         $defaultController = str_replace(':controller', $controller, $defaultController);

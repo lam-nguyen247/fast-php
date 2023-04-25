@@ -59,7 +59,7 @@ class MakeCommandCommand extends Command
         } else {
             $command = $name;
         }
-        $defaultCommandPath = base_path('vendor/faker/faker/src/Fast/Helpers/Init/command.txt');
+        $defaultCommandPath = base_path('vendor/fast-php/fast/src/Fast/Helpers/Init/command.txt');
         $defaultCommand = file_get_contents($defaultCommandPath);
         $defaultCommand = str_replace(':namespace', $namespace, $defaultCommand);
         $defaultCommand = str_replace(':command', $command, $defaultCommand);
