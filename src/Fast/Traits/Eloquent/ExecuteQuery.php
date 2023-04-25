@@ -3,6 +3,7 @@ namespace Fast\Traits\Eloquent;
 
 use PDO;
 use PDOStatement;
+use ReflectionException;
 use Fast\Eloquent\EloquentException;
 use Fast\Http\Exceptions\AppException;
 use Fast\Eloquent\ModelBindingObject;
@@ -11,7 +12,7 @@ trait ExecuteQuery
 {
 	/**
 	 * @throws QueryException
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	public function request(string $sql)
 	{
