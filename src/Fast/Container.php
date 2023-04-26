@@ -7,14 +7,13 @@ use Fast\Eloquent\Model;
 use Fast\Http\FormRequest;
 use Fast\Http\Exceptions\AppException;
 
-class Container
-{
+class Container {
 	/**
 	 * Version of the application
 	 *
 	 * @const  VERSION
 	 */
-	const VERSION = "1.0.0";
+	const VERSION = '1.0.0';
 
 	/**
 	 * Instance of the application
@@ -64,8 +63,7 @@ class Container
 	 *
 	 * @param string $basePath
 	 */
-	public function __construct(string $basePath)
-	{
+	public function __construct(string $basePath) {
 		$this->basePath = $basePath;
 
 		$this->instance('path.route', $this->getRoutePath());
@@ -83,8 +81,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getDatabasePath(): string
-	{
+	private function getDatabasePath(): string {
 		return $this->basePath() . DIRECTORY_SEPARATOR . 'database';
 	}
 
@@ -93,8 +90,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getPublicPath(): string
-	{
+	private function getPublicPath(): string {
 		return $this->basePath() . DIRECTORY_SEPARATOR . 'public';
 	}
 
@@ -103,8 +99,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getRoutePath(): string
-	{
+	private function getRoutePath(): string {
 		return $this->basePath() . DIRECTORY_SEPARATOR . 'routes';
 	}
 
@@ -113,8 +108,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getConfigPath(): string
-	{
+	private function getConfigPath(): string {
 		return $this->basePath() . DIRECTORY_SEPARATOR . 'config';
 	}
 
@@ -123,8 +117,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getCachePath(): string
-	{
+	private function getCachePath(): string {
 		return $this->getStoragePath() . DIRECTORY_SEPARATOR . 'cache';;
 	}
 
@@ -134,26 +127,23 @@ class Container
 	 * @param string $key
 	 * @param mixed $instance
 	 */
-	private function instance(string $key, mixed $instance): void
-	{
+	private function instance(string $key, mixed $instance): void {
 		$this->instances[$key] = $instance;
 	}
 
-	private function hasInstance(string $key): bool
-	{
+	private function hasInstance(string $key): bool {
 		return isset($this->instances[$key]);
 	}
 
 	/**
-	* Returns the base path of the application, optionally joined with a provided path string.
-	* If no path is provided, this method returns the base path of the application. Otherwise, it joins the provided path string
-	* with the base path using the appropriate directory separator, and returns the resulting path string.
-	* @param string $path (optional) A path string to join with the base path.
-	* @return string The resulting path string.
+	 * Returns the base path of the application, optionally joined with a provided path string.
+	 * If no path is provided, this method returns the base path of the application. Otherwise, it joins the provided path string
+	 * with the base path using the appropriate directory separator, and returns the resulting path string.
+	 * @param string $path (optional) A path string to join with the base path.
+	 * @return string The resulting path string.
 	 */
-	public function getBasePath(string $path=''): string
-	{
-		return !$path ? $this->basePath : $this->basePath . DIRECTORY_SEPARATOR . $path ;
+	public function getBasePath(string $path = ''): string {
+		return !$path ? $this->basePath : $this->basePath . DIRECTORY_SEPARATOR . $path;
 	}
 
 
@@ -163,8 +153,7 @@ class Container
 	 * @param string $path
 	 * @return string
 	 */
-	public function basePath(string $path = ''): string
-	{
+	public function basePath(string $path = ''): string {
 		return !$path ? $this->basePath : $this->basePath . (DIRECTORY_SEPARATOR . $path);
 	}
 
@@ -173,20 +162,18 @@ class Container
 	 *
 	 * @return string
 	 */
-	private function getStoragePath(): string
-	{
+	private function getStoragePath(): string {
 		return $this->basePath() . DIRECTORY_SEPARATOR . 'storage';
 	}
 
 	/**
-	* Returns an instance of the Container class, ensuring that only a single instance is created.
-	* If no instance of the Container class currently exists, a new instance is created using the provided arguments.
-	* Otherwise, the existing instance is returned.
-	* @return Container An instance of the Container class.
+	 * Returns an instance of the Container class, ensuring that only a single instance is created.
+	 * If no instance of the Container class currently exists, a new instance is created using the provided arguments.
+	 * Otherwise, the existing instance is returned.
+	 * @return Container An instance of the Container class.
 	 */
-	public static function getInstance(): Container
-	{
-		if(!self::$instance){
+	public static function getInstance(): Container {
+		if (!self::$instance) {
 			return new self(...func_get_args());
 		}
 
@@ -202,8 +189,7 @@ class Container
 	 * @return mixed
 	 * @throws AppException|ReflectionException
 	 */
-	public function make(string $entity): mixed
-	{
+	public function make(string $entity): mixed {
 		return $this->instances[$entity] ?? $this->resolve($entity);
 	}
 
@@ -214,8 +200,7 @@ class Container
 	 * @param mixed $concrete
 	 * @return void
 	 */
-	public function singleton(string $abstract, mixed $concrete): void
-	{
+	public function singleton(string $abstract, mixed $concrete): void {
 		$this->bind($abstract, $concrete, true);
 	}
 
@@ -227,14 +212,14 @@ class Container
 	 *
 	 * @return void
 	 */
-	public function bind(string $abstract, mixed $concrete = null, bool $shared = false): void
-	{
-		if(is_null($concrete)) {
+	public function bind(string $abstract, mixed $concrete = null, bool $shared = false): void {
+		if (is_null($concrete)) {
 			$concrete = $abstract;
 		}
-		if(!$concrete instanceof  Closure) {
+		if (!$concrete instanceof Closure) {
 			$concrete = $this->getClosure($concrete);
 		}
+
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 	}
 
@@ -247,18 +232,15 @@ class Container
 	 * @return object|null
 	 * @throws AppException|ReflectionException
 	 */
-	public function resolve(string $entity): null|object
-	{
-		if(!$this->canResolve($entity)){
+	public function resolve(string $entity): null|object {
+		if (!$this->canResolve($entity)) {
 			throw new AppException("Cannot resolve entity `{$entity}`. It's has not bidding yet.");
 		}
 
 		$object = $this->build($entity);
-
-		if($this->bound($entity) && $this->takeBound($entity)['shared'] === true && !$this->isResolved($entity)){
+		if ($this->bound($entity) && $this->takeBound($entity)['shared'] === true && !$this->isResolved($entity)) {
 			$this->addResolve($entity, $object);
 		}
-
 		return $object;
 	}
 
@@ -268,20 +250,17 @@ class Container
 	 * @param string $entity
 	 * @return bool
 	 */
-	public function canResolve(string $entity): bool
-	{
+	public function canResolve(string $entity): bool {
 		return $this->bound($entity) || class_exists($entity) || $this->hasInstance($entity);
 	}
 
 	/**
 	 * @throws AppException
 	 */
-	private function addResolve(string $abstract, mixed $concrete): void
-	{
+	private function addResolve(string $abstract, mixed $concrete): void {
 		if ($this->isResolved($abstract)) {
 			throw new AppException("Duplicated abstract resolve `{$abstract}`");
 		}
-
 		$this->resolves[$abstract] = $concrete;
 	}
 
@@ -291,8 +270,7 @@ class Container
 	 * @param string $entity
 	 * @return bool
 	 */
-	public function bound(string $entity): bool
-	{
+	public function bound(string $entity): bool {
 		return isset($this->bindings[$entity]);
 	}
 
@@ -306,9 +284,12 @@ class Container
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function build(mixed $concrete): null|object
-	{
-		if(is_string($concrete) && $this->isResolved($concrete)){
+
+	public $test = false;
+
+	public function build(mixed $concrete): null|object {
+
+		if (is_string($concrete) && $this->isResolved($concrete)) {
 			return $this->takeResolved($concrete);
 		}
 
@@ -316,43 +297,48 @@ class Container
 			return call_user_func($concrete, $this);
 		}
 
-		if($this->bound($concrete)){
+		if ($this->bound($concrete)) {
 			return $this->build($this->takeBound($concrete)['concrete']);
 		}
 
 		$reflector = new \ReflectionClass($concrete);
-		if(!$reflector->isInstantiable()){
+		if (!$reflector->isInstantiable()) {
 			throw new AppException("Class `{$concrete}` is not an instantiable");
 		}
 
-		if(is_null($constructor = $reflector->getConstructor())){
+		if (is_null($constructor = $reflector->getConstructor())) {
 			return new $concrete;
 		}
-
 		$dependencies = $constructor->getParameters();
+		if (str_contains($concrete, 'DemoController')) {
+			$this->test = true;
+		}
 		$instances = $this->resolveContractorHaveDependencies($dependencies);
 
 		return $reflector->newInstanceArgs($instances);
-
 	}
 
 	/**
 	 * Resolve all the dependencies from the ReflectionParameters.
 	 * @param array $dependencies
 	 * @return array
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
-	private function resolveContractorHaveDependencies(array $dependencies): array
-	{
+	private function resolveContractorHaveDependencies(array $dependencies): array {
 		$array = [];
 		foreach ($dependencies as $dependency) {
-			if ($dependency->getDeclaringClass() instanceof \ReflectionClass) {
-				$object = $dependency->getDeclaringClass()->getName();
+			if ($this->isReflectionClass($dependency)) {
+				$object = $dependency->getType()->getName();
 				$array[$dependency->getName()] = $this->make($object);
 			}
 		}
 
 		return $array;
+	}
+
+	private function isReflectionClass(\ReflectionParameter $reflectionParameter): bool {
+		$type = $reflectionParameter->getType();
+		return $type instanceof \ReflectionNamedType || !$type->isBuiltin() || class_exists($type->getName());
 	}
 
 	/**
@@ -366,57 +352,56 @@ class Container
 	 *
 	 * @throws AppException
 	 */
-	public function resolveMethodDependencyWithParameters(string $controller, string $methodName, array $params): array
-	{
+	public function resolveMethodDependencyWithParameters(string $controller, string $methodName, array $params): array {
 		try {
 			$ref = new \ReflectionMethod($controller, $methodName);
 			$listParameters = $ref->getParameters();
 			$array = [];
-			foreach ($listParameters as  $parameter) {
-				switch(true) {
-					case $parameter->getDeclaringClass() instanceof \ReflectionClass:
+			foreach ($listParameters as $parameter) {
+				switch (true) {
+					case $this->isReflectionClass($parameter):
 						$object = $this->buildStacks(
-							$parameter->getDeclaringClass()->getName()
+							$parameter->getType()->getName()
 						);
-						if($object instanceof \Fast\Eloquent\Model) {
+						if ($object instanceof \Fast\Eloquent\Model) {
 							$arg = array_shift($params);
 							if (!$arg) {
 								throw new AppException("Missing parameter `{$parameter->getName()}` 
-								for initial model `{$parameter->getDeclaringClass()->getName()}`");
+								for initial model `{$parameter->getType()->getName()}`");
 							}
 							$object = $object->findOrFail($arg);
 						}
 						$array = [...$array, $object];
 						break;
-					case is_null($parameter->getDeclaringClass()):
+					case is_null($parameter->getType()->getName()):
 						$param = array_shift($params);
 						try {
 							$default = $parameter->getDefaultValue();
-						}catch(\ReflectionException $e) {
+						} catch (\ReflectionException $e) {
 							$default = null;
 						}
 
-						if(!is_null($parameter->getType())) {
-							switch($parameter->getType()->getName()) {
+						if (!is_null($parameter->getType())) {
+							switch ($parameter->getType()->getName()) {
 								case 'int':
 								case 'integer':
-									$param = (int) $param ?: (is_numeric($default) ? $default : $default);
+									$param = (int)$param ?: $default;
 									break;
 								case 'array':
-									$param = (array) $param ?: $default;
+									$param = (array)$param ?: $default;
 									break;
 								case 'object':
-									$param = (object) $param ?: $default;
+									$param = (object)$param ?: $default;
 									break;
 								case 'float':
-									$param = (float) $param ?: $default;
+									$param = (float)$param ?: $default;
 									break;
 								case 'string':
-									$param = (string) $param ?: $default;
+									$param = (string)$param ?: $default;
 									break;
 								case 'boolean':
 								case 'bool':
-									$param = (bool) $param ?: $default;
+									$param = (bool)$param ?: $default;
 									break;
 							}
 						}
@@ -424,7 +409,7 @@ class Container
 						$array = [...$array, $param];
 						break;
 					default:
-						throw new AppException("Invalid type of parameter");
+						throw new AppException('Invalid type of parameter');
 
 				}
 			}
@@ -434,18 +419,15 @@ class Container
 		}
 	}
 
-	private function isResolved(string $abstract): bool
-	{
+	private function isResolved(string $abstract): bool {
 		return isset($this->resolves[$abstract]);
 	}
 
-	private function takeResolved(string $concrete)
-	{
+	private function takeResolved(string $concrete) {
 		return $this->resolves[$concrete];
 	}
 
-	private function takeBound(string $concrete)
-	{
+	private function takeBound(string $concrete) {
 		return $this->bindings[$concrete];
 	}
 
@@ -453,15 +435,14 @@ class Container
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	private function buildStacks(mixed $object): object
-	{
+	private function buildStacks(mixed $object): object {
 		try {
 			$object = $this->build($object);
-			if($object instanceof  FormRequest) {
+			if ($object instanceof FormRequest) {
 				$object->executeValidate();
 			}
 			return $object;
-		}catch (\ArgumentCountError $e){
+		} catch (\ArgumentCountError $e) {
 			throw new AppException($e->getMessage());
 		}
 	}
@@ -471,8 +452,7 @@ class Container
 	 *
 	 * @return array
 	 */
-	public function getBindings(): array
-	{
+	public function getBindings(): array {
 		return $this->bindings;
 	}
 
@@ -490,8 +470,7 @@ class Container
 	 *
 	 * @return bool
 	 */
-	public function skipMiddleware(): bool
-	{
+	public function skipMiddleware(): bool {
 		return $this->skipMiddleware;
 	}
 
@@ -500,8 +479,7 @@ class Container
 	 *
 	 * @return string
 	 */
-	public function getOS(): string
-	{
+	public function getOS(): string {
 		return match (true) {
 			stristr(PHP_OS, 'DAR') => 'macosx',
 			stristr(PHP_OS, 'WIN') => 'windows',
@@ -515,9 +493,8 @@ class Container
 	 *
 	 * @return bool
 	 */
-	public function isWindows(): bool
-	{
-		return "windows" === $this->getOs();
+	public function isWindows(): bool {
+		return 'windows' === $this->getOs();
 	}
 
 	/**
@@ -525,9 +502,8 @@ class Container
 	 *
 	 * @return bool
 	 */
-	public function isMacos(): bool
-	{
-		return "macosx" === $this->getOs();
+	public function isMacos(): bool {
+		return 'macosx' === $this->getOs();
 	}
 
 	/**
@@ -535,9 +511,8 @@ class Container
 	 *
 	 * @return bool
 	 */
-	public function isLinux(): bool
-	{
-		return "linux" === $this->getOs();
+	public function isLinux(): bool {
+		return 'linux' === $this->getOs();
 	}
 
 	/**
@@ -545,19 +520,17 @@ class Container
 	 *
 	 * @return bool
 	 */
-	public function unknownOs(): bool
-	{
-		return "unknown" === $this->getOs();
+	public function unknownOs(): bool {
+		return 'unknown' === $this->getOs();
 	}
 
 	/**
 	 * Get the Closure to be used when building a type.
 	 *
-	 * @param  string  $concrete
+	 * @param string $concrete
 	 * @return Closure
 	 */
-	private function getClosure(string $concrete): Closure
-	{
+	private function getClosure(string $concrete): Closure {
 		return function () use ($concrete) {
 			return $this->build($concrete);
 		};
