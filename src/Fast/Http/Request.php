@@ -118,13 +118,13 @@ class Request
 		return $_SERVER['REQUEST_METHOD'];
 	}
 
-	public function __set($name, $value)
-	{
-		$this->$name = $value;
+	private array $data = [];
+
+	public function __set($name, $value) {
+		$this->data[$name] = $value;
 	}
 
-	public function __get($name)
-	{
-		return isset($this->$name) ? $this->name : null;
+	public function __get($name) {
+		return $this->data[$name] ?? null;
 	}
 }
