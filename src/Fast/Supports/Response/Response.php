@@ -18,10 +18,6 @@ class Response
     {
         (new HttpResponseCode($code));
         header('Content-Type: application/json');
-
-        if ($arguments instanceof \ArrayObject) {
-            $arguments = objectToArray($arguments);
-        }
         echo json_encode($arguments);
 
         return $this;
