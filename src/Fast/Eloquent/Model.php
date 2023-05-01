@@ -80,19 +80,35 @@ abstract class Model {
 	 * @throws EloquentException
 	 */
 	public function __construct() {
+		$this->callServiceGetAttributes();
 		$this->callServiceAppends();
 		$this->callServiceCasts();
-		$this->callServiceGetAttributes();
 	}
 
-	private array $data = [];
-
-	public function __set($name, $value) {
-		$this->data[$name] = $value;
+	public function __set(string $name, mixed $value) {
+		$this->setAttributes($name, $value);
 	}
 
-	public function __get($name) {
-		return $this->data[$name] ?? null;
+	public function __get(string $name) {
+		return $this->getAttributes($name);
+	}
+
+	protected function setAttributes(string $name, mixed $value) : void{
+		$this->attributes[$name] = $value;
+	}
+
+	public function getData(): array {
+		return $this->attributes;
+	}
+
+	/**
+	 * Get the column attributes for the given model.
+	 *
+	 * @param
+	 * @return mixed|null
+	 */
+	protected function getAttributes($name): mixed {
+		return $this->attributes[$name] ?? null;
 	}
 
 	/**

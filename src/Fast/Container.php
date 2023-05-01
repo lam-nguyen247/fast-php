@@ -285,8 +285,10 @@ class Container {
 	 * @throws AppException
 	 */
 
-	public $test = false;
-
+	/**
+	 * @throws ReflectionException
+	 * @throws AppException
+	 */
 	public function build(mixed $concrete): null|object {
 
 		if (is_string($concrete) && $this->isResolved($concrete)) {
@@ -310,9 +312,6 @@ class Container {
 			return new $concrete;
 		}
 		$dependencies = $constructor->getParameters();
-		if (str_contains($concrete, 'DemoController')) {
-			$this->test = true;
-		}
 		$instances = $this->resolveContractorHaveDependencies($dependencies);
 
 		return $reflector->newInstanceArgs($instances);
@@ -338,7 +337,7 @@ class Container {
 
 	private function isReflectionClass(\ReflectionParameter $reflectionParameter): bool {
 		$type = $reflectionParameter->getType();
-		return $type instanceof \ReflectionNamedType || !$type->isBuiltin() || class_exists($type->getName());
+		return !$type->isBuiltin() || class_exists($type->getName());
 	}
 
 	/**

@@ -118,13 +118,13 @@ class Request
 		return $_SERVER['REQUEST_METHOD'];
 	}
 
-	private array $data = [];
+	private array $properties = [];
 
 	public function __set($name, $value) {
-		$this->data[$name] = $value;
+		$this->properties[$name] = $value;
 	}
 
 	public function __get($name) {
-		return $this->data[$name] ?? null;
+		return $this->properties[$name] ?? null;
 	}
 }

@@ -8,8 +8,7 @@ use Fast\Database\QueryBuilder\Compile;
 use Fast\Traits\Eloquent\CommitQueryMethod;
 use Fast\Traits\Eloquent\HandleCompileWithBuilder;
 
-class QueryBuilder
-{
+class QueryBuilder {
 	use HandleCompileWithBuilder, ExecuteQuery, Pagination, CommitQueryMethod;
 
 	/**
@@ -24,7 +23,7 @@ class QueryBuilder
 	 *
 	 * @var array
 	 */
-	private array $columns = ["*"];
+	private array $columns = ['*'];
 
 	/**
 	 * The list of need bindings arguments
@@ -150,14 +149,13 @@ class QueryBuilder
 	 *
 	 * @var string
 	 */
-	private string $calledFromModel = "";
+	private string $calledFromModel = '';
 	/**
 	 * @var array
 	 */
 	private array $havings = [];
 
-	public function __construct(string $table = '', $calledClass = '')
-	{
+	public function __construct(string $table = '', $calledClass = '') {
 		$this->calledFromModel = $calledClass;
 		$this->table = $table;
 		$this->compile = new Compile;
@@ -166,22 +164,20 @@ class QueryBuilder
 	/**
 	 * Set the table which the query is targeting.
 	 *
-	 * @param  string  $table
+	 * @param string $table
 	 * @return self
 	 */
-	public static function table(string $table): QueryBuilder
-	{
+	public static function table(string $table): QueryBuilder {
 		return new self($table);
 	}
 
 	/**
 	 * Set the columns to be selected.
 	 *
-	 * @param  array|mixed  $columns
+	 * @param array|mixed $columns
 	 * @return self
 	 */
-	public function select(mixed $columns): QueryBuilder
-	{
+	public function select(mixed $columns): QueryBuilder {
 		$this->columns = is_array($columns) ? $columns : func_get_args();
 		return $this;
 	}
@@ -189,11 +185,10 @@ class QueryBuilder
 	/**
 	 * Add a new select column to the query.
 	 *
-	 * @param  array|mixed  $column
+	 * @param array|mixed $column
 	 * @return self
 	 */
-	public function andSelect(mixed $column): QueryBuilder
-	{
+	public function andSelect(mixed $column): QueryBuilder {
 		$column = is_array($column) ? $column : func_get_args();
 		$this->columns = [... $this->columns, ... $column];
 		return $this;
@@ -204,8 +199,7 @@ class QueryBuilder
 	 *
 	 * @return self
 	 */
-	public function distinct(): QueryBuilder
-	{
+	public function distinct(): QueryBuilder {
 		$this->distinct = true;
 		return $this;
 	}
@@ -220,8 +214,7 @@ class QueryBuilder
 	 * @param string $type
 	 * @return self
 	 */
-	public function join(string $tableJoin, string $st, string $operator, string $nd, string $type = 'INNER'): QueryBuilder
-	{
+	public function join(string $tableJoin, string $st, string $operator, string $nd, string $type = 'INNER'): QueryBuilder {
 		$this->joins[] = [$tableJoin, $st, $operator, $nd, $type];
 		return $this;
 	}
@@ -235,8 +228,7 @@ class QueryBuilder
 	 * @param string $nd
 	 * @return QueryBuilder|static
 	 */
-	public function leftJoin(string $tableJoin, string $st, string $operator, string $nd): QueryBuilder
-	{
+	public function leftJoin(string $tableJoin, string $st, string $operator, string $nd): QueryBuilder {
 		return $this->join($tableJoin, $st, $operator, $nd, 'LEFT');
 	}
 
@@ -249,8 +241,7 @@ class QueryBuilder
 	 * @param string $nd
 	 * @return QueryBuilder|static
 	 */
-	public function rightJoin(string $tableJoin, string $st, string $operator, string $nd): QueryBuilder
-	{
+	public function rightJoin(string $tableJoin, string $st, string $operator, string $nd): QueryBuilder {
 		return $this->join($tableJoin, $st, $operator, $nd, 'RIGHT');
 	}
 
@@ -262,8 +253,7 @@ class QueryBuilder
 	 * @param Closure|null $default
 	 * @return QueryBuilder
 	 */
-	public function when(bool $condition, Closure $callback, ?Closure $default = null): QueryBuilder
-	{
+	public function when(bool $condition, Closure $callback, ?Closure $default = null): QueryBuilder {
 		if ($condition) {
 			$callback($this);
 		} elseif (!is_null($default)) {
@@ -276,13 +266,12 @@ class QueryBuilder
 	 * Add a basic where clause to the query.
 	 *
 	 * @param array|Closure|string $column
-	 * @param  string  $operator
+	 * @param string $operator
 	 * @param mixed|null $value
 	 * @param string $boolean
 	 * @return self
 	 */
-	public function where(array|Closure|string $column, string $operator = '=', mixed $value = null, string $boolean = 'AND'): QueryBuilder
-	{
+	public function where(array|Closure|string $column, string $operator = '=', mixed $value = null, string $boolean = 'AND'): QueryBuilder {
 		if (!is_callable($column) && !is_array($column)) {
 			if (!in_array($operator, $this->operator)) {
 				$value = $operator;
@@ -311,12 +300,11 @@ class QueryBuilder
 	 * Add an "or where" clause to the query.
 	 *
 	 * @param array|Closure|string $column
-	 * @param  string  $operator
+	 * @param string $operator
 	 * @param mixed|null $value
 	 * @return self
 	 */
-	public function orWhere(array|Closure|string $column, string $operator = '=', mixed $value = null): QueryBuilder
-	{
+	public function orWhere(array|Closure|string $column, string $operator = '=', mixed $value = null): QueryBuilder {
 		if (!is_callable($column)) {
 			return $this->where($column, $operator, $value, 'OR');
 		}
@@ -334,9 +322,8 @@ class QueryBuilder
 	 * @param bool $in
 	 * @return self
 	 */
-	public function whereIn(string $column, array $value = [], bool $in = true): QueryBuilder
-	{
-		$this->wherein = [$column, $value , $in];
+	public function whereIn(string $column, array $value = [], bool $in = true): QueryBuilder {
+		$this->wherein = [$column, $value, $in];
 		return $this;
 	}
 
@@ -347,8 +334,7 @@ class QueryBuilder
 	 * @param array $value
 	 * @return self
 	 */
-	public function whereNotIn(string $column, array $value = []): QueryBuilder
-	{
+	public function whereNotIn(string $column, array $value = []): QueryBuilder {
 		return $this->whereIn($column, $value, false);
 	}
 
@@ -358,8 +344,7 @@ class QueryBuilder
 	 * @param array|string $groups
 	 * @return self
 	 */
-	public function groupBy(array|string $groups): QueryBuilder
-	{
+	public function groupBy(array|string $groups): QueryBuilder {
 		$this->groups = is_array($groups) ? $groups : func_get_args();
 		return $this;
 	}
@@ -367,14 +352,13 @@ class QueryBuilder
 	/**
 	 * Add a "having" clause to the query.
 	 *
-	 * @param  string  $column
-	 * @param  string  $operator
-	 * @param  string  $value
-	 * @param  string  $boolean
+	 * @param string $column
+	 * @param string $operator
+	 * @param string $value
+	 * @param string $boolean
 	 * @return self
 	 */
-	public function having(string $column, string $operator, string $value, string $boolean = 'and'): QueryBuilder
-	{
+	public function having(string $column, string $operator, string $value, string $boolean = 'and'): QueryBuilder {
 		$this->havings = [$column, $operator, $value, $boolean];
 		return $this;
 	}
@@ -382,13 +366,12 @@ class QueryBuilder
 	/**
 	 * Add a "or having" clause to the query.
 	 *
-	 * @param  string  $column
-	 * @param  string  $operator
-	 * @param  string  $value
+	 * @param string $column
+	 * @param string $operator
+	 * @param string $value
 	 * @return self
 	 */
-	public function orHaving(string $column, string $operator, string $value): QueryBuilder
-	{
+	public function orHaving(string $column, string $operator, string $value): QueryBuilder {
 		return $this->having($column, $operator, $value, 'or');
 	}
 
@@ -399,8 +382,7 @@ class QueryBuilder
 	 * @param string $type
 	 * @return self
 	 */
-	public function orderBy(string $columns, string $type = 'asc'): QueryBuilder
-	{
+	public function orderBy(string $columns, string $type = 'asc'): QueryBuilder {
 		$this->orders[] = [$columns, $type];
 		return $this;
 	}
@@ -408,22 +390,10 @@ class QueryBuilder
 	/**
 	 * Add a descending "order by" clause to the query.
 	 *
-	 * @param  string  $column
+	 * @param string $column
 	 * @return self
 	 */
-	public function orderByDesc(string $column = "id"): QueryBuilder
-	{
-		return $this->orderBy($column, 'desc');
-	}
-
-	/**
-	 * Add an "order by" clause for a timestamp to the query.
-	 *
-	 * @param  string  $column
-	 * @return self
-	 */
-	public function latest(string $column = 'id'): QueryBuilder
-	{
+	public function orderByDesc(string $column = 'id'): QueryBuilder {
 		return $this->orderBy($column, 'desc');
 	}
 
@@ -433,8 +403,17 @@ class QueryBuilder
 	 * @param string $column
 	 * @return self
 	 */
-	public function oldest(string $column = 'id'): QueryBuilder
-	{
+	public function latest(string $column = 'id'): QueryBuilder {
+		return $this->orderBy($column, 'desc');
+	}
+
+	/**
+	 * Add an "order by" clause for a timestamp to the query.
+	 *
+	 * @param string $column
+	 * @return self
+	 */
+	public function oldest(string $column = 'id'): QueryBuilder {
 		return $this->orderBy($column, 'asc');
 	}
 
@@ -444,8 +423,7 @@ class QueryBuilder
 	 * @param int $limit
 	 * @return self
 	 */
-	public function limit(int $limit): QueryBuilder
-	{
+	public function limit(int $limit): QueryBuilder {
 		$this->limit = $limit;
 		return $this;
 	}
@@ -453,22 +431,20 @@ class QueryBuilder
 	/**
 	 * Alias to set the "limit" value of the query.
 	 *
-	 * @param  int  $value
+	 * @param int $value
 	 * @return self
 	 */
-	public function take(int $value): QueryBuilder
-	{
+	public function take(int $value): QueryBuilder {
 		return $this->limit($value);
 	}
 
 	/**
 	 * Alias to set the "offset" value of the query.
 	 *
-	 * @param  int  $value
+	 * @param int $value
 	 * @return self
 	 */
-	public function skip(int $value): QueryBuilder
-	{
+	public function skip(int $value): QueryBuilder {
 		return $this->offset($value);
 	}
 
@@ -478,8 +454,7 @@ class QueryBuilder
 	 * @param int $offset
 	 * @return self
 	 */
-	public function offset(int $offset): QueryBuilder
-	{
+	public function offset(int $offset): QueryBuilder {
 		$this->offset = $offset;
 		return $this;
 	}

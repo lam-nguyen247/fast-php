@@ -2,28 +2,47 @@
 
 namespace Fast\Eloquent;
 
-class Collection extends \ArrayObject
-{
-    /**
-     * Initial collection
-     * 
-     * @param array $input = []
-     * @param int $flag
-     * 
-     * @return void
-     */
-    public function __construct(array $input = [], int $flag = \ArrayObject::STD_PROP_LIST)
-    {
-        parent::__construct($input, $flag);
-    }
+class Collection extends \ArrayObject {
+	public function __construct(object|array $array = [], int $flags = 0, string $iteratorClass = 'ArrayIterator') {
+		$collections = [];
+		foreach ($array as $value) {
+			if (($value instanceof Model)) {
+				$value = $value->getData();
+			}
+			$collections[] = $value;
+		}
+		parent::__construct($collections, $flags, $iteratorClass);
+	}
 
-    /**
-     * Collection to array
-     * 
-     * @return array
-     */
-    public function toArray(): array
-    {
-		return objectToArray($this);
-    }
+	public function map(callable $callback): Collection {
+		$mapped_data = array_map($callback, $this->getArrayCopy());
+		return new Collection($mapped_data);
+	}
+
+	public function filter(callable $callback = null): Collection {
+		if ($callback) {
+			$filtered_data = array_filter($this->getArrayCopy(), $callback);
+		} else {
+			$filtered_data = array_filter($this->getArrayCopy());
+		}
+		return new Collection($filtered_data);
+	}
+
+	public function pluck($column): Collection {
+		$plucked_data = array_column($this->getArrayCopy(), $column);
+		return new Collection($plucked_data);
+	}
+
+	public function sum($key = null): float|int {
+		if ($key) {
+			$summed_data = array_sum($this->pluck($key)->toArray());
+		} else {
+			$summed_data = array_sum($this->getArrayCopy());
+		}
+		return $summed_data;
+	}
+
+	public function toArray(): array {
+		return $this->getArrayCopy();
+	}
 }

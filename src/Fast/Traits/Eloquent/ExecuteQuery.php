@@ -8,15 +8,15 @@ use Fast\Eloquent\EloquentException;
 use Fast\Http\Exceptions\AppException;
 use Fast\Eloquent\ModelBindingObject;
 use Fast\Database\QueryBuilder\QueryException;
-trait ExecuteQuery
-{
+
+trait ExecuteQuery {
 	/**
 	 * @throws QueryException
 	 * @throws AppException|ReflectionException
 	 */
-	public function request(string $sql)
-	{
-		try{
+	public function request(string $sql) {
+		try {
+			$object = null;
 			$connection = app()->make('connection')->getConnection();
 			switch (true) {
 				case $this->isInsertQuery($sql):
@@ -32,7 +32,7 @@ trait ExecuteQuery
 			}
 			$this->rowCount = $object->rowCount();
 			return $this->buildResponse($sql, $object, $connection);
-		}catch (\PDOException $e) {
+		} catch (\PDOException $e) {
 			throw new QueryException($e->getMessage());
 		}
 	}
@@ -44,8 +44,7 @@ trait ExecuteQuery
 	 *
 	 * @return boolean
 	 */
-	public function isInsertQuery(string $query): bool
-	{
+	public function isInsertQuery(string $query): bool {
 		$parse = explode(' ', $query);
 		$queryType = array_shift($parse);
 
@@ -59,8 +58,7 @@ trait ExecuteQuery
 	 *
 	 * @return boolean
 	 */
-	public function isUpdateQuery(string $query): bool
-	{
+	public function isUpdateQuery(string $query): bool {
 		$parse = explode(' ', $query);
 		$queryType = array_shift($parse);
 
@@ -74,8 +72,7 @@ trait ExecuteQuery
 	 *
 	 * @return boolean
 	 */
-	public function isSelectQuery(string $query): bool
-	{
+	public function isSelectQuery(string $query): bool {
 		$parse = explode(' ', $query);
 		$queryType = array_shift($parse);
 
@@ -89,8 +86,7 @@ trait ExecuteQuery
 	 *
 	 * @return boolean
 	 */
-	public function isDeleteQuery(string $query): bool
-	{
+	public function isDeleteQuery(string $query): bool {
 		$parse = explode(' ', $query);
 		$queryType = array_shift($parse);
 
@@ -105,10 +101,10 @@ trait ExecuteQuery
 	 *
 	 * @return mixed
 	 * @throws EloquentException
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	private function buildResponse(string $sql, PDOStatement $object, PDO $connection): mixed {
-		$type = explode(" ", $sql);
+		$type = explode(' ', $sql);
 		return match (array_shift($type)) {
 			'SELECT' => $this->inCaseSelect($object),
 			'INSERT' => $this->inCaseInsert($connection),
@@ -124,12 +120,9 @@ trait ExecuteQuery
 	 *
 	 * @return void
 	 */
-	private function bindingParams(PDOStatement $object): void
-	{
-		if (!is_null($this->parameters)) {
-			foreach ($this->parameters as $key => &$param) {
-				$object->bindParam($key + 1, $param);
-			}
+	private function bindingParams(PDOStatement $object): void {
+		foreach ($this->parameters as $key => &$param) {
+			$object->bindParam($key + 1, $param);
 		}
 	}
 
@@ -139,14 +132,16 @@ trait ExecuteQuery
 	 * @param PDO $connection
 	 *
 	 * @return mixed
+	 * @throws AppException
+	 * @throws QueryException
+	 * @throws ReflectionException
 	 */
 	private function getOneItemHasModel(PDO $connection): mixed {
 		$primaryKey = $this->getCalledModelInstance()->primaryKey();
 		return $this->find($connection->lastInsertId(), $primaryKey);
 	}
 
-	private function getCalledModelInstance()
-	{
+	private function getCalledModelInstance() {
 		return new $this->calledFromModel;
 	}
 
@@ -156,7 +151,7 @@ trait ExecuteQuery
 	 * @param PDO $connection
 	 *
 	 * @return mixed
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	private function sqlExecGetColumnIdInConnection(PDO $connection): mixed {
 		$lastInsertId = $connection->lastInsertId();
@@ -175,8 +170,7 @@ trait ExecuteQuery
 	 *
 	 * @return string
 	 */
-	private function createSqlStatementGetColumnName(string $databaseName): string
-	{
+	private function createSqlStatementGetColumnName(string $databaseName): string {
 		return "
             SELECT
                 COLUMN_NAME
@@ -194,7 +188,7 @@ trait ExecuteQuery
 	 * @param PDO $connection
 	 *
 	 * @return mixed
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	private function inCaseInsert(PDO $connection): mixed {
 		if (!empty($this->calledFromModel)) {
@@ -229,15 +223,12 @@ trait ExecuteQuery
 	 *
 	 * @param PDOStatement $pdoStatementObject
 	 *
-	 * @return object|null
+	 * @return object|array|null
 	 * @throws EloquentException
 	 */
-	private function execBindingModelObject(PDOStatement $pdoStatementObject): ?object
-	{
+	private function execBindingModelObject(PDOStatement $pdoStatementObject): object|array|null {
 		$resources = $pdoStatementObject->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-
 		$binding = new ModelBindingObject($resources);
-
 		return $binding->setTakeOne($this->find || $this->first)
 			->setTakeList(!$this->find && !$this->first)
 			->setIsThrow($this->isThrow)
@@ -255,8 +246,7 @@ trait ExecuteQuery
 	 *
 	 * @return array
 	 */
-	private function fetchOneItemWithoutModel(PDOStatement $object): array
-	{
+	private function fetchOneItemWithoutModel(PDOStatement $object): array {
 		return $object->fetchAll(PDO::FETCH_OBJ);
 	}
 }
