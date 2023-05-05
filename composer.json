@@ -23,7 +23,8 @@
     "ext-readline": "*",
     "ext-json": "*",
 	  "ext-fileinfo": "*",
-    "symfony/http-foundation": "^6.2"
+    "symfony/http-foundation": "^6.2",
+    "psr/http-message": "^2.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

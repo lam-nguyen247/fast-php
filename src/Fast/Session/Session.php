@@ -1,7 +1,5 @@
 <?php
 namespace Fast\Session;
-session_start();
-
 class Session
 {
 	/**
