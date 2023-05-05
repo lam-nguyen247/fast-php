@@ -57,6 +57,7 @@ class Container {
 	 * @var bool $skipMiddleware
 	 */
 	private bool $skipMiddleware = false;
+	public mixed $demo = '';
 
 	/**
 	 * Initial of container
@@ -304,6 +305,7 @@ class Container {
 		}
 
 		$reflector = new \ReflectionClass($concrete);
+
 		if (!$reflector->isInstantiable()) {
 			throw new AppException("Class `{$concrete}` is not an instantiable");
 		}
@@ -312,6 +314,7 @@ class Container {
 			return new $concrete;
 		}
 		$dependencies = $constructor->getParameters();
+		$this->demo = $concrete;
 		$instances = $this->resolveContractorHaveDependencies($dependencies);
 
 		return $reflector->newInstanceArgs($instances);
@@ -325,6 +328,7 @@ class Container {
 	 */
 	private function resolveContractorHaveDependencies(array $dependencies): array {
 		$array = [];
+
 		foreach ($dependencies as $dependency) {
 			if ($this->isReflectionClass($dependency)) {
 				$object = $dependency->getType()->getName();
@@ -337,7 +341,7 @@ class Container {
 
 	private function isReflectionClass(\ReflectionParameter $reflectionParameter): bool {
 		$type = $reflectionParameter->getType();
-		return !$type->isBuiltin() || class_exists($type->getName());
+		return $type && !$type?->isBuiltin();
 	}
 
 	/**
@@ -529,7 +533,7 @@ class Container {
 	 * @param string $concrete
 	 * @return Closure
 	 */
-	private function getClosure(string $concrete): Closure {
+	private function getClosure(mixed $concrete): Closure {
 		return function () use ($concrete) {
 			return $this->build($concrete);
 		};

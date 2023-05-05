@@ -8,6 +8,7 @@ use Fast\Session\Session;
 use Fast\Auth\Authenticatable;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
+use Fast\Supports\Arr;
 
 if(!function_exists('app'))
 {
@@ -761,5 +762,71 @@ if (!function_exists('get_client_ip')) {
 		}
 
 		return $ip;
+	}
+}
+
+if (! function_exists('data_get')) {
+	/**
+	 * Get an item from an array or object using "dot" notation.
+	 *
+	 * @param  mixed  $target
+	 * @param array|int|string|null $key
+	 * @param mixed|null $default
+	 * @return mixed
+	 */
+	function data_get(mixed $target, array|int|string|null $key, mixed $default = null): mixed {
+		if (is_null($key)) {
+			return $target;
+		}
+
+		$key = is_array($key) ? $key : explode('.', $key);
+
+		foreach ($key as $i => $segment) {
+			unset($key[$i]);
+
+			if (is_null($segment)) {
+				return $target;
+			}
+
+			if ($segment === '*') {
+				if ($target instanceof \Fast\Eloquent\Collection) {
+					$target = $target->all();
+				} elseif (! is_iterable($target)) {
+					return value($default);
+				}
+
+				$result = [];
+
+				foreach ($target as $item) {
+					$result[] = data_get($item, $key);
+				}
+
+				return in_array('*', $key) ? Arr::collapse($result) : $result;
+			}
+
+			if ((is_array($target) || $target instanceof ArrayAccess) && Arr::exists($target, $segment)) {
+				$target = $target[$segment];
+			} elseif (is_object($target) && isset($target->{$segment})) {
+				$target = $target->{$segment};
+			} else {
+				return value($default);
+			}
+		}
+
+		return $target;
+	}
+}
+
+
+if (! function_exists('value')) {
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @param  mixed  $value
+	 * @param  mixed  ...$args
+	 * @return mixed
+	 */
+	function value(mixed $value, ...$args): mixed {
+		return $value instanceof Closure ? $value(...$args) : $value;
 	}
 }
