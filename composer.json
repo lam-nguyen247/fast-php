@@ -1,5 +1,6 @@
 {
   "name": "fast-php/fast",
+  "version": "2.0",
   "type": "framework",
   "description": "fastPHP framework is a simple framework for develop web application",
   "keywords": [
