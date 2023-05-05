@@ -17,6 +17,7 @@
     }
   ],
   "require": {
+    "fast-php/fast": "1.0.*",
     "php": ">=8.1",
     "firebase/php-jwt": "@dev",
     "ext-pdo": "*",
