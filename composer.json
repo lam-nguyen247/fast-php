@@ -1,6 +1,11 @@
 {
   "name": "fast-php/fast",
   "version": "1.0",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
   "type": "framework",
   "description": "fastPHP framework is a simple framework for develop web application",
   "keywords": [
