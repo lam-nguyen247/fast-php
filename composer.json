@@ -22,8 +22,7 @@
     "ext-pdo": "*",
     "ext-readline": "*",
     "ext-json": "*",
-	  "ext-fileinfo": "*",
-    "symfony/http-foundation": "^6.2"
+	  "ext-fileinfo": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

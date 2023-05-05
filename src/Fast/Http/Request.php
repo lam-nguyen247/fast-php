@@ -4,9 +4,8 @@ namespace Fast\Http;
 
 use Fast\Services\File;
 use Fast\Enums\MethodType;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Auth;
-class Request extends SymfonyRequest
+class Request
 {
 	public function __construct() {
 		foreach ($this->getRequest() as $key => $value){
@@ -127,62 +126,5 @@ class Request extends SymfonyRequest
 
 	public function __get($name) {
 		return $this->properties[$name] ?? null;
-	}
-
-	/**
-	 * Create an Illuminate request from a Symfony instance.
-	 *
-	 * @param SymfonyRequest $request
-	 * @return static
-	 */
-	public static function createFromBase(SymfonyRequest $request): static {
-		$newRequest = (new static)->duplicate(
-			$request->query->all(), $request->request->all(), $request->attributes->all(),
-			$request->cookies->all(), $request->files->all(), $request->server->all()
-		);
-
-		$newRequest->headers->replace($request->headers->all());
-
-		$newRequest->content = $request->content;
-
-		if ($newRequest->isJson()) {
-			$newRequest->request = $newRequest->json();
-		}
-
-		return $newRequest;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @return static
-	 */
-	public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null): static
-	{
-		return parent::duplicate($query, $request, $attributes, $cookies, $this->filterFiles($files), $server);
-	}
-
-	/**
-	 * Filter the given array of files, removing any empty values.
-	 *
-	 * @param  mixed  $files
-	 * @return mixed
-	 */
-	protected function filterFiles(mixed $files): mixed {
-		if (! $files) {
-			return;
-		}
-
-		foreach ($files as $key => $file) {
-			if (is_array($file)) {
-				$files[$key] = $this->filterFiles($file);
-			}
-
-			if (empty($files[$key])) {
-				unset($files[$key]);
-			}
-		}
-
-		return $files;
 	}
 }
