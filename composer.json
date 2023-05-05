@@ -23,7 +23,7 @@
     "ext-pdo": "*",
     "ext-readline": "*",
     "ext-json": "*",
-	  "ext-fileinfo": "*"
+    "ext-fileinfo": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
