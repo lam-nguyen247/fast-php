@@ -35,7 +35,6 @@ abstract class Authenticate extends Model
 	 */
     public function createToken(array $customClaims = []): array {
         $key = config('jwt.secret');
-
         $hash = config('jwt.hash');
 
         if (empty($key)) {

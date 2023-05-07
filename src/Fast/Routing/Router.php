@@ -99,6 +99,9 @@ class Router
 		return $this;
 	}
 
+	/**
+	 * @throws AppException
+	 */
 	public function group(string $path): Router
 	{
 		if (file_exists($path)) {
@@ -167,7 +170,6 @@ class Router
 	 */
 	public function run(): mixed {
 		$routing = new Routing($this->collect());
-
 		return $routing->find();
 	}
 

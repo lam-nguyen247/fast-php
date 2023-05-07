@@ -54,7 +54,6 @@ class Authenticatable implements Authentication
 		}
 
 		$guardDriver = $this->getConfigDriverFromGuard($this->getCurrentGuard());
-
 		switch ($guardDriver) {
 			case 'session':
 				return Session::get('user');
@@ -241,6 +240,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getConfigDriverFromGuard(string $guard): string
 	{
@@ -298,6 +298,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	private function getDefaultGuard(): string
 	{

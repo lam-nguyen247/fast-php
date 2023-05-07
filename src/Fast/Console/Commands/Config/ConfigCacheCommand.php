@@ -5,7 +5,6 @@ namespace Fast\Console\Commands\Config;
 use ReflectionException;
 use Fast\Console\Command;
 use Fast\Http\Exceptions\AppException;
-use Fast\Console\Commands\View\ViewClearCommand;
 use Fast\Console\ConsoleException;
 use Fast\Console\Kernel;
 
@@ -23,7 +22,7 @@ class ConfigCacheCommand extends Command
      *
      * @var string
      */
-    protected string $description = 'Clear and rewrite caching, views, config';
+    protected string $description = 'Clear and rewrite caching, config';
 
     /**
      * Flag check using cache
@@ -60,8 +59,5 @@ class ConfigCacheCommand extends Command
     public function handle(): void
     {
         (new ConfigClearCommand)->handle();
-		(new \Fast\Console\Kernel)->handle([
-			(new \Fast\Console\Commands\View\ViewClearCommand)->getSignature()
-		]);
     }
 }

@@ -5,10 +5,13 @@ use Fast\Container;
 use ReflectionException;
 use Fast\Pipeline\Pipeline;
 use Fast\Routing\RouteCollection;
+use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 
 class NextPasses
 {
+
+	private Response $response;
 	/**
 	 * @throws RouteException|AppException|ReflectionException
 	 */
@@ -41,12 +44,18 @@ class NextPasses
 				throw new RouteException("Middleware '{$middleware}' not found.");
 			}
 		}
-
-		return (new Pipeline(Container::getInstance()))
+		(new Pipeline(Container::getInstance()))
 			->send(app('request'))
 			->through($middlewares)
 			->then(function() use ($params, $next) {
-				return $next(...$params);
+				$this->setResponse($next(...$params));
 			});
+	}
+
+	public function setResponse(Response $response): void {
+		$this->response = $response;
+	}
+	public function getResponse(): Response{
+		return $this->response;
 	}
 }

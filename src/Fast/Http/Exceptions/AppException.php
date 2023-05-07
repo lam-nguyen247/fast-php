@@ -30,14 +30,11 @@ class AppException extends Exception
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function render(Exception $exception){
-		if(request()->isAjax()) {
-			return response()->json([
-				'status'  => false,
-				'message' => $exception->getMessage()
-			], $this->code);
-		}
-		return app('view')->render('exception', compact('exception'));
+	public function render(Exception $exception): \Fast\Supports\Response\Response|\React\Http\Message\Response {
+		return response()->json([
+			'status'  => false,
+			'message' => $exception->getMessage()
+		], $this->code);
 	}
 
 	/**

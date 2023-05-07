@@ -20,7 +20,6 @@ class ErrorHandler
 
 		if($this->app->make(Application::class)->isLoaded())
 		{
-			$this->app->make('view')->setMaster('');
 			ob_get_clean();
 		}
 	}

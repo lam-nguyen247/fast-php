@@ -20,6 +20,7 @@ class Application
 
 	/**
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function __construct(Container $container)
 	{
@@ -112,9 +113,7 @@ class Application
 		});
 		foreach ($cache as $item) {
 			$key = str_replace('.php', '', $item);
-
 			$value = require cache_path($item);
-
 			$this->container->make('config')->setConfig($key, $value);
 		}
 	}

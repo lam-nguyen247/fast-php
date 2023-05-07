@@ -15,7 +15,6 @@ use Fast\Console\Commands\Live\LiveCodeCommand;
 use Fast\Console\Commands\Exec\ExecQueryCommand;
 use Fast\Console\Commands\Jwt\JwtInstallCommand;
 use Fast\Console\Commands\Make\MakeModelCommand;
-use Fast\Console\Commands\View\ViewClearCommand;
 use Fast\Console\Commands\CreateServerCliCommand;
 use Fast\Console\Commands\Key\KeyGenerateCommand;
 use Fast\Console\Commands\Queue\QueueWorkCommand;
@@ -101,7 +100,6 @@ class Kernel implements KernelContract
         LiveCodeCommand::class,
         ListOfCommand::class,
         ConfigCacheCommand::class,
-        ViewClearCommand::class,
         ConfigClearCommand::class,
         StorageLinkCommand::class,
         DevelopmentModeCommand::class,

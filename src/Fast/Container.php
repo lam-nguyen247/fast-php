@@ -57,7 +57,6 @@ class Container {
 	 * @var bool $skipMiddleware
 	 */
 	private bool $skipMiddleware = false;
-	public mixed $demo = '';
 
 	/**
 	 * Initial of container
@@ -128,7 +127,7 @@ class Container {
 	 * @param string $key
 	 * @param mixed $instance
 	 */
-	private function instance(string $key, mixed $instance): void {
+	public function instance(string $key, mixed $instance): void {
 		$this->instances[$key] = $instance;
 	}
 
