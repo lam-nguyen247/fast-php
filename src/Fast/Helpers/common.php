@@ -763,3 +763,15 @@ if (!function_exists('get_client_ip')) {
 		return $ip;
 	}
 }
+
+if (!function_exists('format_url')) {
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	function format_url(string $str): string {
+		return preg_replace('/\/$/', '', $str);
+	}
+}

@@ -22,12 +22,11 @@ class Routing
 	 * @throws ReflectionException
 	 */
 	public function find(): mixed {
-		$routes = $this->routes;
-		$requestUrl = $this->getRequestURL();
+		$requestUrl = format_url($this->getRequestURL());
 		$requestMethod = $this->getRequestMethod();
 		$requestParams = explode(Routing::ROUTING_SEPARATOR, $requestUrl);
 
-		foreach ($routes as $route) {
+		foreach ($this->routes as $route) {
 			$uri = $route->getUri();
 			$method = $route->getMethods();
 			$prefix = $route->getPrefix();
@@ -39,7 +38,7 @@ class Routing
 			$routeParams = explode(self::ROUTING_SEPARATOR, $uri);
 			if (str_contains(strtolower($method), strtolower($requestMethod))) {
 				if (count($requestParams) === count($routeParams)) {
-					$checking = new HandleMatched($uri, $requestUrl);
+					$checking = new HandleMatched(format_url($uri), $requestUrl);
 					if ($checking->isMatched === true) {
 						return new NextPasses($routeParams, $requestParams, $route);
 					}
