@@ -32,13 +32,13 @@ class Routing
 			$prefix = $route->getPrefix();
 
 			if(!empty($prefix)) {
-				$uri = self::ROUTING_SEPARATOR . implode(self::ROUTING_SEPARATOR, $prefix) . $uri;
+				$uri =	format_url( self::ROUTING_SEPARATOR . implode(self::ROUTING_SEPARATOR, $prefix) . $uri);
 			}
 
 			$routeParams = explode(self::ROUTING_SEPARATOR, $uri);
 			if (str_contains(strtolower($method), strtolower($requestMethod))) {
 				if (count($requestParams) === count($routeParams)) {
-					$checking = new HandleMatched(format_url($uri), $requestUrl);
+					$checking = new HandleMatched($uri, $requestUrl);
 					if ($checking->isMatched === true) {
 						return new NextPasses($routeParams, $requestParams, $route);
 					}
