@@ -68,8 +68,10 @@ class Routing {
 	 * Handle not found
 	 *
 	 * @return Response
+	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	private function handleNotFound(): Response {
-		return new Response('File Not found', 404);
+		return response()->json(['status' => false, 'message' => 'File not found'], 404);
 	}
 }
