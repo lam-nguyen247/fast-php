@@ -5,6 +5,7 @@ use Fast\Container;
 use Fast\Application;
 use ReflectionException;
 use JetBrains\PhpStorm\NoReturn;
+use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\UnknownException;
 
 class ErrorHandler
@@ -32,19 +33,17 @@ class ErrorHandler
 	 * @param string $file
 	 * @param int $line
 	 *
-	 * @return void
+	 * @return \React\Http\Message\Response|Response
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function errorHandler(int $errorNo, string $errStr, string $file, int $line): void
-	{
-		$msg = "{$errStr} on line {$line} in file {$file}";
+	public function errorHandler(int $errorNo, string $errStr, string $file, int $line): \React\Http\Message\Response|Response {
+		$msg = "{$errorNo}: {$errStr} on line {$line} in file {$file}";
 
-		$file = str_replace(base_path(), '', $file);
+		str_replace(base_path(), '', $file);
 
 		$exception = new UnknownException($msg);
 
-		$exception->render($exception);
-		exit($errorNo);
+		throw $exception->render($exception);
 	}
 }

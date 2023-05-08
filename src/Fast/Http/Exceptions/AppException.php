@@ -19,10 +19,6 @@ class AppException extends Exception
 
 		parent::__construct($message, $code, $previous);
 
-		if(PHP_SAPI === 'cli'){
-			die($message);
-		}
-
 		set_exception_handler([$this, 'render']);
 	}
 

@@ -313,7 +313,6 @@ class Container {
 			return new $concrete;
 		}
 		$dependencies = $constructor->getParameters();
-		$this->demo = $concrete;
 		$instances = $this->resolveContractorHaveDependencies($dependencies);
 
 		return $reflector->newInstanceArgs($instances);

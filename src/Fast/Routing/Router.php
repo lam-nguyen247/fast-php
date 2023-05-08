@@ -3,6 +3,7 @@ namespace Fast\Routing;
 
 use ReflectionException;
 use Fast\Routing\RouteCollection;
+use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 use Fast\Http\Exceptions\UnknownException;
 
@@ -163,12 +164,12 @@ class Router
 	/**
 	 * Run the routing
 	 *
-	 * @return mixed
+	 * @return Response
 	 * @throws RouteException
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function run(): mixed {
+	public function run(): Response {
 		$routing = new Routing($this->collect());
 		return $routing->find();
 	}
@@ -202,7 +203,7 @@ class Router
 	 * @return mixed
 	 * @throws AppException
 	 * @throws RouteException
-	 * @throws UnknownException
+	 * @throws UnknownException|ReflectionException
 	 */
 	public function callableAction(array $action, array $params = []): mixed {
 		$rc = new RouteCollection(

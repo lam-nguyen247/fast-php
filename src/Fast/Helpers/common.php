@@ -499,8 +499,10 @@ if (!function_exists('dd')) {
 	 */
 	function dd(): void {
 		array_map(static function ($x) {
+			Log::debug(json_encode($x));
 			var_dump($x);
 		}, func_get_args());
+
 		die;
 	}
 }
@@ -560,7 +562,7 @@ if (!function_exists('writeCache')) {
 	 * @param string $file
 	 *
 	 * @return void
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function writeCache(string $folder, string $file): void {
 		$cacheDir = 'storage/cache/';
@@ -601,7 +603,7 @@ if (!function_exists('make_dir')) {
 	 * @param bool $recursive
 	 *
 	 * @return bool
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function make_dir(string $dir, int $mode = 0777, bool $recursive = false): bool {
 		return mkdir(base_path($dir), $mode, $recursive);

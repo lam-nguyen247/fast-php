@@ -35,7 +35,7 @@ class Application
 	}
 
 	/**
-	 * Register initial configuration providerisLoaded
+	 * Register initial configuration provider is Loaded
 	 *
 	 * @return void
 	 */
@@ -55,7 +55,6 @@ class Application
 	public function setErrorHandler(): void {
 		set_error_handler(function () {
 			$handler = new ErrorHandler;
-
 			return $handler->errorHandler(...func_get_args());
 		});
 	}

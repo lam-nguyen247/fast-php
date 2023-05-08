@@ -5,8 +5,8 @@ use Closure;
 use Fast\Application;
 use Fast\Container;
 use ReflectionException;
+use Fast\Routing\Router;
 use Fast\Pipeline\Pipeline;
-use Route;
 use Fast\Http\Exceptions\AppException;
 use Fast\Contracts\Http\Kernel as HttpKernel;
 
@@ -59,15 +59,32 @@ class Kernel implements HttpKernel
 	}
 
 	/**
+	 * Handle execute pipeline request
+	 * @param Request $request
+	 *
+	 * @return mixed
+	 */
+	public function reactHandle(Request $request): mixed {
+		Container::getInstance()->instance(Request::class, $request);
+		return (new Pipeline($this->app))
+			->send($request)
+			->through($this->middlewares)
+			->then($this->dispatchToRouter());
+	}
+
+	/**
 	 * Dispatch router of application
 	 * @return Closure
 	 */
 	protected function dispatchToRouter(): Closure
 	{
 		return function () {
-			$route = new Route;
-
-			return $route->run();
+			try{
+				$route = new Router();
+				return $route->run();
+			}catch (AppException $exception){
+				return $exception->render($exception);
+			}
 		};
 	}
 

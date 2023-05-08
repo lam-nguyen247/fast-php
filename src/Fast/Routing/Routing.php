@@ -23,7 +23,7 @@ class Routing {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function find(): mixed {
+	public function find(): Response {
 		$requestUrl = format_url($this->getRequestURL());
 		$requestMethod = $this->getRequestMethod();
 		$requestParams = explode(Routing::ROUTING_SEPARATOR, $requestUrl);
@@ -67,9 +67,9 @@ class Routing {
 	/**
 	 * Handle not found
 	 *
-	 * @return RouteException
+	 * @return Response
 	 */
-	private function handleNotFound(): RouteException {
-		return new RouteException();
+	private function handleNotFound(): Response {
+		return new Response('File Not found', 404);
 	}
 }
