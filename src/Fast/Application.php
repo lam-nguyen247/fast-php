@@ -8,8 +8,7 @@ use Fast\Http\Exceptions\ErrorHandler;
 use Fast\Http\Exceptions\AppException;
 use Fast\Http\Exceptions\RuntimeException;
 
-class Application
-{
+class Application {
 	use Instance;
 
 	private Container $container;
@@ -22,8 +21,7 @@ class Application
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function __construct(Container $container)
-	{
+	public function __construct(Container $container) {
 		$this->container = $container;
 		$this->registerConfigProvider();
 
@@ -39,8 +37,7 @@ class Application
 	 *
 	 * @return void
 	 */
-	private function registerConfigProvider(): void
-	{
+	private function registerConfigProvider(): void {
 		$this->container->singleton('config', function () {
 			return new \Fast\Configuration\Config();
 		});
@@ -64,8 +61,7 @@ class Application
 	 *
 	 * @return bool
 	 */
-	public function isLoaded(): bool
-	{
+	public function isLoaded(): bool {
 		return $this->loaded;
 	}
 
@@ -74,11 +70,10 @@ class Application
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function registerServiceProvider(): void
-	{
+	public function registerServiceProvider(): void {
 		$providers = $this->container->make('config')->getConfig('app.providers');
 
-		if(!empty($providers)) {
+		if (!empty($providers)) {
 			foreach ($providers as $provider) {
 				$provider = new $provider;
 				$provider->register();
@@ -106,7 +101,7 @@ class Application
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function loadConfiguration(): void{
+	public function loadConfiguration(): void {
 		$cache = array_filter(scandir(cache_path()), function ($item) {
 			return str_contains($item, '.php');
 		});
@@ -124,8 +119,7 @@ class Application
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function run(): void
-	{
+	public function run(): void {
 		$this->loadConfiguration();
 		$this->registerServiceProvider();
 		$this->setLoadState(true);
@@ -134,8 +128,7 @@ class Application
 	/**
 	 * Terminate the application
 	 */
-	public function terminate(): void
-	{ }
+	public function terminate(): void { }
 
 	/**
 	 * Set error handler
@@ -146,11 +139,12 @@ class Application
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function whenShutDown(): void
-	{
+	public function whenShutDown(): void {
 		$last_error = error_get_last();
 		if (!is_null($last_error)) {
-			if (ob_get_contents()) ob_end_clean();
+			if (ob_get_contents()) {
+				ob_end_clean();
+			}
 			$handler = new ErrorHandler();
 
 			$handler->errorHandler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);

@@ -3,21 +3,18 @@ namespace Fast\Eloquent;
 
 use Fast\Http\Exceptions\AppException;
 
-final class Paginator
-{
+final class Paginator {
 	/**
 	 * @throws AppException
 	 */
-	public static function resolveCurrentPage(): int
-	{
+	public static function resolveCurrentPage(): int {
 		return request()->get('page') ?? 1;
 	}
 
 	/**
 	 * @throws AppException
 	 */
-	public static function resolvePagePagination(int $total, int $perPage, string $pageUrl): array
-	{
+	public static function resolvePagePagination(int $total, int $perPage, string $pageUrl): array {
 		$lastPage = self::resolveLastPage($total, $perPage);
 		$currentPage = self::resolveCurrentPage();
 		$firstPage = self::resolveFirstPage();
@@ -37,8 +34,7 @@ final class Paginator
 	 *
 	 * @return array
 	 */
-	public static function buildPagination(int $lastPage, int $firstPage, ?int $nextPage, ?int $prevPage, int $currentPage, string $pageUrl): array
-	{
+	public static function buildPagination(int $lastPage, int $firstPage, ?int $nextPage, ?int $prevPage, int $currentPage, string $pageUrl): array {
 		$parseUrl = parse_url($pageUrl);
 
 		$query = $parseUrl['query'] ?? "page={$currentPage}";
@@ -66,7 +62,7 @@ final class Paginator
 			$firstPageUrl,
 			$lastPageUrl,
 			$nextPageUrl,
-			$prevPageUrl
+			$prevPageUrl,
 		];
 	}
 
@@ -77,9 +73,8 @@ final class Paginator
 	 *
 	 * @return int
 	 */
-	public static function resolveLastPage(int $total, int $perPage): int
-	{
-		$lastPage = (string) $total / $perPage;
+	public static function resolveLastPage(int $total, int $perPage): int {
+		$lastPage = (string)$total / $perPage;
 		$lastPage = explode('.', $lastPage);
 		return count($lastPage) > 1 ? array_shift($lastPage) + 1 : array_shift($lastPage);
 	}
@@ -89,8 +84,7 @@ final class Paginator
 	 *
 	 * @return int
 	 */
-	public static function resolveFirstPage(): int
-	{
+	public static function resolveFirstPage(): int {
 		return 1;
 	}
 
@@ -102,8 +96,7 @@ final class Paginator
 	 *
 	 * @return int|null
 	 */
-	public static function resolveNextPage(int $currentPage, int $lastPage): ?int
-	{
+	public static function resolveNextPage(int $currentPage, int $lastPage): ?int {
 		return $currentPage + 1 <= $lastPage ? $currentPage + 1 : null;
 	}
 
@@ -114,8 +107,7 @@ final class Paginator
 	 *
 	 * @return int|null
 	 */
-	public static function resolvePreviousPage(int $currentPage): ?int
-	{
+	public static function resolvePreviousPage(int $currentPage): ?int {
 		return $currentPage > 1 ? $currentPage - 1 : null;
 	}
 
@@ -127,8 +119,7 @@ final class Paginator
 	 *
 	 * @return int
 	 */
-	public static function resolveFrom(int $currentPage, int $perPage): int
-	{
+	public static function resolveFrom(int $currentPage, int $perPage): int {
 		return ($currentPage - 1) * $perPage + 1;
 	}
 
@@ -142,8 +133,7 @@ final class Paginator
 	 *
 	 * @return int
 	 */
-	public static function resolveTo(int $currentPage, int $perPage, int $total, int $lastPage): int
-	{
+	public static function resolveTo(int $currentPage, int $perPage, int $total, int $lastPage): int {
 		if ($currentPage == $lastPage) {
 			return $total;
 		}

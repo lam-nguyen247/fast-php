@@ -1,8 +1,7 @@
 <?php
 namespace Fast\Services;
 
-class File
-{
+class File {
 	/**
 	 * Raw file
 	 * @var mixed
@@ -33,11 +32,10 @@ class File
 	 */
 	private string $tmp_name;
 
-	public function __construct(mixed $file)
-	{
+	public function __construct(mixed $file) {
 		$this->rawFile = $file;
 
-		foreach ($file as $key => $value){
+		foreach ($file as $key => $value) {
 			$this->$key = $value;
 		}
 
@@ -52,8 +50,7 @@ class File
 	 * Get raw file
 	 * @return mixed
 	 */
-	public function getRawFile(): mixed
-	{
+	public function getRawFile(): mixed {
 		return $this->rawFile;
 	}
 
@@ -61,8 +58,7 @@ class File
 	 * Get name of file
 	 * @return string
 	 */
-	public function getFileName(): string
-	{
+	public function getFileName(): string {
 		return $this->name;
 	}
 
@@ -70,8 +66,7 @@ class File
 	 * Get extension of file
 	 * @return string
 	 */
-	public function getFileExtension(): string
-	{
+	public function getFileExtension(): string {
 		return $this->ext;
 	}
 
@@ -79,8 +74,7 @@ class File
 	 * Get file size
 	 * @return int
 	 */
-	public function getSize(): int
-	{
+	public function getSize(): int {
 		return $this->size;
 	}
 
@@ -88,8 +82,7 @@ class File
 	 * Get temporary name of file
 	 * @return string
 	 */
-	public function getTmpName(): string
-	{
+	public function getTmpName(): string {
 		return $this->tmp_name;
 	}
 
@@ -98,8 +91,7 @@ class File
 	 * @param $name
 	 * @return mixed
 	 */
-	public function __get($name): mixed
-	{
+	public function __get($name): mixed {
 		return $this->$name;
 	}
 }

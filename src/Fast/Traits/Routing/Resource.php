@@ -3,17 +3,15 @@ namespace Fast\Traits\Routing;
 
 use Fast\Routing\RouteCollection;
 
-trait Resource
-{
+trait Resource {
 	/**
 	 * Make route index
 	 *
 	 * @param array $resources
 	 * @return RouteCollection|null
 	 */
-	public function makeIndex(array $resources): ?RouteCollection
-	{
-		if(!in_array('index', $this->except)) {
+	public function makeIndex(array $resources): ?RouteCollection {
+		if (!in_array('index', $this->except)) {
 			return $this->createRoute('GET', "/{$resources['uri']}", $this->name . "{$resources['uri']}.index", "{$resources['action']}@index", $this->middlewares, $this->prefix, $this->namespaces);
 		}
 		return null;
@@ -26,8 +24,7 @@ trait Resource
 	 *
 	 * @return RouteCollection|null
 	 */
-	public function makeCreate(array $resources): ?RouteCollection
-	{
+	public function makeCreate(array $resources): ?RouteCollection {
 		if (!in_array('create', $this->except)) {
 			return $this->createRoute(
 				'GET',
@@ -50,8 +47,7 @@ trait Resource
 	 *
 	 * @return RouteCollection|null
 	 */
-	public function makeShow(array $resources): ?RouteCollection
-	{
+	public function makeShow(array $resources): ?RouteCollection {
 		if (!in_array('show', $this->except)) {
 			return $this->createRoute(
 				'GET',
@@ -74,8 +70,7 @@ trait Resource
 	 *
 	 * @return RouteCollection
 	 */
-	public function makeStore(array $resources): ?RouteCollection
-	{
+	public function makeStore(array $resources): ?RouteCollection {
 		if (!in_array('store', $this->except)) {
 			return $this->createRoute(
 				'POST',
@@ -98,8 +93,7 @@ trait Resource
 	 *
 	 * @return RouteCollection|null
 	 */
-	public function makeEdit(array $resources): ?RouteCollection
-	{
+	public function makeEdit(array $resources): ?RouteCollection {
 		if (!in_array('edit', $this->except)) {
 			return $this->createRoute(
 				'GET',
@@ -122,8 +116,7 @@ trait Resource
 	 *
 	 * @return RouteCollection
 	 */
-	public function makeUpdate(array $resources): ?RouteCollection
-	{
+	public function makeUpdate(array $resources): ?RouteCollection {
 		if (!in_array('update', $this->except)) {
 			return $this->createRoute(
 				'PUT',
@@ -146,8 +139,7 @@ trait Resource
 	 *
 	 * @return RouteCollection|null
 	 */
-	public function makeDelete(array $resources): ?RouteCollection
-	{
+	public function makeDelete(array $resources): ?RouteCollection {
 		if (!in_array('destroy', $this->except)) {
 			return $this->createRoute(
 				'DELETE',
@@ -176,8 +168,7 @@ trait Resource
 	 *
 	 * @return RouteCollection|null
 	 */
-	public function createRoute(string $methods, string $uri, string $name, mixed $action, array $middlewares, array $prefix, array $namespace): ?RouteCollection
-	{
+	public function createRoute(string $methods, string $uri, string $name, mixed $action, array $middlewares, array $prefix, array $namespace): ?RouteCollection {
 		return new RouteCollection($methods, $uri, $name, $action, $middlewares, $prefix, $namespace);
 	}
 }

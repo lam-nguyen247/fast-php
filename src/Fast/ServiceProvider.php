@@ -1,16 +1,16 @@
 <?php
 namespace Fast;
+
 use Fast\Container;
-abstract class ServiceProvider
-{
+
+abstract class ServiceProvider {
 	/**
 	 * Instance of Container
 	 * @var \Fast\Container
 	 */
 	protected Container $app;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->app = Container::getInstance();
 	}
 
@@ -20,13 +20,13 @@ abstract class ServiceProvider
 	 * please implement them to the boot method.
 	 * @return void
 	 */
-	public function boot():void{}
+	public function boot(): void { }
 
 	/**
 	 * Register all the service providers that you
 	 * import in config/app.php -> providers
 	 * @return void
 	 */
-	public function register():void{}
+	public function register(): void { }
 
 }

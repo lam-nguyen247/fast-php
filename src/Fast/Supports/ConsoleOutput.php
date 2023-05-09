@@ -4,8 +4,7 @@ namespace Fast\Supports;
 
 use Fast\Container;
 
-class ConsoleOutput
-{
+class ConsoleOutput {
 	/**
 	 * Can color for terminal
 	 *
@@ -30,8 +29,7 @@ class ConsoleOutput
 	/**
 	 * Init initial foreground and background colors
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// Set up shell colors
 		$this->foreground_colors['black'] = '0;30';
 		$this->foreground_colors['dark_gray'] = '1;30';
@@ -69,16 +67,15 @@ class ConsoleOutput
 	 *
 	 * @return string
 	 */
-	public function getColoredString(string $string, ?string $foreground_color = null, ?string $background_color = null): string
-	{
-		if(Container::getInstance()->isWindows()) {
+	public function getColoredString(string $string, ?string $foreground_color = null, ?string $background_color = null): string {
+		if (Container::getInstance()->isWindows()) {
 			return $string;
 		}
 
 		$colored_string = "";
 
 		// Check if given foreground color found
-		if(isset($this->foreground_colors[$foreground_color])) {
+		if (isset($this->foreground_colors[$foreground_color])) {
 			$colored_string .= "\033[" . $this->foreground_colors[$foreground_color] . "m";
 		}
 		// Check if given background color found
@@ -97,8 +94,7 @@ class ConsoleOutput
 	 *
 	 * @return array
 	 */
-	public function getForegroundColors(): array
-	{
+	public function getForegroundColors(): array {
 		return array_keys($this->foreground_colors);
 	}
 
@@ -107,8 +103,7 @@ class ConsoleOutput
 	 *
 	 * @return array
 	 */
-	public function getBackgroundColors(): array
-	{
+	public function getBackgroundColors(): array {
 		return array_keys($this->background_colors);
 	}
 
@@ -119,8 +114,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function print(string $msg): void
-	{
+	public function print(string $msg): void {
 		echo $this->getColoredString($msg, "dark_gray", "black") . "\n";
 	}
 
@@ -131,8 +125,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function printError(string $error): void
-	{
+	public function printError(string $error): void {
 		echo $this->getColoredString($error, "red", "black") . "\n";
 	}
 
@@ -143,8 +136,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function printWarning(string $warning): void
-	{
+	public function printWarning(string $warning): void {
 		echo $this->getColoredString($warning, "black", "yellow") . "\n";
 	}
 
@@ -155,8 +147,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function printHighlights(string $highlights): void
-	{
+	public function printHighlights(string $highlights): void {
 		echo $this->getColoredString($highlights, "brown", "") . "\n";
 	}
 
@@ -167,8 +158,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function printSuccess(string $success): void
-	{
+	public function printSuccess(string $success): void {
 		echo $this->getColoredString($success, "green", "black") . "\n";
 	}
 
@@ -179,8 +169,7 @@ class ConsoleOutput
 	 *
 	 * @return void
 	 */
-	public function printSuccessNoBackground(string $success): void
-	{
+	public function printSuccessNoBackground(string $success): void {
 		echo $this->getColoredString($success, "green", "") . "\n";
 	}
 }

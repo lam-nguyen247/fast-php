@@ -3,8 +3,7 @@ namespace Fast\Queues;
 
 use ReflectionProperty;
 
-abstract class Queue
-{
+abstract class Queue {
 	/**
 	 * The times of tries
 	 *
@@ -14,8 +13,7 @@ abstract class Queue
 
 	abstract function handle(): void;
 
-	public function getTries(): int
-	{
+	public function getTries(): int {
 		return $this->tries;
 	}
 
@@ -24,12 +22,11 @@ abstract class Queue
 	 *
 	 * @return array
 	 */
-	public function getSerializeData(): array
-	{
+	public function getSerializeData(): array {
 		$properties = (new \ReflectionClass($this))->getProperties();
 		$data = [];
 
-		foreach ($properties as $property){
+		foreach ($properties as $property) {
 			$data[$property->getName()] = $this->getPropertyValue($property);
 		}
 
@@ -39,11 +36,10 @@ abstract class Queue
 	/**
 	 * Get the property value for the given property.
 	 *
-	 * @param  ReflectionProperty  $property
+	 * @param ReflectionProperty $property
 	 * @return mixed
 	 */
-	public function getPropertyValue(ReflectionProperty $property): mixed
-	{
+	public function getPropertyValue(ReflectionProperty $property): mixed {
 		$property->setAccessible(true);
 
 		return $property->getValue($this);

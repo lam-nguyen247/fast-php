@@ -5,8 +5,7 @@ use Closure;
 use Fast\Eloquent\Model;
 use Fast\Http\Exceptions\AppException;
 
-class HasOneRelation extends Relation
-{
+class HasOneRelation extends Relation {
 	protected string $localKey;
 
 	protected string $localValue;
@@ -19,14 +18,14 @@ class HasOneRelation extends Relation
 	}
 
 	public function setLocalKey(string $localKey): void {
-		if(empty($localKey)) {
+		if (empty($localKey)) {
 			$model = $this->getModel();
 			$localKey = (new $model)->primaryKey();
 		}
 		$this->localKey = $localKey;
 	}
 
-	public function getLocalKey(): string{
+	public function getLocalKey(): string {
 		return $this->localKey;
 	}
 
@@ -52,7 +51,7 @@ class HasOneRelation extends Relation
 	public function getModelObject(string $value, ?Closure $callback = null): mixed {
 		$builder = $this->buildWhereCondition($value);
 
-		if(!is_null($callback)){
+		if (!is_null($callback)) {
 			$callback($builder);
 		}
 
@@ -68,9 +67,10 @@ class HasOneRelation extends Relation
 
 	/**
 	 * @throws AppException
-	 */public function buildWhereCondition(string $value): QueryBuilder {
+	 */
+	public function buildWhereCondition(string $value): QueryBuilder {
 		$builder = app()->make($this->getModel())->where($this->getLocalKey(), $value);
-		foreach ($this->getWhereCondition() as $where){
+		foreach ($this->getWhereCondition() as $where) {
 			$builder->where(array_shift($where), array_shift($where), array_shift($where));
 		}
 

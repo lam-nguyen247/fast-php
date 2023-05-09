@@ -1,8 +1,7 @@
 <?php
 namespace Fast\Routing;
 
-class RouteCollection
-{
+class RouteCollection {
 	private string $methods;
 
 	private string $uri;
@@ -35,8 +34,7 @@ class RouteCollection
 								mixed  $action,
 								array  $middlewares,
 								mixed  $prefix,
-								mixed  $namespaces)
-	{
+								mixed  $namespaces) {
 		$this->methods = $methods;
 		$this->uri = $uri;
 		$this->name = $name;
@@ -53,8 +51,7 @@ class RouteCollection
 	 *
 	 * @return self
 	 */
-	public function middleware(array|string $middleware): RouteCollection
-	{
+	public function middleware(array|string $middleware): RouteCollection {
 		if (!is_array($middleware)) {
 			$this->middlewares[] = $middleware;
 		} else {
@@ -70,7 +67,7 @@ class RouteCollection
 	 *
 	 * @return self
 	 */
-	public function namespace(array|string $namespace): RouteCollection{
+	public function namespace(array|string $namespace): RouteCollection {
 		$this->namespaces[] = $namespace;
 		return $this;
 	}
@@ -82,8 +79,7 @@ class RouteCollection
 	 *
 	 * @return self
 	 */
-	public function name(string $name): RouteCollection
-	{
+	public function name(string $name): RouteCollection {
 		$this->name .= $name;
 		return $this;
 	}
@@ -95,8 +91,7 @@ class RouteCollection
 	 *
 	 * @return self
 	 */
-	public function prefix(string $prefix): RouteCollection
-	{
+	public function prefix(string $prefix): RouteCollection {
 		$this->prefix[] = $prefix;
 		return $this;
 	}
@@ -106,8 +101,7 @@ class RouteCollection
 	 *
 	 * @return string
 	 */
-	public function getUri(): string
-	{
+	public function getUri(): string {
 		return empty($this->uri)
 		|| $this->uri[0]
 		!= Routing::ROUTING_SEPARATOR
@@ -115,33 +109,27 @@ class RouteCollection
 			: $this->uri;
 	}
 
-	public function getMethods(): string
-	{
+	public function getMethods(): string {
 		return $this->methods;
 	}
 
-	public function getName(): string
-	{
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function getAction(): mixed
-	{
+	public function getAction(): mixed {
 		return $this->action;
 	}
 
-	public function getMiddlewares(): array
-	{
+	public function getMiddlewares(): array {
 		return $this->middlewares;
 	}
 
-	public function getPrefix(): array
-	{
+	public function getPrefix(): array {
 		return !empty($this->prefix && !empty($this->prefix[0])) ? $this->prefix : [];
 	}
 
-	public function getNamespace(): array
-	{
+	public function getNamespace(): array {
 		return !empty($this->namespaces && !empty($this->namespaces[0])) ? $this->namespaces : [];
 	}
 }

@@ -4,8 +4,7 @@ namespace Fast\Eloquent\Relationship;
 use Closure;
 use Fast\Eloquent\Model;
 
-abstract class Relation
-{
+abstract class Relation {
 	/**
 	 * Model that is belongs to this
 	 *
@@ -33,7 +32,7 @@ abstract class Relation
 	 * @var array
 	 */
 	protected array $conditions = [
-		'=', '>=', '<=', '<', '>', '<>'
+		'=', '>=', '<=', '<', '>', '<>',
 	];
 
 	/**
@@ -51,12 +50,12 @@ abstract class Relation
 	 *
 	 * @return mixed
 	 */
-	abstract public function getModelObject(string $value, ? Closure $callback = null): mixed;
+	abstract public function getModelObject(string $value, ?Closure $callback = null): mixed;
 
 	public function where(string $column, string $condition = '=', string $value = ''): Relation {
-		if(!in_array($condition, $this->getAcceptCondition())) {
+		if (!in_array($condition, $this->getAcceptCondition())) {
 			$where = [$column, '=', $condition];
-		}else {
+		} else {
 			$where = [$column, $condition, $value];
 		}
 		$this->wheres = [...$this->getWhereCondition(), $where];
@@ -64,19 +63,19 @@ abstract class Relation
 		return $this;
 	}
 
-	public function setModelInstance(Model $instance): void{
+	public function setModelInstance(Model $instance): void {
 		$this->instance = $instance;
 	}
 
-	public function getModelInstance(): Model{
+	public function getModelInstance(): Model {
 		return $this->instance;
 	}
 
-	public function setModel(string $model): void{
+	public function setModel(string $model): void {
 		$this->model = $model;
 	}
 
-	public function getModel(): string{
+	public function getModel(): string {
 		return $this->model;
 	}
 
@@ -85,8 +84,7 @@ abstract class Relation
 	 *
 	 * @return array
 	 */
-	protected function getAcceptCondition(): array
-	{
+	protected function getAcceptCondition(): array {
 		return $this->conditions;
 	}
 
@@ -95,8 +93,7 @@ abstract class Relation
 	 *
 	 * @return array
 	 */
-	public function getWhereCondition(): array
-	{
+	public function getWhereCondition(): array {
 		return $this->wheres;
 	}
 }

@@ -6,8 +6,7 @@ use Fast\Container;
 use Fast\Http\Request;
 use Fast\Contracts\Pipeline\Pipeline as IPipeline;
 
-class Pipeline implements IPipeline
-{
+class Pipeline implements IPipeline {
 	protected Container $container;
 
 	protected Request $passable;
@@ -21,15 +20,14 @@ class Pipeline implements IPipeline
 	 *
 	 * @param Container|null $container
 	 */
-	public function __construct(?Container $container = null)
-	{
+	public function __construct(?Container $container = null) {
 		$this->container = $container ?: Container::getInstance();
 	}
 
 	/**
 	 * Set the object being sent through the pipeline.
 	 *
-	 * @param  Request  $passable
+	 * @param Request $passable
 	 * @return $this
 	 */
 	function send(Request $passable): Pipeline {
@@ -51,7 +49,7 @@ class Pipeline implements IPipeline
 	/**
 	 * Set the method to call on the pipes.
 	 *
-	 * @param  string  $method
+	 * @param string $method
 	 * @return $this
 	 */
 	public function via(string $method): Pipeline {
@@ -77,8 +75,7 @@ class Pipeline implements IPipeline
 	 *
 	 * @return Closure
 	 */
-	protected function carry(): Closure
-	{
+	protected function carry(): Closure {
 		return function ($stack, $pipe) {
 			return function ($passable) use ($stack, $pipe) {
 				$pipe = Container::getInstance()->make($pipe);
@@ -93,8 +90,7 @@ class Pipeline implements IPipeline
 	 * @param Closure $handleRouting
 	 * @return Closure
 	 */
-	protected function prepareHandleRouting(Closure $handleRouting): Closure
-	{
+	protected function prepareHandleRouting(Closure $handleRouting): Closure {
 		return function () use ($handleRouting) {
 			return $handleRouting();
 		};

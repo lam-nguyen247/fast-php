@@ -8,19 +8,16 @@ use JetBrains\PhpStorm\NoReturn;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\UnknownException;
 
-class ErrorHandler
-{
+class ErrorHandler {
 	private Container $app;
 
 	/**
 	 * @throws AppException|ReflectionException
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->app = Container::getInstance();
 
-		if($this->app->make(Application::class)->isLoaded())
-		{
+		if ($this->app->make(Application::class)->isLoaded()) {
 			ob_get_clean();
 		}
 	}

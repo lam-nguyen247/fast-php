@@ -5,6 +5,7 @@ namespace Fast\Eloquent;
 class Collection extends \ArrayObject {
 
 	protected array $items = [];
+
 	public function __construct(object|array $array = [], int $flags = 0, string $iteratorClass = 'ArrayIterator') {
 		$collections = [];
 		foreach ($array as $value) {

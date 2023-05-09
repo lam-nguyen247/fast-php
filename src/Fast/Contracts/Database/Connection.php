@@ -1,8 +1,7 @@
 <?php
 namespace Fast\Contracts\Database;
 
-interface Connection
-{
+interface Connection {
 	/**
 	 * Reset driver
 	 *

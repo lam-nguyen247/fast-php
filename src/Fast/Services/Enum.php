@@ -3,8 +3,7 @@ namespace Fast\Services;
 
 use http\Exception\InvalidArgumentException;
 
-abstract class Enum
-{
+abstract class Enum {
 	/**
 	 * The value of the Enum instance.
 	 *
@@ -18,9 +17,8 @@ abstract class Enum
 	 * @param mixed $value The value of the Enum instance.
 	 * @throws InvalidArgumentException if the provided value is not valid.
 	 */
-	public function __construct(mixed $value)
-	{
-		if(!$this->isValidValue($value)){
+	public function __construct(mixed $value) {
+		if (!$this->isValidValue($value)) {
 			throw new InvalidArgumentException("Invalid value provided");
 		}
 
@@ -32,9 +30,8 @@ abstract class Enum
 	 *
 	 * @return string The string representation of the Enum instance.
 	 */
-	public function __toString(): string
-	{
-		return (string) $this->value;
+	public function __toString(): string {
+		return (string)$this->value;
 	}
 
 	/**
@@ -43,8 +40,7 @@ abstract class Enum
 	 * @return mixed The value of the Enum instance.
 	 */
 
-	public function getValue(): mixed
-	{
+	public function getValue(): mixed {
 		return $this->value;
 	}
 
@@ -54,8 +50,7 @@ abstract class Enum
 	 * @return array An array of all the constants defined in the Enum class.
 	 */
 
-	public static function toArray(): array
-	{
+	public static function toArray(): array {
 		$ref = new \ReflectionClass(static::class);
 		return $ref->getConstants();
 	}
@@ -66,8 +61,7 @@ abstract class Enum
 	 * @param mixed $value The value to check.
 	 * @return bool Whether the value is valid for the Enum class.
 	 */
-	public static function isValidValue(mixed $value): bool
-	{
+	public static function isValidValue(mixed $value): bool {
 		$ref = new \ReflectionClass(static::class);
 		$values = array_values($ref->getConstants());
 		return in_array($value, $values, true);

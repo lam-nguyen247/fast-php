@@ -10,8 +10,7 @@ use Fast\Pipeline\Pipeline;
 use Fast\Http\Exceptions\AppException;
 use Fast\Contracts\Http\Kernel as HttpKernel;
 
-class Kernel implements HttpKernel
-{
+class Kernel implements HttpKernel {
 	private Container $app;
 	public array $routeMiddlewares = [];
 
@@ -21,11 +20,10 @@ class Kernel implements HttpKernel
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function __construct()
-	{
-		$this->app =  Container::getInstance();
+	public function __construct() {
+		$this->app = Container::getInstance();
 		$this->bindingMiddlewares();
-		$this->app->singleton(Application::class, function ($app){
+		$this->app->singleton(Application::class, function ($app) {
 			return new Application($app);
 		});
 
@@ -38,8 +36,7 @@ class Kernel implements HttpKernel
 	 *
 	 * @return void
 	 */
-	private function bindingMiddlewares(): void
-	{
+	private function bindingMiddlewares(): void {
 		foreach ($this->routeMiddlewares as $key => $middleware) {
 			$this->app->bind($key, $middleware);
 		}
@@ -76,13 +73,12 @@ class Kernel implements HttpKernel
 	 * Dispatch router of application
 	 * @return Closure
 	 */
-	protected function dispatchToRouter(): Closure
-	{
+	protected function dispatchToRouter(): Closure {
 		return function () {
-			try{
+			try {
 				$route = new Route;
 				return $route->run();
-			}catch (AppException $exception){
+			} catch (AppException $exception) {
 				return $exception->render($exception);
 			}
 		};
@@ -93,8 +89,7 @@ class Kernel implements HttpKernel
 	 *
 	 * @return Container
 	 */
-	public function getApplication(): Container
-	{
+	public function getApplication(): Container {
 		return $this->app;
 	}
 }

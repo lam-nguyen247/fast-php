@@ -61,7 +61,7 @@ class Routing {
 	 * @throws AppException
 	 */
 	private function getRequestMethod(): string {
-		return request()->server->get('REQUEST_METHOD')?? 'GET';
+		return request()->server->get('REQUEST_METHOD') ?? 'GET';
 	}
 
 	/**

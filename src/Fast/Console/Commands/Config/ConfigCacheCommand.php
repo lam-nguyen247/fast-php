@@ -8,44 +8,42 @@ use Fast\Http\Exceptions\AppException;
 use Fast\Console\ConsoleException;
 use Fast\Console\Kernel;
 
-class ConfigCacheCommand extends Command
-{
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected string $signature = 'config:cache';
+class ConfigCacheCommand extends Command {
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected string $signature = 'config:cache';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected string $description = 'Clear and rewrite caching, config';
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected string $description = 'Clear and rewrite caching, config';
 
-    /**
-     * Flag check using cache
-     * @var boolean
-     */
-    protected bool $usingCache = false;
+	/**
+	 * Flag check using cache
+	 * @var boolean
+	 */
+	protected bool $usingCache = false;
 
-    /**
-     * Other called signatures
-     */
-    protected array $otherSignatures = [
-        'c:c'
-    ];
+	/**
+	 * Other called signatures
+	 */
+	protected array $otherSignatures = [
+		'c:c',
+	];
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * Create a new command instance.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		parent::__construct();
+	}
 
 	/**
 	 * Handle the command
@@ -56,8 +54,7 @@ class ConfigCacheCommand extends Command
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    public function handle(): void
-    {
-        (new ConfigClearCommand)->handle();
-    }
+	public function handle(): void {
+		(new ConfigClearCommand)->handle();
+	}
 }

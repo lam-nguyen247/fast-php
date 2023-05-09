@@ -5,8 +5,7 @@ use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 use Fast\Database\QueryBuilder\QueryException;
 
-trait CommitQueryMethod
-{
+trait CommitQueryMethod {
 	/**
 	 * Execute the query as a "select" statement.
 	 *
@@ -39,7 +38,7 @@ trait CommitQueryMethod
 		return $this->passe();
 	}
 
-	public function passe(): string{
+	public function passe(): string {
 		if (empty($this->table)) {
 			return false;
 		}
@@ -229,8 +228,7 @@ trait CommitQueryMethod
 	 * @throws QueryException
 	 * @throws ReflectionException
 	 */
-	public function update(array $data)
-	{
+	public function update(array $data) {
 		$sql = $this->compile->compileUpdate($this->table, $data);
 
 		if (!is_null($this->existsModelInstance)) {
@@ -251,8 +249,7 @@ trait CommitQueryMethod
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function beginTransaction(): bool
-	{
+	public function beginTransaction(): bool {
 		return app()->make('connection')->getConnection()->{__FUNCTION__}();
 	}
 
@@ -263,8 +260,7 @@ trait CommitQueryMethod
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function commit(): bool
-	{
+	public function commit(): bool {
 		return app()->make('connection')->getConnection()->{__FUNCTION__}();
 	}
 
@@ -275,8 +271,7 @@ trait CommitQueryMethod
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function rollBack(): bool
-	{
+	public function rollBack(): bool {
 		return app()->make('connection')->getConnection()->{__FUNCTION__}();
 	}
 }

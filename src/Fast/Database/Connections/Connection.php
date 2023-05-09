@@ -5,8 +5,7 @@ use PDO;
 use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
-abstract class Connection implements \Fast\Contracts\Database\Connection
-{
+abstract class Connection implements \Fast\Contracts\Database\Connection {
 	protected string $driver;
 
 	protected PDO $instance;
@@ -15,8 +14,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->setDriver($this->getDefaultDriver());
 	}
 
@@ -24,15 +22,14 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function getConfig(): array
-	{
+	public function getConfig(): array {
 		return [
 			$this->getDriverConnection($this->driver()),
 			$this->getHostConnection($this->driver()),
 			$this->getPortConnection($this->driver()),
 			$this->getDatabaseConnection($this->driver()),
 			$this->getUsernameConnection($this->driver()),
-			$this->getPasswordConnection($this->driver())
+			$this->getPasswordConnection($this->driver()),
 		];
 	}
 
@@ -41,8 +38,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return string
 	 */
-	protected function driver(): string
-	{
+	protected function driver(): string {
 		return $this->driver;
 	}
 
@@ -55,8 +51,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getDriverConnection(string $driver): string
-	{
+	protected function getDriverConnection(string $driver): string {
 		return config("database.connections.{$driver}.driver");
 	}
 
@@ -68,8 +63,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getHostConnection(string $driver): string
-	{
+	protected function getHostConnection(string $driver): string {
 		return config("database.connections.{$driver}.host");
 	}
 
@@ -82,8 +76,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getPortConnection(string $driver): string
-	{
+	protected function getPortConnection(string $driver): string {
 		return config("database.connections.{$driver}.port");
 	}
 
@@ -96,8 +89,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getDatabaseConnection(string $driver): string
-	{
+	protected function getDatabaseConnection(string $driver): string {
 		return config("database.connections.{$driver}.database");
 	}
 
@@ -110,8 +102,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getUsernameConnection(string $driver): string
-	{
+	protected function getUsernameConnection(string $driver): string {
 		return config("database.connections.{$driver}.username");
 	}
 
@@ -124,8 +115,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getPasswordConnection(string $driver): string
-	{
+	protected function getPasswordConnection(string $driver): string {
 		return config("database.connections.{$driver}.password");
 	}
 
@@ -136,8 +126,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getDefaultDriver(): string
-	{
+	protected function getDefaultDriver(): string {
 		return config('database.default');
 	}
 
@@ -153,8 +142,7 @@ abstract class Connection implements \Fast\Contracts\Database\Connection
 	 *
 	 * @return PDO
 	 */
-	public function getConnection(): PDO
-	{
+	public function getConnection(): PDO {
 		return $this->instance;
 	}
 }

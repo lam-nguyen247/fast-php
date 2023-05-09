@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Auth;
-class Request extends SymfonyRequest
-{
+
+class Request extends SymfonyRequest {
 
 	public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null) {
 		parent::__construct($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
@@ -22,13 +22,12 @@ class Request extends SymfonyRequest
 	 */
 	protected ?ParameterBag $json;
 
-	public function getRequest(): array
-	{
-		$params = array_merge($_REQUEST, array_map(function($file){
+	public function getRequest(): array {
+		$params = array_merge($_REQUEST, array_map(function ($file) {
 			return new File($file);
 		}, $_FILES));
 
-		if($this->method() === MethodType::PUT){
+		if ($this->method() === MethodType::PUT) {
 			parse_str(file_get_contents('php://input'), $data);
 			$params = array_merge($params, $data);
 		}
@@ -36,31 +35,26 @@ class Request extends SymfonyRequest
 		return $params;
 	}
 
-	public function all(): array
-	{
+	public function all(): array {
 		return $this->getRequest();
 	}
 
-	public function getQueryParams(): array
-	{
+	public function getQueryParams(): array {
 		return $_GET;
 	}
 
-	public function input(string $input) : mixed
-	{
+	public function input(string $input): mixed {
 		return $this->getRequest()[$input] ?? null;
 	}
 
-	public function get(string $key, mixed $default = null) : mixed
-	{
+	public function get(string $key, mixed $default = null): mixed {
 		return $this->input($key);
 	}
 
-	public function only(array $inputs): object
-	{
+	public function only(array $inputs): object {
 		$request = [];
 		foreach ($this->getRequest() as $name => $value) {
-			if(in_array($name, $inputs)) {
+			if (in_array($name, $inputs)) {
 				$request[$name] = $value;
 			}
 		}
@@ -68,11 +62,10 @@ class Request extends SymfonyRequest
 		return (object)$request;
 	}
 
-	public function except(array $inputs): object
-	{
+	public function except(array $inputs): object {
 		$request = [];
 		foreach ($this->getRequest() as $name => $value) {
-			if(!in_array($name, $inputs)) {
+			if (!in_array($name, $inputs)) {
 				$request[$name] = $value;
 			}
 		}
@@ -80,14 +73,12 @@ class Request extends SymfonyRequest
 		return (object)$request;
 	}
 
-	public function headers(): object
-	{
+	public function headers(): object {
 		return (object)getallheaders();
 	}
 
-	public function user(?string $guard = null): ?object
-	{
-		if(is_null($guard)){
+	public function user(?string $guard = null): ?object {
+		if (is_null($guard)) {
 			$guard = Auth::getCurrentGuard();
 		}
 
@@ -100,7 +91,7 @@ class Request extends SymfonyRequest
 	 * @return bool
 	 */
 	public function isAjax(): bool {
-		$headers = (array) $this->headers();
+		$headers = (array)$this->headers();
 		return isset($headers['Accept'])
 			&& $headers['Accept'] == 'application/json'
 			|| isset($headers['Content-Type'])
@@ -119,8 +110,7 @@ class Request extends SymfonyRequest
 	/**
 	 * Get method
 	 */
-	public function method(): string
-	{
+	public function method(): string {
 		return $this->getMethod();
 	}
 
@@ -165,8 +155,8 @@ class Request extends SymfonyRequest
 	 * @return ParameterBag|mixed
 	 */
 	public function json(string $key = null, mixed $default = null): mixed {
-		if (! isset($this->json)) {
-			$this->json = new ParameterBag((array) json_decode($this->getContent(), true));
+		if (!isset($this->json)) {
+			$this->json = new ParameterBag((array)json_decode($this->getContent(), true));
 		}
 
 		if (is_null($key)) {
@@ -215,19 +205,18 @@ class Request extends SymfonyRequest
 	 *
 	 * @return static
 	 */
-	public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null): static
-	{
+	public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null): static {
 		return parent::duplicate($query, $request, $attributes, $cookies, $this->filterFiles($files), $server);
 	}
 
 	/**
 	 * Filter the given array of files, removing any empty values.
 	 *
-	 * @param  mixed  $files
+	 * @param mixed $files
 	 * @return mixed
 	 */
 	protected function filterFiles(mixed $files): mixed {
-		if (! $files) {
+		if (!$files) {
 			return null;
 		}
 
@@ -244,7 +233,7 @@ class Request extends SymfonyRequest
 		return $files;
 	}
 
-	public static function getFromServer(string $method){
+	public static function getFromServer(string $method) {
 
 	}
 }

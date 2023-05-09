@@ -6,8 +6,7 @@ use Fast\Container;
 use Fast\Supports\ConsoleOutput;
 use Fast\Contracts\Console\Command as CommandContract;
 
-abstract class Command implements CommandContract
-{
+abstract class Command implements CommandContract {
 	/**
 	 * Output of command
 	 *
@@ -20,230 +19,217 @@ abstract class Command implements CommandContract
 	 */
 	protected Container $app;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected string $signature = "";
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected string $signature = "";
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected string $description = "";
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected string $description = "";
 
-    /**
-     * Options in options
-     * 
-     * @var array
-     */
-    protected array $options = [];
+	/**
+	 * Options in options
+	 *
+	 * @var array
+	 */
+	protected array $options = [];
 
-    /**
-     * Argv
-     * 
-     * @var array
-     */
-    protected array $argv = [];
+	/**
+	 * Argv
+	 *
+	 * @var array
+	 */
+	protected array $argv = [];
 
-    /**
-     * Flag is using cache
-     * 
-     * @var bool
-     */
-    protected bool $usingCache = true;
+	/**
+	 * Flag is using cache
+	 *
+	 * @var bool
+	 */
+	protected bool $usingCache = true;
 
-    /**
-     * Other called signatures
-     * 
-     * @var array
-     */
-    protected array $otherSignatures = [];
+	/**
+	 * Other called signatures
+	 *
+	 * @var array
+	 */
+	protected array $otherSignatures = [];
 
-    /**
-     * Option required
-     * 
-     * @var array
-     */
-    protected array $required = [];
+	/**
+	 * Option required
+	 *
+	 * @var array
+	 */
+	protected array $required = [];
 
-    /**
-     * True format for command
-     * 
-     * @var string
-     */
-    protected string $format = "";
+	/**
+	 * True format for command
+	 *
+	 * @var string
+	 */
+	protected string $format = "";
 
-    /**
-     * Helper for using command
-     * 
-     * @var string
-     */
-    protected string $helper = "";
+	/**
+	 * Helper for using command
+	 *
+	 * @var string
+	 */
+	protected string $helper = "";
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        global $argv;
+	/**
+	 * Create a new command instance.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		global $argv;
 
-        $this->output = new ConsoleOutput;
-        $this->setArgv($argv);
-        $this->app = Container::getInstance();
-    }
+		$this->output = new ConsoleOutput;
+		$this->setArgv($argv);
+		$this->app = Container::getInstance();
+	}
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
-    abstract public function handle(): void;
+	/**
+	 * Execute the console command.
+	 *
+	 * @return void
+	 */
+	abstract public function handle(): void;
 
-    /**
-     * Set argv
-     * 
-     * @param array $argv
-     * 
-     * @return void
-     */
-    public function setArgv(array $argv = []): void
-    {
-        $this->argv = $argv;
-    }
+	/**
+	 * Set argv
+	 *
+	 * @param array $argv
+	 *
+	 * @return void
+	 */
+	public function setArgv(array $argv = []): void {
+		$this->argv = $argv;
+	}
 
-    /**
-     * Get argv
-     * 
-     * @return array
-     */
-    public function argv(): array
-    {
-        return $this->argv;
-    }
+	/**
+	 * Get argv
+	 *
+	 * @return array
+	 */
+	public function argv(): array {
+		return $this->argv;
+	}
 
-    /**
-     * Get signature
-     * 
-     * @return string
-     */
-    public function getSignature(): string
-    {
-        return $this->signature;
-    }
+	/**
+	 * Get signature
+	 *
+	 * @return string
+	 */
+	public function getSignature(): string {
+		return $this->signature;
+	}
 
-    /**
-     * Get other signatures
-     * 
-     * @return array
-     */
-    public function getOtherSignatures(): array
-    {
-        return $this->otherSignatures;
-    }
+	/**
+	 * Get other signatures
+	 *
+	 * @return array
+	 */
+	public function getOtherSignatures(): array {
+		return $this->otherSignatures;
+	}
 
-    /**
-     * Get description
-     * 
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
+	/**
+	 * Get description
+	 *
+	 * @return string
+	 */
+	public function getDescription(): string {
+		return $this->description;
+	}
 
-    /**
-     * Set options of passed command
-     * @param array $options
-     * 
-     * @return void
-     */
-    public function setOptions(array $options): void
-    {
-        $results = [];
+	/**
+	 * Set options of passed command
+	 * @param array $options
+	 *
+	 * @return void
+	 */
+	public function setOptions(array $options): void {
+		$results = [];
 
-        foreach ($options as $opKey => $option) {
-            if (str_contains($option, '--')) {
-                $parsing = explode('=', str_replace('--', '', $option));
-                $key = array_shift($parsing);
-                $results[$key] = $key == 'help' ? true : array_shift($parsing);
-            } else {
-                $results[$opKey] = $option;
-            }
-        }
+		foreach ($options as $opKey => $option) {
+			if (str_contains($option, '--')) {
+				$parsing = explode('=', str_replace('--', '', $option));
+				$key = array_shift($parsing);
+				$results[$key] = $key == 'help' ? true : array_shift($parsing);
+			} else {
+				$results[$opKey] = $option;
+			}
+		}
 
-        $this->options = $results;
-    }
+		$this->options = $results;
+	}
 
-    /**
-     * Get options of passed command
-     * 
-     * @return array
-     */
-    public function getOptions(): array
-    {
-        return $this->options;
-    }
+	/**
+	 * Get options of passed command
+	 *
+	 * @return array
+	 */
+	public function getOptions(): array {
+		return $this->options;
+	}
 
-    /**
-     * Get options of passed command
-     * 
-     * @param string $property
-     * 
-     * @return string
-     */
-    public function getOption(string $property): ?string
-    {
-        return $this->options[$property] ?? null;
-    }
+	/**
+	 * Get options of passed command
+	 *
+	 * @param string $property
+	 *
+	 * @return string
+	 */
+	public function getOption(string $property): ?string {
+		return $this->options[$property] ?? null;
+	}
 
-    /**
-     * Get check is using cache
-     * 
-     * @return boolean
-     */
-    public function isUsingCache(): bool
-    {
-        return $this->usingCache;
-    }
+	/**
+	 * Get check is using cache
+	 *
+	 * @return boolean
+	 */
+	public function isUsingCache(): bool {
+		return $this->usingCache;
+	}
 
-    /**
-     * Check in is verified
-     * 
-     * @return bool
-     */
-    public function isVerified(): bool
-    {
-        foreach ($this->required as $required) {
-            if (!isset($this->options[$required])) {
-                return false;
-            }
-        }
+	/**
+	 * Check in is verified
+	 *
+	 * @return bool
+	 */
+	public function isVerified(): bool {
+		foreach ($this->required as $required) {
+			if (!isset($this->options[$required])) {
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * Get format of command
-     * 
-     * @return string
-     */
-    public function getFormat(): string
-    {
-        return $this->format;
-    }
+	/**
+	 * Get format of command
+	 *
+	 * @return string
+	 */
+	public function getFormat(): string {
+		return $this->format;
+	}
 
-    /**
-     * Get helper using command
-     * 
-     * @return string
-     */
-    public function getHelper(): string
-    {
-        return $this->helper;
-    }
+	/**
+	 * Get helper using command
+	 *
+	 * @return string
+	 */
+	public function getHelper(): string {
+		return $this->helper;
+	}
 }

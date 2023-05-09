@@ -7,8 +7,7 @@ use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 use Fast\Http\Exceptions\UnknownException;
 
-class Router
-{
+class Router {
 	private array $middlewares = [];
 
 	private string $prefix = '';
@@ -32,44 +31,37 @@ class Router
 	 *
 	 * @return RouteCollection
 	 */
-	private function addRoute(string $methods, string $uri, mixed $action): RouteCollection
-	{
+	private function addRoute(string $methods, string $uri, mixed $action): RouteCollection {
 		$router = new RouteCollection($methods, $uri, $this->name, $action, $this->middlewares, $this->prefix, $this->namespace);
 		$this->routes[] = $router;
 		return $router;
 	}
-	public function get(string $uri, mixed $action): RouteCollection
-	{
+
+	public function get(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('GET', $uri, $action);
 	}
 
-	public function post(string $uri, mixed $action): RouteCollection
-	{
+	public function post(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('POST', $uri, $action);
 	}
 
-	public function put(string $uri, mixed $action): RouteCollection
-	{
+	public function put(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('PUT', $uri, $action);
 	}
 
-	public function patch(string $uri, mixed $action): RouteCollection
-	{
+	public function patch(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('PATCH', $uri, $action);
 	}
 
-	public function any(string $uri, mixed $action): RouteCollection
-	{
+	public function any(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('GET|POST', $uri, $action);
 	}
 
-	public function delete(string $uri, mixed $action): RouteCollection
-	{
+	public function delete(string $uri, mixed $action): RouteCollection {
 		return $this->addRoute('DELETE', $uri, $action);
 	}
 
-	public function middleware(mixed $middleware): Router
-	{
+	public function middleware(mixed $middleware): Router {
 		if (!is_array($middleware)) {
 			$this->middlewares[] = $middleware;
 		} else {
@@ -88,14 +80,12 @@ class Router
 		return true;
 	}
 
-	public function prefix(string $prefix): Router
-	{
+	public function prefix(string $prefix): Router {
 		$this->prefix = $prefix;
 		return $this;
 	}
 
-	public function namespace(string $namespace): Router
-	{
+	public function namespace(string $namespace): Router {
 		$this->namespace = $namespace;
 		return $this;
 	}
@@ -103,8 +93,7 @@ class Router
 	/**
 	 * @throws AppException
 	 */
-	public function group(string $path): Router
-	{
+	public function group(string $path): Router {
 		if (file_exists($path)) {
 			require $path;
 			return $this;
@@ -112,13 +101,12 @@ class Router
 		throw new AppException("$path not found");
 	}
 
-	public function resource(string $uri, mixed $action): RouteResource
-	{
+	public function resource(string $uri, mixed $action): RouteResource {
 		$resource = [
 			[
-				compact('uri', 'action')
+				compact('uri', 'action'),
 			],
-			$this->name, $this->middlewares, $this->prefix, $this->namespace
+			$this->name, $this->middlewares, $this->prefix, $this->namespace,
 		];
 		$routeResource = new RouteResource(...$resource);
 		$this->routes[] = $routeResource;
@@ -132,8 +120,7 @@ class Router
 	 *
 	 * @return RouteResource
 	 */
-	public function resources(array $resources): RouteResource
-	{
+	public function resources(array $resources): RouteResource {
 		$middlewares = $this->middlewares;
 		$prefix = $this->prefix;
 		$namespace = $this->namespace;
@@ -142,7 +129,7 @@ class Router
 		foreach ($resources as $key => $resource) {
 			$items[] = [
 				'uri' => $key,
-				'action' => $resource
+				'action' => $resource,
 			];
 		}
 		$resources = [$items, $name, $middlewares, $prefix, $namespace];
@@ -156,8 +143,7 @@ class Router
 	 *
 	 * @return array
 	 */
-	public function routes(): array
-	{
+	public function routes(): array {
 		return $this->routes;
 	}
 
@@ -179,8 +165,7 @@ class Router
 	 *
 	 * @return array
 	 */
-	public function collect(): array
-	{
+	public function collect(): array {
 		$routes = [];
 
 		foreach ($this->routes() as $object) {
@@ -213,7 +198,7 @@ class Router
 			$action,
 			__FUNCTION__,
 			__FUNCTION__,
-			NULL
+			null
 		);
 
 		$compile = new Compile($rc, $params);

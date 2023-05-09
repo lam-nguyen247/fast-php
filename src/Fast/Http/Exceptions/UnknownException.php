@@ -5,8 +5,7 @@ namespace Fast\Http\Exceptions;
 use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
-class UnknownException extends AppException
-{
+class UnknownException extends AppException {
 	/**
 	 * AuthenticationException constructor
 	 *
@@ -15,8 +14,7 @@ class UnknownException extends AppException
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    public function __construct($message = 'Unknown !', $code = 400)
-    {
-        parent::__construct($message, $code);
-    }
+	public function __construct($message = 'Unknown !', $code = 400) {
+		parent::__construct($message, $code);
+	}
 }

@@ -3,13 +3,12 @@ namespace Fast\Hashing;
 
 use Fast\Contracts\Hashing\Hashes;
 
-class BcryptHashes implements Hashes
-{
+class BcryptHashes implements Hashes {
 	/**
 	 * Hash the given value.
 	 *
-	 * @param  string  $value
-	 * @param  array   $options
+	 * @param string $value
+	 * @param array $options
 	 * @return string
 	 *
 	 */
@@ -18,7 +17,7 @@ class BcryptHashes implements Hashes
 	}
 
 	public function check(string $value, string $hashedValue, array $options = []): bool {
-		if(strlen($hashedValue) === 0) {
+		if (strlen($hashedValue) === 0) {
 			return false;
 		}
 		return password_verify($value, $hashedValue);

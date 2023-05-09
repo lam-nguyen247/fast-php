@@ -1,13 +1,12 @@
 <?php
 namespace Fast\Contracts\Hashing;
 
-interface Hashes
-{
+interface Hashes {
 	/**
 	 * Hash the given value.
 	 *
-	 * @param  string  $value
-	 * @param  array   $options
+	 * @param string $value
+	 * @param array $options
 	 * @return string
 	 */
 	public function make(string $value, array $options = []): string;
@@ -15,9 +14,9 @@ interface Hashes
 	/**
 	 * Check the given plain value against a hash.
 	 *
-	 * @param  string  $value
-	 * @param  string  $hashedValue
-	 * @param  array   $options
+	 * @param string $value
+	 * @param string $hashedValue
+	 * @param array $options
 	 * @return bool
 	 */
 	public function check(string $value, string $hashedValue, array $options = []): bool;

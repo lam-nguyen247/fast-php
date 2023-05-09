@@ -5,15 +5,13 @@ namespace Fast;
 use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
-Class AliasLoader
-{
+class AliasLoader {
 	/**
 	 * Initial alias loader
 	 *
 	 * @method aliasLoader()
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		spl_autoload_register([$this, 'aliasLoader']);
 	}
 
@@ -24,11 +22,10 @@ Class AliasLoader
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function aliasLoader(string $class): bool
-	{
+	public function aliasLoader(string $class): bool {
 		$aliases = config('app.aliases');
 
-		if(isset($aliases[$class])){
+		if (isset($aliases[$class])) {
 			return class_alias($aliases[$class], $class);
 		}
 

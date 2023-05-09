@@ -1,7 +1,7 @@
 <?php
 namespace Fast\Session;
-class Session
-{
+
+class Session {
 	/**
 	 * Check exists session key
 	 *
@@ -9,8 +9,7 @@ class Session
 	 *
 	 * @return bool
 	 */
-	public function isset(string $key): bool
-	{
+	public function isset(string $key): bool {
 		return isset($_SESSION[$key]);
 	}
 
@@ -22,8 +21,7 @@ class Session
 	 *
 	 * @return void
 	 */
-	public function set(string $key, mixed $value): void
-	{
+	public function set(string $key, mixed $value): void {
 		$_SESSION[$key] = $value;
 	}
 
@@ -34,8 +32,7 @@ class Session
 	 *
 	 * @return void
 	 */
-	public function unset(string $key): void
-	{
+	public function unset(string $key): void {
 		unset($_SESSION[$key]);
 	}
 
@@ -55,8 +52,7 @@ class Session
 	 *
 	 * @return array
 	 */
-	public function storage(): array
-	{
+	public function storage(): array {
 		return $_SESSION;
 	}
 }

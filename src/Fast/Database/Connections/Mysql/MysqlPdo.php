@@ -6,8 +6,7 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
-class MysqlPdo extends PDO
-{
+class MysqlPdo extends PDO {
 	/**
 	 * Initial MysqlPdo
 	 *
@@ -17,8 +16,7 @@ class MysqlPdo extends PDO
 	 * @param array|null $options
 	 *
 	 */
-	public function __construct(string $dns, string $username,string  $password, array $options = null)
-	{
+	public function __construct(string $dns, string $username, string $password, array $options = null) {
 		parent::__construct($dns, $username, $password, $options);
 	}
 
@@ -30,8 +28,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @return PDOStatement
 	 */
-	public function prepare(string $query, array $options = []): PDOStatement
-	{
+	public function prepare(string $query, array $options = []): PDOStatement {
 		return parent::prepare($query, $options);
 	}
 
@@ -40,8 +37,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @return bool
 	 */
-	public function execute(): bool
-	{
+	public function execute(): bool {
 		return parent::execute();
 	}
 
@@ -53,8 +49,7 @@ class MysqlPdo extends PDO
 	 * @param mixed ...$fetch_mode_args
 	 * @return PDOStatement
 	 */
-	public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, ...$fetch_mode_args): PDOStatement
-	{
+	public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, ...$fetch_mode_args): PDOStatement {
 		return parent::query($statement);
 	}
 
@@ -63,8 +58,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @return int
 	 */
-	public function rowCount(): int
-	{
+	public function rowCount(): int {
 		return parent::rowCount();
 	}
 
@@ -75,8 +69,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @return int|false
 	 */
-	public function exec(string $statement): int|false
-	{
+	public function exec(string $statement): int|false {
 		return parent::exec($statement);
 	}
 
@@ -87,8 +80,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @return bool
 	 */
-	public function beginTransaction(): bool
-	{
+	public function beginTransaction(): bool {
 		return parent::beginTransaction();
 	}
 
@@ -99,8 +91,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @throws PDOException
 	 */
-	public function commit(): bool
-	{
+	public function commit(): bool {
 		return parent::commit();
 	}
 
@@ -111,8 +102,7 @@ class MysqlPdo extends PDO
 	 *
 	 * @throws PDOException
 	 */
-	public function rollBack(): bool
-	{
+	public function rollBack(): bool {
 		return parent::rollBack();
 	}
 }

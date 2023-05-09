@@ -6,8 +6,7 @@ use ReflectionException;
 use Fast\FileSystem\FileSystem;
 use Fast\Http\Exceptions\AppException;
 
-class Logger
-{
+class Logger {
 	/**
 	 * File system
 	 *
@@ -36,9 +35,10 @@ class Logger
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function __construct(?string $directory = null)
-	{
-		if (!is_null($directory)) $this->setDirectory($directory);
+	public function __construct(?string $directory = null) {
+		if (!is_null($directory)) {
+			$this->setDirectory($directory);
+		}
 
 		$this->setFileSystem(
 			\Fast\Container::getInstance()->make('fileSystem')
@@ -52,8 +52,7 @@ class Logger
 	 *
 	 * @return self
 	 */
-	public function setDirectory(string $directory): Logger
-	{
+	public function setDirectory(string $directory): Logger {
 		$this->directory = $directory;
 		return $this;
 	}
@@ -63,8 +62,7 @@ class Logger
 	 *
 	 * @return string
 	 */
-	public function getDirectory(): string
-	{
+	public function getDirectory(): string {
 		return $this->directory;
 	}
 
@@ -75,8 +73,7 @@ class Logger
 	 *
 	 * @return self
 	 */
-	public function setWriteLogByDate(int $byDate): Logger
-	{
+	public function setWriteLogByDate(int $byDate): Logger {
 		$this->byDate = $byDate;
 		return $this;
 	}
@@ -86,8 +83,7 @@ class Logger
 	 *
 	 * @return boolean
 	 */
-	public function isLogByDate(): bool
-	{
+	public function isLogByDate(): bool {
 		return $this->byDate;
 	}
 
@@ -98,8 +94,7 @@ class Logger
 	 *
 	 * @return void
 	 */
-	protected function setFileSystem(FileSystem $fileSystem): void
-	{
+	protected function setFileSystem(FileSystem $fileSystem): void {
 		$this->fileSystem = $fileSystem;
 	}
 
@@ -108,8 +103,7 @@ class Logger
 	 *
 	 * @return FileSystem
 	 */
-	protected function getFileSystem(): FileSystem
-	{
+	protected function getFileSystem(): FileSystem {
 		return $this->fileSystem;
 	}
 
@@ -124,8 +118,7 @@ class Logger
 	 *
 	 * @return int
 	 */
-	public function writeLog(string $level, mixed $message, ?string $directory = null, ?string $fileName = null): int
-	{
+	public function writeLog(string $level, mixed $message, ?string $directory = null, ?string $fileName = null): int {
 		$directory = !is_null($directory) ? $directory : $this->getDirectory();
 		$time = date('Y-m-d H:i:s');
 		$fileName = !is_null($fileName) ? $fileName : $level;
@@ -150,8 +143,7 @@ class Logger
 	 *
 	 * @throws LoggerException
 	 */
-	public function __call(string $method, array $args)
-	{
+	public function __call(string $method, array $args) {
 		return match ($method) {
 			'info', 'error', 'debug', 'warning' => $this->writeLog(strtoupper($method), ...$args),
 			default => throw new LoggerException("Logger method {$method} is not supported."),

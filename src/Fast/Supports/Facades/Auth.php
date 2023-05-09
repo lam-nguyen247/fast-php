@@ -4,15 +4,13 @@ namespace Fast\Supports\Facades;
 
 use Fast\Supports\Facade;
 
-class Auth extends Facade
-{
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor(): string
-    {
-        return 'auth';
-    }
+class Auth extends Facade {
+	/**
+	 * Get the registered name of the component.
+	 *
+	 * @return string
+	 */
+	protected static function getFacadeAccessor(): string {
+		return 'auth';
+	}
 }

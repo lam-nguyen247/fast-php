@@ -6,15 +6,14 @@ use Fast\Database\Connections\PostgresSQL\PostgresPdo;
 use Fast\Database\Connections\Connection as FastConnection;
 use Fast\Database\Connections\PostgresSQL\PostgresConnectionException;
 
-class Connection extends FastConnection
-{
+class Connection extends FastConnection {
 	/**
 	 * @throws PostgresConnectionException
 	 * @throws AppException
 	 */
 	public function setDriver(string $driver): void {
 		$connections = config('database.connections');
-		if(!isset($connections[$driver])){
+		if (!isset($connections[$driver])) {
 			throw new PostgresConnectionException("Could not find driver {$driver}");
 		}
 		$this->driver = $driver;
@@ -26,8 +25,7 @@ class Connection extends FastConnection
 	 * @return boolean
 	 * @throws AppException
 	 */
-	public function isConnected(): bool
-	{
+	public function isConnected(): bool {
 		try {
 			[$driver, $host, $port, $database, $username, $password] = $this->getConfig();
 			new PostgresPdo("$driver:host=$host;port=$port;dbname=$database", $username, $password, null);

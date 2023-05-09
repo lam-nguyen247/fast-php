@@ -7,8 +7,7 @@ use Fast\Http\Exceptions\AppException;
 use Fast\Traits\DatabaseBuilder\MigrateBuilder;
 use Fast\Database\DatabaseBuilder\DatabaseBuilderException;
 
-class Schema
-{
+class Schema {
 	use MigrateBuilder;
 
 	/**
@@ -23,9 +22,8 @@ class Schema
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public static function __callStatic(string $method, array $arguments): void
-	{
-		switch($method) {
+	public static function __callStatic(string $method, array $arguments): void {
+		switch ($method) {
 			case 'create':
 				[$table, $columns] = $arguments;
 				(new self)->createMigrate($table, $columns);

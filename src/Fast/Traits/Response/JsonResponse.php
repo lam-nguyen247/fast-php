@@ -6,8 +6,7 @@ use ReflectionException;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 
-trait JsonResponse
-{
+trait JsonResponse {
 	/**
 	 * Return generic json response with the given data.
 	 *
@@ -18,8 +17,7 @@ trait JsonResponse
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function respond(mixed $data, int $statusCode = 200, array $headers = []): Response
-	{
+	protected function respond(mixed $data, int $statusCode = 200, array $headers = []): Response {
 		return response()->json($data, $statusCode, $headers);
 	}
 
@@ -30,8 +28,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondCreated(mixed $data): Response
-	{
+	protected function respondCreated(mixed $data): Response {
 		return $this->respond($data, 201);
 	}
 
@@ -43,8 +40,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondSuccess(mixed $data, int $statusCode = 200): Response
-	{
+	protected function respondSuccess(mixed $data, int $statusCode = 200): Response {
 		return $this->respond([
 			'success' => true,
 			'data' => $data,
@@ -60,8 +56,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondError(string $message = 'Bad request', int $statusCode = 400): Response
-	{
+	protected function respondError(string $message = 'Bad request', int $statusCode = 400): Response {
 		return $this->respond([
 			'success' => false,
 			'errors' => [
@@ -76,8 +71,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondNoContent(): Response
-	{
+	protected function respondNoContent(): Response {
 		return $this->respondSuccess(null, 204);
 	}
 
@@ -88,8 +82,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondUnauthorized(string $message = 'Unauthorized'): Response
-	{
+	protected function respondUnauthorized(string $message = 'Unauthorized'): Response {
 		return $this->respondError($message, 401);
 	}
 
@@ -100,8 +93,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondForbidden(string $message = 'Forbidden'): Response
-	{
+	protected function respondForbidden(string $message = 'Forbidden'): Response {
 		return $this->respondError($message, 403);
 	}
 
@@ -112,8 +104,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondNotFound(string $message = 'Not Found'): Response
-	{
+	protected function respondNotFound(string $message = 'Not Found'): Response {
 		return $this->respondError($message, 404);
 	}
 
@@ -124,8 +115,7 @@ trait JsonResponse
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	protected function respondInternalError(string $message = 'Internal Error'): Response
-	{
+	protected function respondInternalError(string $message = 'Internal Error'): Response {
 		return $this->respondError($message, 500);
 	}
 }

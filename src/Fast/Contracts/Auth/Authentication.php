@@ -3,11 +3,10 @@ namespace Fast\Contracts\Auth;
 
 use Fast\Eloquent\Model;
 
-interface Authentication
-{
+interface Authentication {
 	public function attempt(array $options = []): bool;
 
-	public function user(): ? Model;
+	public function user(): ?Model;
 
 	public function logout(): void;
 
