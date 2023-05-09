@@ -77,7 +77,7 @@ You just make a test ? Ok please give --test=true, like:
    php creator exec:query --query="select * from users" --test=true
 ```
 
-**You don't know list of your defined route ?**
+**List of your defined route ?**
 
 ```bash
    php creator route:list
@@ -97,8 +97,6 @@ _Code with terminal like with a file_
 ```
 
 Give helper
-
-_Don't be worry, we're known that, please choose your command and give argument **--help** to get a cup of coffee_
 
 > Here is example: `php creator serve --help`
 

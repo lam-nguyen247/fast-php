@@ -12,8 +12,7 @@ use Fast\Http\Exceptions\AppException;
 use Fast\Contracts\Auth\Authentication;
 use Firebase\JWT\SignatureInvalidException;
 
-class Authenticatable implements Authentication
-{
+class Authenticatable implements Authentication {
 
 	private string $guard = '';
 
@@ -26,6 +25,7 @@ class Authenticatable implements Authentication
 	/**
 	 * @throws AuthenticationException
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function attempt(array $options = []): bool {
 		$model = new $this->model;
@@ -35,7 +35,7 @@ class Authenticatable implements Authentication
 		unset($options[$columnPassword]);
 
 		$object = DB::table($table)->where($options)->first();
-		if(!$object || !Hash::check($paramPassword, $object->password)){
+		if (!$object || !Hash::check($paramPassword, $object->password)) {
 			return false;
 		}
 
@@ -49,7 +49,7 @@ class Authenticatable implements Authentication
 	 * @throws ReflectionException
 	 */
 	public function user(): ?Model {
-		if(!is_null($this->getObject())) {
+		if (!is_null($this->getObject())) {
 			return $this->getObject();
 		}
 
@@ -61,15 +61,15 @@ class Authenticatable implements Authentication
 				$key = config('jwt.secret');
 				$hash = config('jwt.hash');
 
-				if(empty($key)) {
+				if (empty($key)) {
 					throw new AuthenticationException('Please install the JWT authentication');
 				}
 
-				if(empty($hash)) {
+				if (empty($hash)) {
 					throw new AuthenticationException('Please set hash type in config/jwt.php');
 				}
 				$header = getallheaders();
-				if(!isset($header['Authorization'])) {
+				if (!isset($header['Authorization'])) {
 					return null;
 				}
 
@@ -79,7 +79,7 @@ class Authenticatable implements Authentication
 					$decode = $jwt->decode($bearerToken, $this->trueFormatKey($key), [$hash]);
 					$primaryKey = app()->make($this->model)->primaryKey();
 					return $this->model::findOrFail($decode->object->{$primaryKey});
-				}catch (ExpiredException|SignatureInvalidException $e){
+				} catch (ExpiredException|SignatureInvalidException $e) {
 					throw new AuthenticationException($e->getMessage());
 				}
 			default:
@@ -89,6 +89,7 @@ class Authenticatable implements Authentication
 
 	/**
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function logout(): void {
 		$guardDriver = $this->getConfigDriverFromGuard(
@@ -111,8 +112,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 */
-	public function trueFormatKey(string $key): string
-	{
+	public function trueFormatKey(string $key): string {
 		return base64_decode(strtr($key, '-_', '+/'));
 	}
 
@@ -131,10 +131,9 @@ class Authenticatable implements Authentication
 	 * @return bool
 	 *
 	 * @throws AuthenticationException
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
-	private function setUserAuth(Model $user): bool
-	{
+	private function setUserAuth(Model $user): bool {
 		$this->setObject($user);
 
 		$guardDriver = $this->getConfigDriverFromGuard(
@@ -148,7 +147,7 @@ class Authenticatable implements Authentication
 			case 'jwt':
 				break;
 			default:
-				throw new AuthenticationException("Unknown authentication");
+				throw new AuthenticationException('Unknown authentication');
 		}
 
 		return true;
@@ -161,9 +160,9 @@ class Authenticatable implements Authentication
 	 *
 	 * @return $this
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
-	public function guard(string $guard = ""): Authenticatable
-	{
+	public function guard(string $guard = ''): Authenticatable {
 		if (empty($guard)) {
 			$guard = $this->getDefaultGuard();
 		}
@@ -192,8 +191,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return void
 	 */
-	protected function setObject(Model $object): void
-	{
+	protected function setObject(Model $object): void {
 		$this->object = $object;
 	}
 
@@ -202,8 +200,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return null|Model
 	 */
-	protected function getObject(): ?Model
-	{
+	protected function getObject(): ?Model {
 		return $this->object;
 	}
 
@@ -214,9 +211,9 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
-	protected function getConfigModelFromProvider(string $provider): string
-	{
+	protected function getConfigModelFromProvider(string $provider): string {
 		return config("auth.providers.{$provider}.model");
 	}
 
@@ -226,10 +223,9 @@ class Authenticatable implements Authentication
 	 * @param string $guard
 	 *
 	 * @return string
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
-	protected function getConfigProviderFromGuard(string $guard): string
-	{
+	protected function getConfigProviderFromGuard(string $guard): string {
 		return config("auth.guards.{$guard}.provider");
 	}
 
@@ -242,8 +238,7 @@ class Authenticatable implements Authentication
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function getConfigDriverFromGuard(string $guard): string
-	{
+	protected function getConfigDriverFromGuard(string $guard): string {
 		return config("auth.guards.{$guard}.driver");
 	}
 
@@ -254,8 +249,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return void
 	 */
-	protected function setModel(string $model): void
-	{
+	protected function setModel(string $model): void {
 		$this->model = $model;
 	}
 
@@ -264,8 +258,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 */
-	protected function getProvider(): string
-	{
+	protected function getProvider(): string {
 		return $this->provider;
 	}
 
@@ -276,8 +269,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return void
 	 */
-	public function setProvider(string $provider): void
-	{
+	public function setProvider(string $provider): void {
 		$this->provider = $provider;
 	}
 
@@ -288,8 +280,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return void
 	 */
-	public function setGuard(string $guard): void
-	{
+	public function setGuard(string $guard): void {
 		$this->guard = $guard;
 	}
 
@@ -300,8 +291,7 @@ class Authenticatable implements Authentication
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	private function getDefaultGuard(): string
-	{
+	private function getDefaultGuard(): string {
 		return config('auth.defaults.guard');
 	}
 
@@ -310,8 +300,7 @@ class Authenticatable implements Authentication
 	 *
 	 * @return string
 	 */
-	public function getCurrentGuard(): string
-	{
+	public function getCurrentGuard(): string {
 		return $this->guard;
 	}
 }
