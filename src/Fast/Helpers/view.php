@@ -13,9 +13,9 @@ if (!function_exists('view')) {
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-    function view(string $view = '', array $data = []): mixed {
-        return $view ? app()->make('view')->render($view, $data) : app()->make('view');
-    }
+	function view(string $view = '', array $data = []): mixed {
+		return $view ? app()->make('view')->render($view, $data) : app()->make('view');
+	}
 }
 
 if (!function_exists('master')) {
@@ -28,10 +28,9 @@ if (!function_exists('master')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function master(string $master): void
-    {
-        app()->make('view')->setMaster($master);
-    }
+	function master(string $master): void {
+		app()->make('view')->setMaster($master);
+	}
 }
 
 if (!function_exists('setVar')) {
@@ -45,10 +44,9 @@ if (!function_exists('setVar')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function setVar(string $key, mixed $value): void
-    {
-        app()->make('view')->setVar($key, $value);
-    }
+	function setVar(string $key, mixed $value): void {
+		app()->make('view')->setVar($key, $value);
+	}
 }
 
 if (!function_exists('need')) {
@@ -61,10 +59,9 @@ if (!function_exists('need')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function need(string $section, string $instead = ''): void
-    {
-        echo app()->make('view')->getNeedSection($section, $instead);
-    }
+	function need(string $section, string $instead = ''): void {
+		echo app()->make('view')->getNeedSection($section, $instead);
+	}
 }
 
 if (!function_exists('section')) {
@@ -78,14 +75,13 @@ if (!function_exists('section')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function section(string $section, mixed $data = null): void
-    {
-        if (!is_null($data)) {
-            app()->make('view')->setSectionWithData($section, $data);
-        } else {
-            app()->make('view')->setCurrentSection($section);
-        }
-    }
+	function section(string $section, mixed $data = null): void {
+		if (!is_null($data)) {
+			app()->make('view')->setSectionWithData($section, $data);
+		} else {
+			app()->make('view')->setCurrentSection($section);
+		}
+	}
 }
 
 if (!function_exists('endsection')) {
@@ -96,10 +92,9 @@ if (!function_exists('endsection')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function endsection(): void
-    {
-        app()->make('view')->setDataForSection(ob_get_clean());
-    }
+	function endsection(): void {
+		app()->make('view')->setDataForSection(ob_get_clean());
+	}
 }
 
 if (!function_exists('included')) {
@@ -112,18 +107,17 @@ if (!function_exists('included')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-    function included(string $path): void
-    {
-        $path = str_replace('.', DIRECTORY_SEPARATOR, $path);
+	function included(string $path): void {
+		$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
 
-        app()->make('view')->makeCache($path);
+		app()->make('view')->makeCache($path);
 
-        $path = cache_path("resources/views/{$path}.php");
+		$path = cache_path("resources/views/{$path}.php");
 
-        if (file_exists($path)) {
-            include $path;
-        } else {
-            throw new \Fast\Http\Exceptions\AppException("Cache $path not found.");
-        }
-    }
+		if (file_exists($path)) {
+			include $path;
+		} else {
+			throw new \Fast\Http\Exceptions\AppException("Cache $path not found.");
+		}
+	}
 }

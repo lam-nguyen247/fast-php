@@ -2,8 +2,7 @@
 
 namespace Fast\View;
 
-class ViewCompiler
-{
+class ViewCompiler {
 	/**
 	 * Path of the view
 	 *
@@ -28,8 +27,7 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	public function __construct(string $path)
-	{
+	public function __construct(string $path) {
 		$this->setPath($path);
 		$this->setHtml();
 	}
@@ -41,21 +39,19 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	protected function setPath(string $path): void
-	{
+	protected function setPath(string $path): void {
 		$this->path = $path;
 	}
 
 	/**
 	 * Set html content view
 	 *
-	 * @property $this->html
+	 * @return void
 	 * @property $this->path
 	 *
-	 * @return void
+	 * @property $this->html
 	 */
-	protected function setHtml(): void
-	{
+	protected function setHtml(): void {
 		$this->html = file_get_contents($this->path);
 	}
 
@@ -64,12 +60,11 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	public final function compileEcho(): void
-	{
+	public final function compileEcho(): void {
 		$newViewData = [];
 
-		foreach(explode(PHP_EOL, $this->getHtml()) as $line) {
-			if(!str_contains($line, " //  ")) {
+		foreach (explode(PHP_EOL, $this->getHtml()) as $line) {
+			if (!str_contains($line, " //  ")) {
 				$line = preg_replace('/\{\{\{(.+?)\}\}\}/', '<?php echo this->htmlentities($1); ?>', $line);
 
 				$newViewData[] = preg_replace('/\{\{(.+?)\}\}/', '<?php echo $1; ?>', $line);
@@ -89,12 +84,11 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	public final function compilePhpTag(array $start_tags, array $end_tags): void
-	{
-		foreach($start_tags as $tag) {
+	public final function compilePhpTag(array $start_tags, array $end_tags): void {
+		foreach ($start_tags as $tag) {
 			$html = str_replace($tag, '<?php', $this->getHtml());
 		}
-		foreach($end_tags as $tag) {
+		foreach ($end_tags as $tag) {
 			$html = str_replace($tag, '?>', $html);
 		}
 
@@ -106,12 +100,11 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	public final function compileSpecialTags(): void
-	{
+	public final function compileSpecialTags(): void {
 		$newViewData = [];
 
-		foreach(explode(PHP_EOL, $this->getHtml()) as $line) {
-			switch(true) {
+		foreach (explode(PHP_EOL, $this->getHtml()) as $line) {
+			switch (true) {
 				case str_contains($line, '@if('):
 				case str_contains($line, '@foreach('):
 					$line = str_replace('@', '', $line);
@@ -136,8 +129,7 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	public final function compileComment(): void
-	{
+	public final function compileComment(): void {
 		$html = preg_replace('/\{\{--(.+?)(--\}\})?\n/', "<?php // $1 ?>\n", $this->getHtml());
 
 		$html = preg_replace('/\{\{--((.|\s)*?)--\}\}/', "<?php /* $1 */ ?>\n", $html);
@@ -156,8 +148,7 @@ class ViewCompiler
 	 *
 	 * @return void
 	 */
-	protected final function resetHtml(string $html): void
-	{
+	protected final function resetHtml(string $html): void {
 		$this->html = $html;
 	}
 
@@ -166,8 +157,7 @@ class ViewCompiler
 	 *
 	 * @return string
 	 */
-	public final function getHtml(): string
-	{
+	public final function getHtml(): string {
 		return $this->html;
 	}
 }

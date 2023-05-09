@@ -4,14 +4,13 @@ namespace Fast\Database\QueryBuilder;
 use Fast\Eloquent\Model;
 use Fast\Database\QueryBuilder\QueryException;
 
-class Compile
-{
+class Compile {
 	public function compileSelect(bool $distinct): string {
 		return $distinct ? 'SELECT DISTINCT ' : 'SELECT ';
 	}
 
 	public function compileColumns(array $columns = []): string {
-		return !empty($columns) ? implode(', ', $columns): ' * ';
+		return !empty($columns) ? implode(', ', $columns) : ' * ';
 	}
 
 	public function compileFrom(string $table): string {
@@ -20,7 +19,7 @@ class Compile
 
 	public function compileJoins(array $joins): string {
 		$sql = "";
-		foreach ($joins as $join){
+		foreach ($joins as $join) {
 			$j = !empty($join[4]) ? strtoupper($join[4]) : 'INNER';
 			$sql .= " {$j} JOIN {$join[0]} ON {$join[1]} {$join[2]} {$join[3]} ";
 		}
@@ -34,8 +33,7 @@ class Compile
 	 * @param array $wheres Array of WHERE conditions.
 	 * @return string Compiled WHERE clause string.
 	 */
-	public function compileWheres(array $wheres): string
-	{
+	public function compileWheres(array $wheres): string {
 		if (empty($wheres)) {
 			return "";
 		}
@@ -74,8 +72,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileGroups(array $groups): string
-	{
+	public function compileGroups(array $groups): string {
 		return !empty($groups) ? " GROUP BY " . implode(', ', $groups) : "";
 	}
 
@@ -85,8 +82,7 @@ class Compile
 	 * @param array $havings Array of HAVING conditions.
 	 * @return string Compiled HAVING clause string.
 	 */
-	public function compileHaving(array $havings): string
-	{
+	public function compileHaving(array $havings): string {
 		if (empty($havings)) {
 			return "";
 		}
@@ -118,8 +114,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileOrders(array $orders): string
-	{
+	public function compileOrders(array $orders): string {
 		if (empty($orders)) {
 			return "";
 		}
@@ -144,8 +139,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileLimit(int $limit): string
-	{
+	public function compileLimit(int $limit): string {
 		return $limit ? " LIMIT {$limit} " : "";
 	}
 
@@ -156,8 +150,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileOffset(int $offset): string
-	{
+	public function compileOffset(int $offset): string {
 		return $offset ? " OFFSET {$offset}" : "";
 	}
 
@@ -173,7 +166,7 @@ class Compile
 			return "";
 		}
 
-		$array = array_map(function($value) {
+		$array = array_map(function ($value) {
 			return "'" . $value . "'";
 		}, explode(", ", $wherein[1]));
 
@@ -188,8 +181,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileInsert(string $table, array $data): string
-	{
+	public function compileInsert(string $table, array $data): string {
 		$columns = implode(', ', array_keys($data));
 		$placeholders = implode(', ', array_fill(0, count($data), '?'));
 
@@ -199,8 +191,7 @@ class Compile
 	/**
 	 * @throws QueryException|\Fast\Database\QueryBuilder\QueryException
 	 */
-	public function compileCreate(Model $model, array $fillable, array $data): string
-	{
+	public function compileCreate(Model $model, array $fillable, array $data): string {
 		try {
 			$columns = [];
 			$values = [];
@@ -232,8 +223,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileDelete(string $table): string
-	{
+	public function compileDelete(string $table): string {
 		return "DELETE FROM {$table}";
 	}
 
@@ -245,8 +235,7 @@ class Compile
 	 *
 	 * @return string
 	 */
-	public function compileUpdate(string $table, array $arg): string
-	{
+	public function compileUpdate(string $table, array $arg): string {
 		$sql = "UPDATE {$table} SET ";
 		foreach ($arg as $key => $dt) {
 			$sql .= "$key = '$dt', ";

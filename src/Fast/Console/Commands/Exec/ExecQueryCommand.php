@@ -6,8 +6,7 @@ use PDOException;
 use Fast\Console\Command;
 use Fast\Http\Exceptions\AppException;
 
-class ExecQueryCommand extends Command
-{
+class ExecQueryCommand extends Command {
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -41,8 +40,7 @@ class ExecQueryCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 	}
 
@@ -50,11 +48,10 @@ class ExecQueryCommand extends Command
 	 * Handle the command
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws PDOException|AppException
 	 */
-	public function handle(): void
-	{
+	public function handle(): void {
 		$query = $this->getOption('query');
 
 		try {
@@ -62,7 +59,7 @@ class ExecQueryCommand extends Command
 
 			$start = microtime(true);
 
-			if(explode(' ', $query)[0] != 'select') {
+			if (explode(' ', $query)[0] != 'select') {
 				$this->output->printError('Only execute SELECT SQL');
 				exit(1);
 			}
@@ -84,7 +81,7 @@ class ExecQueryCommand extends Command
 			$this->output->print("Ran query: $query");
 			$this->output->print("Ran time: " . $execution_time . ' seconds');
 			$this->output->print("Touched object: $touched");
-		} catch(\PDOException $e) {
+		} catch (\PDOException $e) {
 			$this->output->printError($e->getMessage());
 		}
 	}

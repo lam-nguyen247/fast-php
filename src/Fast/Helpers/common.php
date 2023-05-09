@@ -9,8 +9,7 @@ use Fast\Auth\Authenticatable;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 
-if(!function_exists('app'))
-{
+if (!function_exists('app')) {
 	/**
 	 * Returns an instance of the Fast\Container class or a specified entity from the container.
 	 * This function provides a convenient way to retrieve an instance of the Fast\Container class,
@@ -23,8 +22,8 @@ if(!function_exists('app'))
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	function app(string $entity = ''){
-		if(empty($entity)){
+	function app(string $entity = '') {
+		if (empty($entity)) {
 			return Container::getInstance();
 		}
 		return Container::getInstance()->make($entity);
@@ -55,17 +54,16 @@ if (!function_exists('base_path')) {
 	 * @return string
 	 * @throws AppException|ReflectionException
 	 */
-	function base_path(string $path = ''): string
-	{
+	function base_path(string $path = ''): string {
 		return app()->getBasePath() . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
 
-if(!function_exists('snake_case')) {
+if (!function_exists('snake_case')) {
 	function snake_case(string $string): string {
 		$result = "";
-		for($i = 0; $i < strlen($string); $i++) {
-			if(ctype_upper($string[$i])) {
+		for ($i = 0; $i < strlen($string); $i++) {
+			if (ctype_upper($string[$i])) {
 				$result .= $i === 0 ? strtolower($string[$i]) : '_' . strtolower($string[$i]);
 			} else {
 				$result .= strtolower($string[$i]);
@@ -76,15 +74,14 @@ if(!function_exists('snake_case')) {
 	}
 }
 
-if(!function_exists('class_name_only')) {
+if (!function_exists('class_name_only')) {
 	/**
 	 * Get class name only
 	 *
 	 * @param string $class
 	 * @return string
 	 */
-	function class_name_only(string $class): string
-	{
+	function class_name_only(string $class): string {
 		$explode = explode('\\', $class);
 
 		return end(
@@ -100,8 +97,7 @@ if (!function_exists('request')) {
 	 * @return Request
 	 * @throws AppException|ReflectionException
 	 */
-	function request(): Request
-	{
+	function request(): Request {
 		return app()->make(__FUNCTION__);
 	}
 }
@@ -113,8 +109,7 @@ if (!function_exists('response')) {
 	 * @return Response
 	 * @throws AppException|ReflectionException
 	 */
-	function response(): Response
-	{
+	function response(): Response {
 		return app()->make(__FUNCTION__);
 	}
 }
@@ -127,8 +122,7 @@ if (!function_exists('objectToArray')) {
 	 *
 	 * @return array
 	 */
-	function objectToArray(\ArrayObject $inputs): array
-	{
+	function objectToArray(\ArrayObject $inputs): array {
 		$array = [];
 
 		foreach ($inputs as $object) {
@@ -148,8 +142,7 @@ if (!function_exists('items_in_folder')) {
 	 *
 	 * @return array
 	 */
-	function items_in_folder(string $folder, bool $included = true): array
-	{
+	function items_in_folder(string $folder, bool $included = true): array {
 		$dir = new \RecursiveDirectoryIterator(
 			$folder,
 			\FilesystemIterator::SKIP_DOTS
@@ -186,8 +179,7 @@ if (!function_exists('session')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	function session(): Session
-	{
+	function session(): Session {
 		return app()->make(__FUNCTION__);
 	}
 }
@@ -202,8 +194,7 @@ if (!function_exists('unset_session')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	function unset_session(string $key): void
-	{
+	function unset_session(string $key): void {
 		app()->make('session')->unset($key);
 	}
 }
@@ -274,8 +265,7 @@ if (!function_exists('trans')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	function trans(string $variable, array $params = [], string $lang = 'en'): string
-	{
+	function trans(string $variable, array $params = [], string $lang = 'en'): string {
 		return app()->make('translator')->trans($variable, $params, $lang);
 	}
 }
@@ -289,8 +279,7 @@ if (!function_exists('storage_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function storage_path(string $path = ''): string
-	{
+	function storage_path(string $path = ''): string {
 		return app('path.storage') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -303,8 +292,7 @@ if (!function_exists('database_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function database_path(string $path = ''): string
-	{
+	function database_path(string $path = ''): string {
 		return app('path.database') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -317,8 +305,7 @@ if (!function_exists('delete_directory')) {
 	 *
 	 * @return boolean
 	 */
-	function delete_directory(string $dir): bool
-	{
+	function delete_directory(string $dir): bool {
 		if (!file_exists($dir)) {
 			return true;
 		}
@@ -370,8 +357,7 @@ if (!function_exists('cache_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function cache_path(string $path = ''): string
-	{
+	function cache_path(string $path = ''): string {
 		return app('path.cache') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -384,8 +370,7 @@ if (!function_exists('config_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function config_path(string $path = ''): string
-	{
+	function config_path(string $path = ''): string {
 		return app('path.config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -415,8 +400,7 @@ if (!function_exists('generateRandomString')) {
 	 *
 	 * @return string
 	 */
-	function generateRandomString(int $length = 10): string
-	{
+	function generateRandomString(int $length = 10): string {
 		$characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$charactersLength = strlen($characters);
 		$randomString = '';
@@ -436,8 +420,7 @@ if (!function_exists('check_file')) {
 	 * @return boolean
 	 * @throws AppException
 	 */
-	function check_file(string $file): bool
-	{
+	function check_file(string $file): bool {
 		return file_exists(base_path($file));
 	}
 }
@@ -451,8 +434,7 @@ if (!function_exists('cacheExists')) {
 	 * @return bool
 	 * @throws AppException
 	 */
-	function cacheExists(string $cacheFile): bool
-	{
+	function cacheExists(string $cacheFile): bool {
 		return check_file('storage/cache/' . $cacheFile);
 	}
 }
@@ -464,8 +446,7 @@ if (!function_exists('logger')) {
 	 * @return Logger
 	 * @throws AppException|ReflectionException
 	 */
-	function logger(): Logger
-	{
+	function logger(): Logger {
 		return app()->make('log');
 	}
 }
@@ -478,8 +459,7 @@ if (!function_exists('public_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function public_path(string $path = ''): string
-	{
+	function public_path(string $path = ''): string {
 		return app('path.public') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -493,8 +473,7 @@ if (!function_exists('check_dir')) {
 	 * @return boolean
 	 * @throws AppException
 	 */
-	function check_dir(string $dir): bool
-	{
+	function check_dir(string $dir): bool {
 		return is_dir(base_path($dir));
 	}
 }
@@ -508,8 +487,7 @@ if (!function_exists('route_path')) {
 	 * @return string
 	 * @throws AppException
 	 */
-	function route_path(string $path = ''): string
-	{
+	function route_path(string $path = ''): string {
 		return app('path.route') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 	}
 }
@@ -518,8 +496,7 @@ if (!function_exists('dd')) {
 	/**
 	 * @return void
 	 */
-	function dd(): void
-	{
+	function dd(): void {
 		array_map(static function ($x) {
 			var_dump($x);
 		}, func_get_args());
@@ -535,8 +512,7 @@ if (!function_exists('assets')) {
 	 *
 	 * @return string
 	 */
-	function assets(string $path): string
-	{
+	function assets(string $path): string {
 		if (php_sapi_name() == 'cli-server') {
 			return "/public/$path";
 		} else {
@@ -553,8 +529,7 @@ if (!function_exists('auth')) {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	function auth(): Authenticatable
-	{
+	function auth(): Authenticatable {
 		return app()->make(__FUNCTION__);
 	}
 }
@@ -565,8 +540,7 @@ if (!function_exists('get_all_headers')) {
 	 *
 	 * @return array
 	 */
-	function get_all_headers(): array
-	{
+	function get_all_headers(): array {
 		$headers = [];
 		foreach ($_SERVER as $name => $value) {
 			if (str_starts_with($name, 'HTTP_')) {
@@ -628,8 +602,7 @@ if (!function_exists('make_dir')) {
 	 * @return bool
 	 * @throws AppException
 	 */
-	function make_dir(string $dir, int $mode = 0777, bool $recursive = false): bool
-	{
+	function make_dir(string $dir, int $mode = 0777, bool $recursive = false): bool {
 		return mkdir(base_path($dir), $mode, $recursive);
 	}
 }
@@ -746,15 +719,15 @@ if (!function_exists('get_client_ip')) {
 		$ip = '';
 		if (getenv('HTTP_CLIENT_IP')) {
 			$ip = getenv('HTTP_CLIENT_IP');
-		} else if (getenv('HTTP_X_FORWARDED_FOR')) {
+		} elseif (getenv('HTTP_X_FORWARDED_FOR')) {
 			$ip = getenv('HTTP_X_FORWARDED_FOR');
-		} else if (getenv('HTTP_X_FORWARDED')) {
+		} elseif (getenv('HTTP_X_FORWARDED')) {
 			$ip = getenv('HTTP_X_FORWARDED');
-		} else if (getenv('HTTP_FORWARDED_FOR')) {
+		} elseif (getenv('HTTP_FORWARDED_FOR')) {
 			$ip = getenv('HTTP_FORWARDED_FOR');
-		} else if (getenv('HTTP_FORWARDED')) {
+		} elseif (getenv('HTTP_FORWARDED')) {
 			$ip = getenv('HTTP_FORWARDED');
-		} else if (getenv('REMOTE_ADDR')) {
+		} elseif (getenv('REMOTE_ADDR')) {
 			$ip = getenv('REMOTE_ADDR');
 		} else {
 			$ip = 'UNKNOWN';

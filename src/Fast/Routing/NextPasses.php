@@ -7,13 +7,11 @@ use Fast\Pipeline\Pipeline;
 use Fast\Routing\RouteCollection;
 use Fast\Http\Exceptions\AppException;
 
-class NextPasses
-{
+class NextPasses {
 	/**
 	 * @throws RouteException|AppException|ReflectionException
 	 */
-	public function __construct(array $routeParams, array $requestParams, RouteCollection $route)
-	{
+	public function __construct(array $routeParams, array $requestParams, RouteCollection $route) {
 		$params = [];
 
 		foreach ($routeParams as $key => $value) {
@@ -36,8 +34,8 @@ class NextPasses
 		};
 		$httpKernel = new \App\Http\Kernel(Container::getInstance());
 
-		foreach($middlewares as $middleware) {
-			if(!isset($httpKernel->routeMiddlewares[$middleware])) {
+		foreach ($middlewares as $middleware) {
+			if (!isset($httpKernel->routeMiddlewares[$middleware])) {
 				throw new RouteException("Middleware '{$middleware}' not found.");
 			}
 		}
@@ -45,7 +43,7 @@ class NextPasses
 		return (new Pipeline(Container::getInstance()))
 			->send(app('request'))
 			->through($middlewares)
-			->then(function() use ($params, $next) {
+			->then(function () use ($params, $next) {
 				return $next(...$params);
 			});
 	}

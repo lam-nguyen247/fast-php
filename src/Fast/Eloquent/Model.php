@@ -93,7 +93,7 @@ abstract class Model {
 		return $this->getAttributes($name);
 	}
 
-	protected function setAttributes(string $name, mixed $value) : void{
+	protected function setAttributes(string $name, mixed $value): void {
 		$this->attributes[$name] = $value;
 	}
 

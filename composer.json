@@ -1,44 +1,44 @@
 {
-  "name": "fast-php/fast",
-  "version": "1.0",
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.x-dev"
-    }
-  },
-  "type": "framework",
-  "description": "fastPHP framework is a simple framework for develop web application",
-  "keywords": [
-    "fastPHP",
-    "Core PHP",
-    "framework",
-    "simple"
-  ],
-  "homepage": "https://github.com/lam-nguyen247/fast-php",
-  "license": "None",
-  "authors": [
-    {
-      "name": "Nguyen Thanh Lam",
-      "email": "lnguyen24794@gmail.com"
-    }
-  ],
-  "require": {
-    "php": ">=8.1",
-    "firebase/php-jwt": "@dev",
-    "ext-pdo": "*",
-    "ext-readline": "*",
-    "ext-json": "*",
-    "ext-fileinfo": "*"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "autoload": {
-    "files": [
-      "src/Fast/Helpers/common.php"
-    ],
-    "psr-4": {
-      "Fast\\": "src/Fast/",
-      "App\\": "app/"
-    }
-  }
+	"name": "fast-php/fast",
+	"version": "1.0",
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.x-dev"
+		}
+	},
+	"type": "framework",
+	"description": "fastPHP framework is a simple framework for develop web application",
+	"keywords": [
+		"fastPHP",
+		"Core PHP",
+		"framework",
+		"simple"
+	],
+	"homepage": "https://github.com/lam-nguyen247/fast-php",
+	"license": "None",
+	"authors": [
+		{
+			"name": "Nguyen Thanh Lam",
+			"email": "lnguyen24794@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=8.1",
+		"firebase/php-jwt": "@dev",
+		"ext-pdo": "*",
+		"ext-readline": "*",
+		"ext-json": "*",
+		"ext-fileinfo": "*"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"autoload": {
+		"files": [
+			"src/Fast/Helpers/common.php"
+		],
+		"psr-4": {
+			"Fast\\": "src/Fast/",
+			"App\\": "app/"
+		}
+	}
 }

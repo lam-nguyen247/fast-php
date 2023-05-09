@@ -1,9 +1,9 @@
 <?php
 namespace Fast\Routing;
+
 use Fast\Traits\Routing\Resource;
 
-class RouteResource
-{
+class RouteResource {
 	use Resource;
 
 	private string $name;
@@ -18,9 +18,8 @@ class RouteResource
 
 	private array $except = [];
 
-	public function __construct()
-	{
-		list($resource, $name, $middlewares, $prefix, $namespaces) = func_get_args();
+	public function __construct() {
+		[$resource, $name, $middlewares, $prefix, $namespaces] = func_get_args();
 
 		$this->middlewares = is_array($middlewares) ? $middlewares : [$middlewares];
 		$this->prefix = is_array($prefix) ? $prefix : [$prefix];
@@ -29,14 +28,12 @@ class RouteResource
 		$this->resources = is_array($resource) ? $resource : [$resource];
 	}
 
-	public function except(array $methods): RouteResource
-	{
+	public function except(array $methods): RouteResource {
 		$this->except = $methods;
 		return $this;
 	}
 
-	public function middleware(mixed $middleware): RouteResource
-	{
+	public function middleware(mixed $middleware): RouteResource {
 		if (!is_array($middleware)) {
 			$this->middlewares[] = $middleware;
 		} else {
@@ -45,20 +42,17 @@ class RouteResource
 		return $this;
 	}
 
-	public function namespace(string $namespace): RouteResource
-	{
+	public function namespace(string $namespace): RouteResource {
 		$this->namespaces[] = $namespace;
 		return $this;
 	}
 
-	public function name(string $name): RouteResource
-	{
+	public function name(string $name): RouteResource {
 		$this->name .= $name;
 		return $this;
 	}
 
-	public function prefix(string $prefix): RouteResource
-	{
+	public function prefix(string $prefix): RouteResource {
 		$this->prefix[] = $prefix;
 		return $this;
 	}
@@ -68,8 +62,7 @@ class RouteResource
 	 *
 	 * @return array
 	 */
-	public function parse(): array
-	{
+	public function parse(): array {
 		$routes = [];
 
 		foreach ($this->resources as $resource) {

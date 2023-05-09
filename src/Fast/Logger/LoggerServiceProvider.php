@@ -6,28 +6,25 @@ use ReflectionException;
 use Fast\ServiceProvider;
 use Fast\Http\Exceptions\AppException;
 
-class LoggerServiceProvider extends ServiceProvider
-{
-    /**
-     * Booting
+class LoggerServiceProvider extends ServiceProvider {
+	/**
+	 * Booting
 	 * @throws AppException|ReflectionException
 	 */
-    public function boot(): void
-    {
-        $logger = $this->app->make('log');
+	public function boot(): void {
+		$logger = $this->app->make('log');
 
-        $logger->setDirectory(config('logger.directory'));
+		$logger->setDirectory(config('logger.directory'));
 
-        $logger->setWriteLogByDate(config('logger.by_date'));
-    }
+		$logger->setWriteLogByDate(config('logger.by_date'));
+	}
 
-    /**
-     * Register singleton routing
-     */
-    public function register(): void
-    {
-        $this->app->singleton('log', function () {
-            return new \Fast\Logger\Logger();
-        });
-    }
+	/**
+	 * Register singleton routing
+	 */
+	public function register(): void {
+		$this->app->singleton('log', function () {
+			return new \Fast\Logger\Logger();
+		});
+	}
 }

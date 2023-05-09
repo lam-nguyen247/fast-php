@@ -5,9 +5,10 @@ use Fast\Http\Request;
 use Fast\Traits\Validator\Verify;
 use Fast\Http\Exceptions\AppException;
 
-class Validator{
+class Validator {
 
 	use Verify;
+
 	protected array $rules = [];
 
 	protected array $customRules = [];
@@ -18,7 +19,7 @@ class Validator{
 
 	protected bool $isFailed = false;
 
-	protected array$failedMessages = [];
+	protected array $failedMessages = [];
 
 	protected Request $passable;
 
@@ -28,72 +29,59 @@ class Validator{
 
 	const SPECIFIC_SEPARATOR = '.';
 
-	public function rules(): array
-	{
+	public function rules(): array {
 		return $this->rules;
 	}
 
-	public function messages(): array
-	{
+	public function messages(): array {
 		return $this->messages;
 	}
 
-	public function setValidationFile(string $file): void
-	{
+	public function setValidationFile(string $file): void {
 		$this->validationFile = $file;
 	}
 
-	public function setRule( string $rule, \Closure $handle, string $message = ''): void
-	{
+	public function setRule(string $rule, \Closure $handle, string $message = ''): void {
 		$this->customRules[$rule] = $handle;
 		$this->customMessages[$rule] = $message;
 	}
 
-	public function setRules(array $rules): void
-	{
+	public function setRules(array $rules): void {
 		$this->rules = $rules;
 	}
 
-	public function isFailed(): bool
-	{
+	public function isFailed(): bool {
 		return $this->isFailed;
 	}
 
-	public function isSucceeded(): bool
-	{
+	public function isSucceeded(): bool {
 		return !$this->isFailed();
 	}
 
-	public function errors(): array
-	{
+	public function errors(): array {
 		return $this->failedMessages;
 	}
 
-	public function setPassable(Request $passable): void
-	{
+	public function setPassable(Request $passable): void {
 		$this->passable = $passable;
 	}
 
-	public function setMessages(array $messages): void
-	{
+	public function setMessages(array $messages): void {
 		$this->messages = $messages;
 	}
 
-	public function isCustom(string $rule): bool
-	{
+	public function isCustom(string $rule): bool {
 		return isset($this->customRules[$rule]);
 	}
 
-	public function getCustom(string $rule): \Closure
-	{
+	public function getCustom(string $rule): \Closure {
 		return $this->customRules[$rule];
 	}
 
 	/**
 	 * @throws ValidationException
 	 */
-	public function makeValidate(Request $request, array $validateRules, array $messages = []): Validator
-	{
+	public function makeValidate(Request $request, array $validateRules, array $messages = []): Validator {
 		$this->setPassable($request);
 		$this->setMessages($messages);
 
@@ -102,11 +90,11 @@ class Validator{
 			$ruleValue = null;
 
 			foreach ($rules as $rule) {
-				if(str_contains($rule, ':')){
-					[$rule, $ruleValue] = explode( ':', $rule);
+				if (str_contains($rule, ':')) {
+					[$rule, $ruleValue] = explode(':', $rule);
 				}
 
-				if(!in_array($rule, $this->rules()) && !$this->isCustom($rule)) {
+				if (!in_array($rule, $this->rules()) && !$this->isCustom($rule)) {
 					throw new ValidationException(" Rule {$rule} is not valid.");
 				}
 
@@ -121,9 +109,8 @@ class Validator{
 	/**
 	 * @throws ValidationException
 	 */
-	public function verify(string $rule, array $rules, $ruleValue): void
-	{
-		$value = isset($this->passable->all()[$this->current]) ? $this->passable->all()[$this->current] : null ;
+	public function verify(string $rule, array $rules, $ruleValue): void {
+		$value = isset($this->passable->all()[$this->current]) ? $this->passable->all()[$this->current] : null;
 
 		switch (true) {
 			case $rule === 'required':
@@ -134,19 +121,22 @@ class Validator{
 			case $rule === 'video':
 			case $rule === 'audio':
 			case $rule === 'email':
-				$this->$rule($value); break;
+				$this->$rule($value);
+				break;
 			case $rule === 'min':
 			case $rule === 'max':
-				$this->$rule($value, $rules, $ruleValue); break;
+				$this->$rule($value, $rules, $ruleValue);
+				break;
 			case $rule === 'unique':
 				$this->$rule($value, $ruleValue);
 			case $this->isCustom($rule):
-				$this->handleCustomRule($rule); break;
+				$this->handleCustomRule($rule);
+				break;
 			default:
 				throw new ValidationException("The rule {$rule} is not supported !");
 		}
 
-		if(!empty($this->errors())){
+		if (!empty($this->errors())) {
 			$this->makeFailed();
 		}
 	}
@@ -155,10 +145,9 @@ class Validator{
 	 * @throws \ReflectionException
 	 * @throws AppException
 	 */
-	public function buildErrorMessage($param, string $rule, array $options = []): string
-	{
+	public function buildErrorMessage($param, string $rule, array $options = []): string {
 		if (is_array($param)) {
-			list($param, $type) = $param;
+			[$param, $type] = $param;
 		}
 		$declaringMessage = $this->getDeclaringMessage($param, $rule);
 
@@ -170,7 +159,7 @@ class Validator{
 					? Validator::SPECIFIC_SEPARATOR . $type
 					: ''),
 				array_merge($options, [
-					'attribute' => $param
+					'attribute' => $param,
 				])
 			);
 
@@ -185,8 +174,7 @@ class Validator{
 	 *
 	 * @return string|null
 	 */
-	public function getDeclaringMessage(string $param, string $rule): ?string
-	{
+	public function getDeclaringMessage(string $param, string $rule): ?string {
 		$currentMessageKey = $param . Validator::SPECIFIC_SEPARATOR . $rule;
 		return $this->messages[$currentMessageKey] ?? null;
 	}
@@ -196,8 +184,7 @@ class Validator{
 	 *
 	 * @return void
 	 */
-	public function makeFailed(): void
-	{
+	public function makeFailed(): void {
 		$this->isFailed = true;
 	}
 
@@ -209,8 +196,7 @@ class Validator{
 	 *
 	 * @return void
 	 */
-	public function pushErrorMessage(string $key, string $message): void
-	{
+	public function pushErrorMessage(string $key, string $message): void {
 		$this->failedMessages[$key][] = $message;
 	}
 }

@@ -1,12 +1,10 @@
 <?php
 namespace Fast\Translator;
 
-class Translator
-{
+class Translator {
 	private array $storage = [];
 
-	public function setTranslation(string $key, $value): Translator
-	{
+	public function setTranslation(string $key, $value): Translator {
 		$this->storage[$key] = $value;
 		return $this;
 	}
@@ -14,25 +12,24 @@ class Translator
 	/**
 	 * @throws TranslationException
 	 */
-	public function trans(string $key, array $params, string $lang = 'en'): mixed
-	{
+	public function trans(string $key, array $params, string $lang = 'en'): mixed {
 		$keys = explode('.', $key);
 		$file = array_shift($keys);
-		$key = $file. DIRECTORY_SEPARATOR . $lang;
+		$key = $file . DIRECTORY_SEPARATOR . $lang;
 
-		if(!$this->checkTranslation($key)) {
+		if (!$this->checkTranslation($key)) {
 			throw new TranslationException("Translator param {$key} not found");
 		}
 		$value = $this->getTranslation($key);
 
-		for( $i = 0; $i <= count($keys) - 1; $i++) {
-			if(isset($value[$keys[$i]])) {
+		for ($i = 0; $i <= count($keys) - 1; $i++) {
+			if (isset($value[$keys[$i]])) {
 				$value = $value[$keys[$i]];
-			}else {
+			} else {
 				throw new TranslationException("Key $keys[$i] not found");
 			}
 		}
-		
+
 		foreach ($params as $key => $param) {
 			$value = str_replace(":{$key}", $param, $value);
 		}
@@ -40,8 +37,7 @@ class Translator
 		return $value;
 	}
 
-	protected function getStorage(): array
-	{
+	protected function getStorage(): array {
 		return $this->storage;
 	}
 
@@ -52,8 +48,7 @@ class Translator
 	 *
 	 * @return bool
 	 */
-	protected function checkTranslation(string $key): bool
-	{
+	protected function checkTranslation(string $key): bool {
 		return isset($this->storage[$key]);
 	}
 

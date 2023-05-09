@@ -5,8 +5,7 @@ namespace Fast\Supports;
 use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
-abstract class Facade
-{
+abstract class Facade {
 	/**
 	 * Get facade of entity
 	 *
@@ -14,8 +13,7 @@ abstract class Facade
 	 *
 	 * @throws AppException
 	 */
-	protected static function getFacadeAccessor(): string
-	{
+	protected static function getFacadeAccessor(): string {
 		throw new AppException("Method " . __METHOD__ . " is not override.");
 	}
 
@@ -30,8 +28,7 @@ abstract class Facade
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public static function __callStatic(string $method, array $arguments)
-	{
+	public static function __callStatic(string $method, array $arguments) {
 		return app()->make(static::getFacadeAccessor())->$method(...$arguments);
 	}
 
@@ -46,8 +43,7 @@ abstract class Facade
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function __call(string $method, array $arguments)
-	{
+	public function __call(string $method, array $arguments) {
 		return app()->make(static::getFacadeAccessor())->$method(...$arguments);
 	}
 }

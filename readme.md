@@ -6,9 +6,14 @@
 
 ## About FastPHP Framework
 
-FastPHP is a web application framework designed with a focus on speed and efficiency. We believe that development should be a seamless and satisfying experience, where coding is a joy, not a burden. Our goal is to streamline the web development process by simplifying common tasks that are required in most web projects, such as:
+FastPHP is a web application framework designed with a focus on speed and efficiency. We believe that development should
+be a seamless and satisfying experience, where coding is a joy, not a burden. Our goal is to streamline the web
+development process by simplifying common tasks that are required in most web projects, such as:
 
-FastPHP is a powerful yet accessible framework that provides all the necessary tools for building large and robust applications. With its elegant and innovative design, it combines simplicity and functionality to give you the tools you need to create any type of web application you can imagine. Whether you're working on a personal project or a complex enterprise application, FastPHP makes the process fast, efficient, and enjoyable.
+FastPHP is a powerful yet accessible framework that provides all the necessary tools for building large and robust
+applications. With its elegant and innovative design, it combines simplicity and functionality to give you the tools you
+need to create any type of web application you can imagine. Whether you're working on a personal project or a complex
+enterprise application, FastPHP makes the process fast, efficient, and enjoyable.
 
 ## Features from FastPHP Framework
 

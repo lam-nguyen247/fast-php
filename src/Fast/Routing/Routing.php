@@ -4,14 +4,12 @@ namespace Fast\Routing;
 use ReflectionException;
 use Fast\Http\Exceptions\AppException;
 
-class Routing
-{
+class Routing {
 	const ROUTING_SEPARATOR = "/";
 
-	private  array $routes = [];
+	private array $routes = [];
 
-	public function __construct(array $routes = [])
-	{
+	public function __construct(array $routes = []) {
 		$this->routes = $routes;
 	}
 
@@ -31,8 +29,8 @@ class Routing
 			$method = $route->getMethods();
 			$prefix = $route->getPrefix();
 
-			if(!empty($prefix)) {
-				$uri =	format_url( self::ROUTING_SEPARATOR . implode(self::ROUTING_SEPARATOR, $prefix) . $uri);
+			if (!empty($prefix)) {
+				$uri = format_url(self::ROUTING_SEPARATOR . implode(self::ROUTING_SEPARATOR, $prefix) . $uri);
 			}
 
 			$routeParams = explode(self::ROUTING_SEPARATOR, $uri);
@@ -48,14 +46,12 @@ class Routing
 		return $this->handleNotFound();
 	}
 
-	public function getRequestURL(): string
-	{
+	public function getRequestURL(): string {
 		$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 		return empty($uri) ? Routing::ROUTING_SEPARATOR : $uri;
 	}
 
-	private function getRequestMethod(): string
-	{
+	private function getRequestMethod(): string {
 		return $_SERVER['REQUEST_METHOD'] ?? "GET";
 	}
 

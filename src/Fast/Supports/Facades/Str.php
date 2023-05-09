@@ -5,41 +5,37 @@ namespace Fast\Supports\Facades;
 use Fast\Supports\Facade;
 use Fast\Supports\Str as SupportsStr;
 
-class Str extends Facade
-{
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor(): string
-    {
-        return 'str';
-    }
+class Str extends Facade {
+	/**
+	 * Get the registered name of the component.
+	 *
+	 * @return string
+	 */
+	protected static function getFacadeAccessor(): string {
+		return 'str';
+	}
 
-    /**
-     * Call static function
-     * 
-     * @param string $method
-     * @param array $arguments
-     * 
-     * @return mixed
-     */
-    public static function __callStatic(string $method, array $arguments)
-    {
-        return (new SupportsStr)->$method(...$arguments);
-    }
+	/**
+	 * Call static function
+	 *
+	 * @param string $method
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public static function __callStatic(string $method, array $arguments) {
+		return (new SupportsStr)->$method(...$arguments);
+	}
 
-    /**
-     * Call function
-     * 
-     * @param string $method
-     * @param array $arguments
-     * 
-     * @return mixed
-     */
-    public function __call(string $method, array $arguments)
-    {
-        return (new SupportsStr)->$method(...$arguments);
-    }
+	/**
+	 * Call function
+	 *
+	 * @param string $method
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public function __call(string $method, array $arguments) {
+		return (new SupportsStr)->$method(...$arguments);
+	}
 }

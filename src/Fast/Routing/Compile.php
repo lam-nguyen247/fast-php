@@ -23,8 +23,7 @@ use Fast\Database\DatabaseBuilder\DatabaseBuilderException;
 use Fast\Database\Connections\Mysql\MysqlConnectionException;
 use Fast\Database\Connections\PostgresSQL\PostgresConnectionException;
 
-class Compile
-{
+class Compile {
 	private string $method;
 
 	private string $controller;
@@ -42,8 +41,7 @@ class Compile
 	/**
 	 * @throws RouteException
 	 */
-	public function __construct(RouteCollection $route, array $params)
-	{
+	public function __construct(RouteCollection $route, array $params) {
 		$this->makeRoute($route);
 		$this->makeParams($params);
 
@@ -59,11 +57,11 @@ class Compile
 	 * @throws UnknownException
 	 * @throws AppException
 	 */
-	public function handle(){
+	public function handle() {
 		$controller = $this->getFullNameSpace($this->getController());
 		$method = $this->getMethod();
 
-		if(!class_exists($controller) || !method_exists($controller, $method)) {
+		if (!class_exists($controller) || !method_exists($controller, $method)) {
 			throw new RouteException("Endpoint target '{$controller}@{$method}' does not exists");
 		}
 		try {
@@ -73,25 +71,25 @@ class Compile
 		} catch (\Exception $e) {
 			throw match (true) {
 				$e instanceof AppException,
-				$e instanceof HashException,
-				$e instanceof RouteException,
-				$e instanceof QueryException,
-				$e instanceof LoggerException,
-				$e instanceof RuntimeException,
-				$e instanceof ConsoleException,
-				$e instanceof StorageException,
-				$e instanceof EloquentException,
-				$e instanceof DispatcherException,
-				$e instanceof FileSystemException,
-				$e instanceof MiddlewareException,
-				$e instanceof ValidationException,
-				$e instanceof TranslationException,
-				$e instanceof UnauthorizedException,
-				$e instanceof ConfigurationException,
-				$e instanceof AuthenticationException,
-				$e instanceof DatabaseBuilderException,
-				$e instanceof MysqlConnectionException,
-				$e instanceof PostgresConnectionException => $e,
+					$e instanceof HashException,
+					$e instanceof RouteException,
+					$e instanceof QueryException,
+					$e instanceof LoggerException,
+					$e instanceof RuntimeException,
+					$e instanceof ConsoleException,
+					$e instanceof StorageException,
+					$e instanceof EloquentException,
+					$e instanceof DispatcherException,
+					$e instanceof FileSystemException,
+					$e instanceof MiddlewareException,
+					$e instanceof ValidationException,
+					$e instanceof TranslationException,
+					$e instanceof UnauthorizedException,
+					$e instanceof ConfigurationException,
+					$e instanceof AuthenticationException,
+					$e instanceof DatabaseBuilderException,
+					$e instanceof MysqlConnectionException,
+					$e instanceof PostgresConnectionException => $e,
 				default => new UnknownException($e->getMessage()),
 			};
 		}
@@ -104,8 +102,7 @@ class Compile
 	 *
 	 * @return void
 	 */
-	private function findingTarget(array|string $action): void
-	{
+	private function findingTarget(array|string $action): void {
 		[$controller, $method] = is_array($action)
 			? (count($action) === 1
 				? [array_shift($action), Compile::__INVOKE]
@@ -118,38 +115,31 @@ class Compile
 		$this->setController($controller);
 	}
 
-	private function setMethod(string $method): void
-	{
+	private function setMethod(string $method): void {
 		$this->method = $method;
 	}
 
-	private function getMethod(): string
-	{
+	private function getMethod(): string {
 		return $this->method;
 	}
 
-	private function setController(string $controller): void
-	{
+	private function setController(string $controller): void {
 		$this->controller = $controller;
 	}
 
-	private function getController(): string
-	{
+	private function getController(): string {
 		return $this->controller;
 	}
 
-	private function makeRoute(RouteCollection $route): void
-	{
+	private function makeRoute(RouteCollection $route): void {
 		$this->route = $route;
 	}
 
-	private function getParams(): array
-	{
+	private function getParams(): array {
 		return $this->params;
 	}
 
-	private function getRoute(): RouteCollection
-	{
+	private function getRoute(): RouteCollection {
 		return $this->route;
 	}
 
@@ -172,8 +162,7 @@ class Compile
 		return $action;
 	}
 
-	private function getFullNamespace(string $controller): string
-	{
+	private function getFullNamespace(string $controller): string {
 		$namespace = $this->getRoute()->getNamespace();
 
 		return !empty($namespace)
@@ -181,8 +170,7 @@ class Compile
 			: $controller;
 	}
 
-	private function makeParams(array $params): void
-	{
+	private function makeParams(array $params): void {
 		$this->params = $params;
 	}
 }

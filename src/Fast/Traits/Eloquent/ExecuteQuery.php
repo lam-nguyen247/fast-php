@@ -233,7 +233,7 @@ trait ExecuteQuery {
 			->setTakeList(!$this->find && !$this->first)
 			->setIsThrow($this->isThrow)
 			->setArgs([
-				'with' => $this->with
+				'with' => $this->with,
 			])
 			->verifyEmptyResources()
 			->handle();

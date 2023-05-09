@@ -1,7 +1,7 @@
 <?php
 namespace Fast\Supports;
-class Str
-{
+
+class Str {
 	private array $plural = [
 		'/(quiz)$/i' => "$1zes",
 		'/^(ox)$/i' => "$1en",
@@ -79,8 +79,7 @@ class Str
 		'equipment',
 	];
 
-	public function pluralize($string)
-	{
+	public function pluralize($string) {
 		if (in_array(strtolower($string), $this->uncountable)) {
 			return $string;
 		}

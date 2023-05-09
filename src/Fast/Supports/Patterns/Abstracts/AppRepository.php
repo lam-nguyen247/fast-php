@@ -9,8 +9,7 @@ use Fast\Http\Exceptions\AppException;
 use Fast\Database\QueryBuilder\QueryBuilder;
 use Fast\Contracts\Patterns\RepositoryInterface;
 
-abstract class AppRepository implements RepositoryInterface
-{
+abstract class AppRepository implements RepositoryInterface {
 	/**
 	 * @var Model
 	 */
@@ -22,8 +21,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @throws ReflectionException
 	 */
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->makeModel();
 	}
 
@@ -39,8 +37,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @return bool
 	 * @throws AppException
 	 */
-	private function isConnected(): bool
-	{
+	private function isConnected(): bool {
 		return app('connection')->isConnected();
 	}
 
@@ -51,9 +48,8 @@ abstract class AppRepository implements RepositoryInterface
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function makeModel(): void
-	{
-		if(!$this->isConnected()) {
+	public function makeModel(): void {
+		if (!$this->isConnected()) {
 			app('connection')->setDriver('backup');
 		}
 		$model = $this->model();
@@ -73,8 +69,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return QueryBuilder|mixed
 	 */
-	public function __call(string $method, array $args): mixed
-	{
+	public function __call(string $method, array $args): mixed {
 		return $this->model->$method(...$args);
 	}
 
@@ -84,8 +79,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param array $columns
 	 * @return mixed
 	 */
-	public function all(array $columns = ['*']): mixed
-	{
+	public function all(array $columns = ['*']): mixed {
 		return $this->model->all($columns);
 	}
 
@@ -96,8 +90,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param null $key
 	 * @return mixed
 	 */
-	public function lists($column, $key = null): mixed
-	{
+	public function lists($column, $key = null): mixed {
 		return $this->model->pluck($column, $key);
 	}
 
@@ -109,8 +102,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @return mixed
 	 * @throws AppException
 	 */
-	public function paginate($limit = null, array $columns = ['*']): mixed
-	{
+	public function paginate($limit = null, array $columns = ['*']): mixed {
 		$limit = is_null($limit) ? config('settings.paginate') : $limit;
 		return $this->model->paginate($limit, $columns);
 	}
@@ -122,13 +114,11 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param array $column
 	 * @return mixed
 	 */
-	public function find($id, array $column = ['*']): mixed
-	{
+	public function find($id, array $column = ['*']): mixed {
 		return $this->model->find($id, $column);
 	}
 
-	public function findOrFail($id, $column = ['*']): mixed
-	{
+	public function findOrFail($id, $column = ['*']): mixed {
 		return $this->model->findOrFail($id, $column);
 	}
 
@@ -137,8 +127,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return mixed
 	 */
-	public function first(): mixed
-	{
+	public function first(): mixed {
 		return $this->model->first();
 	}
 
@@ -150,8 +139,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param null $value
 	 * @return mixed
 	 */
-	public function where($condition, $operator = null, $value = null): mixed
-	{
+	public function where($condition, $operator = null, $value = null): mixed {
 		return $this->model->where($condition, $operator, $value);
 	}
 
@@ -163,8 +151,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param null $value
 	 * @return mixed
 	 */
-	public function orWhere($column, $operator = null, $value = null): mixed
-	{
+	public function orWhere($column, $operator = null, $value = null): mixed {
 		return $this->model->orWhere($column, $operator, $value);
 	}
 
@@ -174,8 +161,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param array $input
 	 * @return mixed
 	 */
-	public function firstOrCreate(array $input = []): mixed
-	{
+	public function firstOrCreate(array $input = []): mixed {
 		return $this->model->firstOrCreate($input);
 	}
 
@@ -185,8 +171,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $input
 	 * @return mixed
 	 */
-	public function insert($input): mixed
-	{
+	public function insert($input): mixed {
 		return $this->model->insert($input);
 	}
 
@@ -196,8 +181,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $input
 	 * @return mixed
 	 */
-	public function create(array $input): mixed
-	{
+	public function create(array $input): mixed {
 		return $this->model->create($input);
 	}
 
@@ -206,8 +190,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $input
 	 * @return mixed
 	 */
-	public function update($id, $input): mixed
-	{
+	public function update($id, $input): mixed {
 		$result = $this->model->find($id);
 		if ($result) {
 			$result->update($input);
@@ -225,8 +208,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @return mixed
 	 */
 
-	public function updateOrCreate($id, $input): mixed
-	{
+	public function updateOrCreate($id, $input): mixed {
 		$result = $this->model->find($id);
 		if ($result) {
 			$result->update($input);
@@ -243,8 +225,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $input
 	 * @return mixed
 	 */
-	public function multiUpdate($column, $value, $input): mixed
-	{
+	public function multiUpdate($column, $value, $input): mixed {
 		$value = is_array($value) ? $value : [$value];
 		return $this->model->whereIn($column, $value)->update($input);
 	}
@@ -255,8 +236,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $ids
 	 * @return mixed
 	 */
-	public function delete($ids): mixed
-	{
+	public function delete($ids): mixed {
 		if (empty($ids)) {
 			return true;
 		}
@@ -273,8 +253,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $input
 	 * @return mixed
 	 */
-	public function softDelete($name, $ids, $input): mixed
-	{
+	public function softDelete($name, $ids, $input): mixed {
 		if (empty($ids)) {
 			return true;
 		}
@@ -287,8 +266,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $relations
 	 * @return mixed
 	 */
-	public function with($relations): mixed
-	{
+	public function with($relations): mixed {
 		return $this->model->with($relations);
 	}
 
@@ -299,8 +277,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param string $direction
 	 * @return mixed
 	 */
-	public function orderBy($column, string $direction = 'asc'): mixed
-	{
+	public function orderBy($column, string $direction = 'asc'): mixed {
 		return $this->model->orderBy($column, $direction);
 	}
 
@@ -310,8 +287,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $relation
 	 * @return mixed
 	 */
-	public function withCount($relation): mixed
-	{
+	public function withCount($relation): mixed {
 		return $this->model->withCount($relation);
 	}
 
@@ -321,8 +297,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param array $columns
 	 * @return mixed
 	 */
-	public function select(array $columns = ['*']): mixed
-	{
+	public function select(array $columns = ['*']): mixed {
 		return $this->model->select($columns);
 	}
 
@@ -333,8 +308,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param $closure
 	 * @return mixed
 	 */
-	public function whereHas($relation, $closure): mixed
-	{
+	public function whereHas($relation, $closure): mixed {
 		return $this->model->whereHas($relation, $closure);
 	}
 
@@ -346,8 +320,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return $this
 	 */
-	public function whereIn($column, array $values): static
-	{
+	public function whereIn($column, array $values): static {
 		$values = is_array($values) ? $values : [$values];
 		return $this->model->whereIn($column, $values);
 	}
@@ -360,8 +333,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return $this
 	 */
-	public function whereNotIn($column, mixed $values): static
-	{
+	public function whereNotIn($column, mixed $values): static {
 		$values = is_array($values) ? $values : [$values];
 		return $this->model->whereNotIn($column, $values);
 	}
@@ -370,8 +342,7 @@ abstract class AppRepository implements RepositoryInterface
 	 * @param string $relation
 	 * @return $this
 	 */
-	public function has(string $relation): static
-	{
+	public function has(string $relation): static {
 		return $this->model->with($relation);
 	}
 
@@ -384,8 +355,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return $this
 	 */
-	public function join(string $table, string $columnTableA = null, string $condition = null, string $columnTableB = null): static
-	{
+	public function join(string $table, string $columnTableA = null, string $condition = null, string $columnTableB = null): static {
 		return $this->model->join($table, $columnTableA, $condition, $columnTableB);
 	}
 
@@ -397,8 +367,7 @@ abstract class AppRepository implements RepositoryInterface
 	 *
 	 * @return $this
 	 */
-	public function when(string $condition, Closure $callback, Closure $default = null): static
-	{
+	public function when(string $condition, Closure $callback, Closure $default = null): static {
 		return $this->model->when($condition, $callback, $default);
 	}
 

@@ -6,8 +6,7 @@ use ReflectionException;
 use Fast\Console\Command;
 use Fast\Http\Exceptions\AppException;
 
-class RouteListCommand extends Command
-{
+class RouteListCommand extends Command {
 	/**
 	 * Specific character
 	 *
@@ -46,8 +45,7 @@ class RouteListCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 	}
 
@@ -57,11 +55,10 @@ class RouteListCommand extends Command
 	 * @return void
 	 * @throws AppException|ReflectionException
 	 */
-	public function handle(): void
-	{
+	public function handle(): void {
 		$routes = app()->make('route')->collect();
 
-		switch($this->getOption('format')) {
+		switch ($this->getOption('format')) {
 			case 'array':
 				print_r($routes);
 				break;
@@ -75,7 +72,7 @@ class RouteListCommand extends Command
 				$this->output->printSuccessNoBackground($this->makeSpace(186, self::SPECIFIC_UNDERSCORE));
 				$this->output->printSuccessNoBackground(self::SPECIFIC_LINE . "{$space15}uri{$space15}" . self::SPECIFIC_LINE . "{$space25}action{$space25}" . self::SPECIFIC_LINE . "{$space5}method{$space5}" . self::SPECIFIC_LINE . "{$space15}name{$space15}" . self::SPECIFIC_LINE . "{$space15}middlewares{$space15}" . self::SPECIFIC_LINE);
 				$this->output->printSuccessNoBackground(self::SPECIFIC_LINE . $this->makeSpace(184, self::SPECIFIC_MIDDLE_SCORE) . self::SPECIFIC_LINE);
-				foreach($routes as $route) {
+				foreach ($routes as $route) {
 					$uriLen = 33;
 					$actionLen = 56;
 					$methodLen = 16;
@@ -86,7 +83,7 @@ class RouteListCommand extends Command
 
 					$prefix = $route->getPrefix();
 
-					if(!empty($prefix)) {
+					if (!empty($prefix)) {
 						$uri = Routing::ROUTING_SEPARATOR . implode("/", $prefix) . $route->getUri();
 					} else {
 						$uri = $route->getUri();
@@ -96,7 +93,7 @@ class RouteListCommand extends Command
 
 					$action = $route->getAction();
 
-					switch(true) {
+					switch (true) {
 						case $action instanceof \Closure:
 							$action = self::CLOSURE;
 							break;
@@ -127,9 +124,8 @@ class RouteListCommand extends Command
 	 *
 	 * @return void
 	 */
-	private function handleViewJsonFormat(array $routes): void
-	{
-		foreach($routes as $route) {
+	private function handleViewJsonFormat(array $routes): void {
+		foreach ($routes as $route) {
 			echo str_replace("\\", "", json_encode(['uri' => $route->getUri(), 'action' => $route->getAction(), 'method' => $route->getMethods(), 'name' => $route->getName(), 'middlewares' => $route->getMiddlewares()])) . PHP_EOL;
 		}
 	}
@@ -142,11 +138,10 @@ class RouteListCommand extends Command
 	 *
 	 * @return string
 	 */
-	public function makeSpace(int $max, string $specific = " "): string
-	{
+	public function makeSpace(int $max, string $specific = " "): string {
 		$space = '';
 
-		for($i = 1; $i <= $max; $i++) {
+		for ($i = 1; $i <= $max; $i++) {
 			$space .= $specific;
 		}
 
