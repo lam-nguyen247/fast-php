@@ -20,7 +20,7 @@ trait JsonResponse
 	 */
 	protected function respond(mixed $data, int $statusCode = 200, array $headers = []): Response
 	{
-		return response()->json($data, $statusCode, $headers);
+		return response()->json($data, $statusCode);
 	}
 
 	/**
