@@ -14,6 +14,7 @@ class Create:TableTable extends Migration
     {
         Schema::create(':table', function (ColumnBuilder $table) {
             $table->increments('id')->comment('this is comment');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
