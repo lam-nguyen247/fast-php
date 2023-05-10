@@ -12,11 +12,10 @@ class AppException extends Exception {
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function __construct($message = "", $code = 0, Throwable $previous = null) {
+	public function __construct($message = '', $code = 0, Throwable $previous = null) {
+		$message = json_encode($message);
 		$this->writeLog($message);
-
 		parent::__construct($message, $code, $previous);
-
 		set_exception_handler([$this, 'render']);
 	}
 
