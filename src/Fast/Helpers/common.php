@@ -495,15 +495,11 @@ if (!function_exists('route_path')) {
 
 if (!function_exists('dd')) {
 	/**
-	 * @return void
+	 * @param $x
+	 * @return Response
 	 */
-	function dd(): void {
-		array_map(static function ($x) {
-			Log::debug(json_encode($x));
-			var_dump($x);
-		}, func_get_args());
-
-		die;
+	function dd($x): Response {
+		throw new AppException($x, 200);
 	}
 }
 

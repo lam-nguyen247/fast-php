@@ -51,7 +51,7 @@ abstract class Authenticate extends Model {
 
 		$jwt = app()->make(JWT::class);
 
-		$minutes = isset($customClaims['exp']) ? $customClaims['exp'] : config('jwt.exp');
+		$minutes = $customClaims['exp'] ?? config('jwt.exp');
 
 		$exp = strtotime('+ ' . $minutes . ' minutes');
 
