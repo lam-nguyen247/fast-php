@@ -2,17 +2,33 @@
 
 namespace Fast\Http;
 
+use Fast\Application;
 use Fast\Services\File;
 use Fast\Enums\MethodType;
+use Fast\Http\Exceptions\AppException;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Auth;
 
 class Request extends SymfonyRequest {
+	public function __construct(Request $request = null) {
+		if($request === null){
+			parent::__construct($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+		}else{
+			parent::__construct(
+				$request->query->all(), $request->request->all(), $request->attributes->all(),
+				$request->cookies->all(), $request->files->all(), $request->server->all()
+			);
 
-	public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null) {
-		parent::__construct($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+			$this->headers->replace($request->headers->all());
+
+			$this->content = $request->content;
+
+			if ($this->isJson()) {
+				$this->request = $this->json();
+			}
+		}
 	}
 
 	/**
@@ -23,9 +39,9 @@ class Request extends SymfonyRequest {
 	protected ?ParameterBag $json;
 
 	public function getRequest(): array {
-		$params = array_merge($_REQUEST, array_map(function ($file) {
+		$params = array_merge($this->request->all(), array_map(function ($file) {
 			return new File($file);
-		}, $_FILES));
+		}, $this->files->all()));
 
 		if ($this->method() === MethodType::PUT) {
 			parse_str(file_get_contents('php://input'), $data);
@@ -40,7 +56,7 @@ class Request extends SymfonyRequest {
 	}
 
 	public function getQueryParams(): array {
-		return $_GET;
+		return $this->query->all();
 	}
 
 	public function input(string $input): mixed {
@@ -104,7 +120,7 @@ class Request extends SymfonyRequest {
 	 * Get request server
 	 */
 	public function server(): array {
-		return $_SERVER;
+		return $this->server->all();
 	}
 
 	/**

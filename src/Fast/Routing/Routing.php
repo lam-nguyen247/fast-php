@@ -52,7 +52,7 @@ class Routing {
 	 * @throws AppException
 	 */
 	public function getRequestURL(): string {
-		$uri = urldecode(parse_url(request()->server->get('REQUEST_URI'), PHP_URL_PATH));
+		$uri = urldecode(parse_url(app()->getRequest()->server->get('REQUEST_URI'), PHP_URL_PATH));
 		return empty($uri) ? Routing::ROUTING_SEPARATOR : $uri;
 	}
 
@@ -61,7 +61,7 @@ class Routing {
 	 * @throws AppException
 	 */
 	private function getRequestMethod(): string {
-		return request()->server->get('REQUEST_METHOD') ?? 'GET';
+		return app()->getRequest()->server->get('REQUEST_METHOD') ?? 'GET';
 	}
 
 	/**

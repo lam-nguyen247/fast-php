@@ -9,7 +9,7 @@ use Fast\Http\Exceptions\UnauthorizedException;
 
 abstract class FormRequest extends Request {
 	public function __construct() {
-		parent::__construct();
+		parent::__construct(app()->getRequest());
 	}
 
 	abstract public function authorize(): bool;
@@ -23,17 +23,16 @@ abstract class FormRequest extends Request {
 	 * @throws AppException|ReflectionException
 	 */
 	public function executeValidate(): void {
+
 		if (!$this->authorize()) {
 			throw new UnauthorizedException();
 		}
-
 		$validator = app()->make('validator');
-		$validator->make(
+		$validator->makeValidate(
 			$this,
 			$this->rules(),
 			$this->messages()
 		);
-
 		if ($validator->isFailed()) {
 			throw new ValidationException($validator->errors());
 		}
