@@ -99,7 +99,7 @@ if (!function_exists('request')) {
 	 * @throws AppException|ReflectionException
 	 */
 	function request(): Request {
-		return app()->make(Request::class);
+		return app()->getRequest();
 	}
 }
 

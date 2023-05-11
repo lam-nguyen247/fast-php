@@ -6,6 +6,7 @@ use ReflectionException;
 use Fast\Eloquent\Model;
 use Fast\Http\FormRequest;
 use Fast\Http\Exceptions\AppException;
+use Symfony\Component\HttpFoundation\Request;
 
 class Container {
 	/**
@@ -58,6 +59,8 @@ class Container {
 	 */
 	private bool $skipMiddleware = false;
 
+	public \Fast\Http\Request $request;
+
 	/**
 	 * Initial of container
 	 *
@@ -74,6 +77,14 @@ class Container {
 		$this->instance('path.database', $this->getDatabasePath());
 
 		self::$instance = $this;
+	}
+
+	public function setRequest(Request $request): void {
+		$this->request = $request;
+	}
+
+	public function getRequest(): Request {
+		return $this->request;
 	}
 
 	/**

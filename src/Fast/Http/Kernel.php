@@ -60,9 +60,11 @@ class Kernel implements HttpKernel {
 	 * @param Request $request
 	 *
 	 * @return mixed
+	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function reactHandle(Request $request): mixed {
-		Container::getInstance()->instance(Request::class, $request);
+		app()->setRequest($request);
 		return (new Pipeline($this->app))
 			->send($request)
 			->through($this->middlewares)
@@ -76,7 +78,7 @@ class Kernel implements HttpKernel {
 	protected function dispatchToRouter(): Closure {
 		return function () {
 			try {
-				$route = new Route;
+				$route = new Route();
 				return $route->run();
 			} catch (AppException $exception) {
 				return $exception->render($exception);
