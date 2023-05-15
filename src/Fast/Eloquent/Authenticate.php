@@ -8,6 +8,7 @@ use Fast\Eloquent\Model;
 use ReflectionException;
 use Fast\Auth\AuthenticationException;
 use Fast\Http\Exceptions\AppException;
+use React\Cache\ArrayCache;
 
 abstract class Authenticate extends Model {
 	/**
@@ -36,17 +37,17 @@ abstract class Authenticate extends Model {
 		$hash = config('jwt.hash');
 
 		if (empty($key)) {
-			throw new AuthenticationException("Please install the JWT authentication");
+			throw new AuthenticationException('Please install the JWT authentication');
 		}
 
 		if (empty($hash)) {
-			throw new AuthenticationException("Please set hash type in config/jwt.php");
+			throw new AuthenticationException('Please set hash type in config/jwt.php');
 		}
 
 		$modelId = $this->primaryKey();
 
 		if (is_null($this->{$modelId})) {
-			throw new AuthenticationException("Cannot generate tokens for the class that are not yet bound");
+			throw new AuthenticationException('Cannot generate tokens for the class that are not yet bound');
 		}
 
 		$jwt = app()->make(JWT::class);
@@ -56,12 +57,16 @@ abstract class Authenticate extends Model {
 		$exp = strtotime('+ ' . $minutes . ' minutes');
 
 		$payload = [
-			'object' => $this,
+			'object' => $this->getData(),
 			'exp' => $exp,
 		];
 
+		$token = $jwt->encode($payload, $this->trueFormatKey($key), $hash);
+
+		$this->token = $token;
+
 		return [
-			'token' => $jwt->encode($payload, $this->trueFormatKey($key), $hash),
+			'token' => $token,
 			'exp' => $exp,
 			'type' => 'Bearer',
 		];

@@ -18,7 +18,7 @@ class Compile {
 	}
 
 	public function compileJoins(array $joins): string {
-		$sql = "";
+		$sql = '';
 		foreach ($joins as $join) {
 			$j = !empty($join[4]) ? strtoupper($join[4]) : 'INNER';
 			$sql .= " {$j} JOIN {$join[0]} ON {$join[1]} {$join[2]} {$join[3]} ";
@@ -35,20 +35,20 @@ class Compile {
 	 */
 	public function compileWheres(array $wheres): string {
 		if (empty($wheres)) {
-			return "";
+			return '';
 		}
 
-		$sql = " WHERE ";
+		$sql = ' WHERE ';
 		$conditions = [];
 
 		foreach ($wheres as $where) {
-			$condition = "";
+			$condition = '';
 
 			if ($where[0] == 'start_where') {
 				$condition .= '(';
 			} elseif ($where[0] == 'start_or') {
 				$condition .= '(';
-				$condition .= " OR ";
+				$condition .= ' OR ';
 			} elseif ($where[0] == 'end_where' || $where[0] == 'end_or') {
 				$condition .= ')';
 			} else {
@@ -73,7 +73,7 @@ class Compile {
 	 * @return string
 	 */
 	public function compileGroups(array $groups): string {
-		return !empty($groups) ? " GROUP BY " . implode(', ', $groups) : "";
+		return !empty($groups) ? ' GROUP BY ' . implode(', ', $groups) : '';
 	}
 
 	/**
@@ -84,10 +84,10 @@ class Compile {
 	 */
 	public function compileHaving(array $havings): string {
 		if (empty($havings)) {
-			return "";
+			return '';
 		}
 
-		$sql = " HAVING ";
+		$sql = ' HAVING ';
 		$conditions = [];
 
 		foreach ($havings as $having) {
@@ -96,7 +96,7 @@ class Compile {
 			if (!empty($having[3])) {
 				$condition .= " {$having[3]} ";
 			} else {
-				$condition .= " AND ";
+				$condition .= ' AND ';
 			}
 
 			$conditions[] = $condition;
@@ -116,16 +116,16 @@ class Compile {
 	 */
 	public function compileOrders(array $orders): string {
 		if (empty($orders)) {
-			return "";
+			return '';
 		}
 
-		$sql = " ORDER BY ";
+		$sql = ' ORDER BY ';
 		$count = count($orders);
 		for ($i = 0; $i < $count; $i++) {
 			$order = $orders[$i];
 			$sql .= "$order[0] $order[1]";
 			if ($i < $count - 1) {
-				$sql .= ", ";
+				$sql .= ', ';
 			}
 		}
 
@@ -140,7 +140,7 @@ class Compile {
 	 * @return string
 	 */
 	public function compileLimit(int $limit): string {
-		return $limit ? " LIMIT {$limit} " : "";
+		return $limit ? " LIMIT {$limit} " : '';
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Compile {
 	 * @return string
 	 */
 	public function compileOffset(int $offset): string {
-		return $offset ? " OFFSET {$offset}" : "";
+		return $offset ? " OFFSET {$offset}" : '';
 	}
 
 	/**
@@ -163,14 +163,14 @@ class Compile {
 	 */
 	public function compileWhereIn(array $wherein): string {
 		if (empty($wherein)) {
-			return "";
+			return '';
 		}
 
 		$array = array_map(function ($value) {
 			return "'" . $value . "'";
-		}, explode(", ", $wherein[1]));
+		}, explode(', ', $wherein[1]));
 
-		return " WHERE {$wherein[0]} IN (" . implode(", ", $array) . ")";
+		return " WHERE {$wherein[0]} IN (" . implode(', ', $array) . ')';
 	}
 
 	/**
@@ -238,6 +238,10 @@ class Compile {
 	public function compileUpdate(string $table, array $arg): string {
 		$sql = "UPDATE {$table} SET ";
 		foreach ($arg as $key => $dt) {
+			if (empty($dt)) {
+				$sql .= "$key = NULL, ";
+				continue;
+			}
 			$sql .= "$key = '$dt', ";
 		}
 		$length = strlen($sql);

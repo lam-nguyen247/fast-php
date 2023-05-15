@@ -27,18 +27,12 @@ class Routing {
 		$requestUrl = format_url($this->getRequestURL());
 		$requestMethod = $this->getRequestMethod();
 		$requestParams = explode(Routing::ROUTING_SEPARATOR, $requestUrl);
-		foreach ($this->routes as $route) {
-			$uri = $route->getUri();
-			$method = $route->getMethods();
-			$prefix = $route->getPrefix();
-			if (!empty($prefix)) {
-				$uri = self::ROUTING_SEPARATOR . implode(self::ROUTING_SEPARATOR, $prefix) . $uri;
-			}
-
+		foreach ($this->routes[$requestMethod] as $uri => $route) {
+			$uri = format_url($route->getUri());
 			$routeParams = explode(self::ROUTING_SEPARATOR, $uri);
-			if (str_contains(strtolower($method), strtolower($requestMethod)) && count($requestParams) === count($routeParams)) {
-				$checking = new HandleMatched(format_url($uri), $requestUrl);
-				if ($checking->isMatched === true) {
+			if (count($requestParams) === count($routeParams)) {
+				$checking = new HandleMatched($uri, $requestUrl);
+				if ($checking->isMatched) {
 					$next = new NextPasses($routeParams, $requestParams, $route);
 					return $next->getResponse();
 				}

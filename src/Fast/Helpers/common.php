@@ -497,9 +497,14 @@ if (!function_exists('dd')) {
 	/**
 	 * @param $x
 	 * @return Response
+	 * @throws AppException
 	 */
 	function dd($x): Response {
-		throw new AppException($x, 200);
+		var_dump('------------------START VAR DUMP-----------------');
+		var_dump($x);
+		var_dump('------------------END VAR DUMP-----------------');
+		die();
+		throw new AppException(var_dump($x), 200);
 	}
 }
 
@@ -811,5 +816,11 @@ if (!function_exists('format_url')) {
 	 */
 	function format_url(string $str): string {
 		return preg_replace('/\/$/', '', $str);
+	}
+}
+
+if(!function_exists('array_except')) {
+	function array_except(array $array, array $excepts) : array {
+		return (array_diff_key($array, array_flip($excepts)));
 	}
 }

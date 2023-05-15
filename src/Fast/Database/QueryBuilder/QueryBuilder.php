@@ -9,7 +9,7 @@ use Fast\Traits\Eloquent\CommitQueryMethod;
 use Fast\Traits\Eloquent\HandleCompileWithBuilder;
 
 class QueryBuilder {
-	use HandleCompileWithBuilder, ExecuteQuery, Pagination, CommitQueryMethod;
+	use HandleCompileWithBuilder, Pagination, CommitQueryMethod, ExecuteQuery;
 
 	/**
 	 * The list of accept operator using in query builder
@@ -281,7 +281,6 @@ class QueryBuilder {
 			$this->wheres[] = [$column, $operator, $value, $boolean];
 			return $this;
 		}
-
 		if (is_array($column)) {
 			foreach ($column as $key => $value) {
 				$this->parameters[] = $value;
@@ -289,8 +288,8 @@ class QueryBuilder {
 			}
 			return $this;
 		}
-
 		$this->wheres[] = ['start_where'];
+
 		call_user_func_array($column, [$this]);
 		$this->wheres[] = ['end_where'];
 		return $this;

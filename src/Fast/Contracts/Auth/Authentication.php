@@ -8,7 +8,7 @@ interface Authentication {
 
 	public function user(): ?Model;
 
-	public function logout(): void;
+	public function logout(): bool;
 
 	public function check(): bool;
 

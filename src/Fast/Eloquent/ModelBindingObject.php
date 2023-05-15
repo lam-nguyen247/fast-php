@@ -97,8 +97,6 @@ final class ModelBindingObject {
 				$this->getWith($object, $with, $callback);
 			}
 		}
-		$object->callServiceHidden();
-
 		return $object;
 	}
 
@@ -107,12 +105,11 @@ final class ModelBindingObject {
 	 *
 	 * @param array $resources
 	 *
-	 * @return Collection
+	 * @return array|null
 	 * @throws EloquentException
 	 */
 	private function bindMultiple(array $resources): array|null {
 		foreach ($resources as $resource) {
-			$resource->callServiceHidden();
 			if ($this->hasWith()) {
 				foreach ($this->withes() as $with => $callback) {
 					$this->getWith($resource, $with, $callback);
@@ -293,10 +290,9 @@ final class ModelBindingObject {
 				if (is_null($this->getResource())) {
 					return null;
 				}
-
-				return (object)$this->bindOne(
+				return $this->bindOne(
 					$this->getResource()
-				)->getData();
+				);
 			case $this->isGetList():
 				return $this->bindMultiple(
 					$this->getResources()

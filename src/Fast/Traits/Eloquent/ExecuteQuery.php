@@ -227,7 +227,8 @@ trait ExecuteQuery {
 	 * @throws EloquentException
 	 */
 	private function execBindingModelObject(PDOStatement $pdoStatementObject): object|array|null {
-		$resources = $pdoStatementObject->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+
+		$resources = $pdoStatementObject->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->calledFromModel);
 		$binding = new ModelBindingObject($resources);
 		return $binding->setTakeOne($this->find || $this->first)
 			->setTakeList(!$this->find && !$this->first)

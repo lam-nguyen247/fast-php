@@ -27,7 +27,6 @@ class NextPasses {
 		$action = $route->getAction();
 
 		$middlewares = $route->getMiddlewares();
-
 		$next = match (true) {
 			is_array($action) || is_string($action) => function () use ($route, $params) {
 				$compile = new Compile($route, $params);
@@ -43,6 +42,7 @@ class NextPasses {
 				throw new RouteException("Middleware '{$middleware}' not found.");
 			}
 		}
+
 		(new Pipeline(Container::getInstance()))
 			->send(app('request'))
 			->through($middlewares)

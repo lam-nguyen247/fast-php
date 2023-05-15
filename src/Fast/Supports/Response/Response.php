@@ -19,7 +19,10 @@ class Response extends SymfonyResponse {
 	 * @return Response
 	 */
 	public final function json(mixed $arguments, int $code = 200): Response {
-		parent::__construct(json_encode($arguments), $code, ['Content-Type' => 'application/json']);
+		if(is_array($arguments) || is_object($arguments)) {
+			$arguments = json_encode($arguments);
+		}
+		parent::__construct($arguments, $code, ['Content-Type' => 'application/json']);
 		return $this;
 	}
 }

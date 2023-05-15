@@ -51,7 +51,7 @@ trait HandleCompileWithBuilder {
 				case 'update':
 				case 'delete':
 					$object->existsModelInstance = $instance;
-					break;
+					return $object->$method(array_except($args, array_merge([$object->existsModelInstance->primaryKey()], $object->existsModelInstance->appends())));
 				default:
 					try {
 						if (method_exists($object, $method)) {
@@ -64,7 +64,6 @@ trait HandleCompileWithBuilder {
 						}
 					} catch (\TypeError $e) {
 						throw new \Exception($e->getMessage());
-
 					}
 			}
 			throw new AppException("Method `{$method}` does not exist");

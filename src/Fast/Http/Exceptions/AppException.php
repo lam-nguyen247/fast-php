@@ -13,7 +13,9 @@ class AppException extends Exception {
 	 * @throws AppException
 	 */
 	public function __construct($message = '', $code = 0, Throwable $previous = null) {
-		$message = json_encode($message);
+		if (is_array($message) || is_object($message)) {
+			$message = json_encode($message);
+		}
 		$this->writeLog($message);
 		parent::__construct($message, $code, $previous);
 		set_exception_handler([$this, 'render']);

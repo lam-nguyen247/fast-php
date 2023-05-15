@@ -228,9 +228,8 @@ trait CommitQueryMethod {
 	 * @throws QueryException
 	 * @throws ReflectionException
 	 */
-	public function update(array $data) {
+	public function update(array $data): mixed {
 		$sql = $this->compile->compileUpdate($this->table, $data);
-
 		if (!is_null($this->existsModelInstance)) {
 			$model = $this->existsModelInstance;
 			$primaryKey = $model->primaryKey();

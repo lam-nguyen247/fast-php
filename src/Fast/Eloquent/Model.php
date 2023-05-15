@@ -20,6 +20,13 @@ abstract class Model {
 	protected array $appends = [];
 
 	/**
+	 * List of custom attributes
+	 *
+	 * @var array
+	 */
+	protected array $customAttributes = [];
+
+	/**
 	 * List of attributes
 	 *
 	 * @var array
@@ -98,7 +105,7 @@ abstract class Model {
 	}
 
 	public function getData(): array {
-		return $this->attributes;
+		return array_except($this->attributes, $this->hidden);
 	}
 
 	/**
@@ -151,6 +158,17 @@ abstract class Model {
 			'calledClass' => get_called_class(),
 		];
 		return DB::staticEloquentBuilder($table, $modelMeta, $method, $args, $this);
+	}
+
+	public function save() {
+		$static = new static;
+		$table = $static->table();
+		$modelMeta = [
+			'primaryKey' => $static->primaryKey(),
+			'fillable' => $static->fillable(),
+			'calledClass' => get_called_class(),
+		];
+		return DB::staticEloquentBuilder($table, $modelMeta, 'update', $this->getData(), $this);
 	}
 
 	/**
