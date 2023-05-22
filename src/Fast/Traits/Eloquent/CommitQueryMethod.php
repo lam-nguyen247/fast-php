@@ -99,10 +99,7 @@ trait CommitQueryMethod {
 	public function create(array $data): mixed {
 		if (!empty($this->calledFromModel)) {
 			$object = new $this->calledFromModel;
-			$fillable = $object->fillable();
-			$hidden = $object->hidden();
-			$columns = array_merge($fillable, $hidden);
-			$sql = $this->compile->compileCreate($object, $columns, $data);
+			$sql = $this->compile->compileCreate($object, $data);
 			return $this->request($sql);
 		}
 		throw new AppException("Method 'create' doesn't exists");

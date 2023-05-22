@@ -191,21 +191,13 @@ class Compile {
 	/**
 	 * @throws QueryException|\Fast\Database\QueryBuilder\QueryException
 	 */
-	public function compileCreate(Model $model, array $fillable, array $data): string {
+	public function compileCreate(Model $model, array $data): string {
 		try {
 			$columns = [];
 			$values = [];
-			foreach ($fillable as $column) {
-				if (isset($data[$column])) {
-					$ucFirst = ucfirst($column);
-					$settingMethod = "set{$ucFirst}Attribute";
-					if (method_exists($model, $settingMethod)) {
-						$values[] = "'" . call_user_func([$model, $settingMethod], $data[$column]) . "'";
-					} else {
-						$values[] = "'$data[$column]'";
-					}
-					$columns[] = $column;
-				}
+			foreach ($data as $key => $item){
+				$columns[] = $key;
+				$values[] = is_string($item) ? "'$item'" : $item;
 			}
 			$columns = implode(', ', $columns);
 			$values = implode(', ', $values);

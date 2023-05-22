@@ -9,6 +9,12 @@ use Fast\Traits\Eloquent\GetAttribute;
 use Fast\Traits\Eloquent\RelationTraits;
 use Log;
 
+
+/**
+ * @method create(array $all)
+ * @method update(array $all)
+ * @method delete(mixed $id)
+ */
 abstract class Model {
 	use GetAttribute, Instance, RelationTraits;
 
@@ -84,13 +90,8 @@ abstract class Model {
 
 	/**
 	 * Initial constructor
-	 * @throws EloquentException
 	 */
-	public function __construct() {
-		$this->callServiceGetAttributes();
-		$this->callServiceAppends();
-		$this->callServiceCasts();
-	}
+	public function __construct() { }
 
 	public function __set(string $name, mixed $value) {
 		$this->setAttributes($name, $value);
@@ -100,12 +101,24 @@ abstract class Model {
 		return $this->getAttributes($name);
 	}
 
-	protected function setAttributes(string $name, mixed $value): void {
-		$this->attributes[$name] = $value;
-	}
+	/**
+	 * @throws EloquentException
+	 */
+	public function getData(array $collect = [], array $hidden = []): array {
+		$data = [];
+		$this->callServiceGetAttributes();
+		$this->callServiceAppends();
+		$this->callServiceCasts();
 
-	public function getData(): array {
-		return array_except($this->attributes, $this->hidden);
+		if (!empty($collect)) {
+			foreach ($collect as $item) {
+				$data[$item] = $this->getAttributes($item);
+			}
+		} else {
+			$data = $this->attributes;
+		}
+
+		return array_except($data, array_merge($hidden, $this->hidden));
 	}
 
 	/**
@@ -116,6 +129,10 @@ abstract class Model {
 	 */
 	protected function getAttributes($name): mixed {
 		return $this->attributes[$name] ?? null;
+	}
+
+	protected function setAttributes(string $name, mixed $value): void {
+		$this->attributes[$name] = $value;
 	}
 
 	/**

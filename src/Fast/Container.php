@@ -61,6 +61,8 @@ class Container {
 
 	public \Fast\Http\Request $request;
 
+	private mixed $eventLoop;
+
 	/**
 	 * Initial of container
 	 *
@@ -85,6 +87,14 @@ class Container {
 
 	public function getRequest(): Request {
 		return $this->request;
+	}
+
+	public function setEventLoop(mixed $loop): void {
+		$this->eventLoop = $loop;
+	}
+
+	public function getEventLoop(): mixed {
+		return $this->eventLoop;
 	}
 
 	/**

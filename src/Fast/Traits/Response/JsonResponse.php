@@ -12,13 +12,12 @@ trait JsonResponse {
 	 *
 	 * @param mixed $data
 	 * @param int $statusCode
-	 * @param array $headers
 	 * @return Response
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	protected function respond(mixed $data, int $statusCode = 200, array $headers = []): Response {
-		return response()->json($data, $statusCode, $headers);
+	protected function respond(mixed $data, int $statusCode = 200): Response {
+		return response()->json($data, $statusCode);
 	}
 
 	/**

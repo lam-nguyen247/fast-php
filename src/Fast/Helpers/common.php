@@ -819,8 +819,17 @@ if (!function_exists('format_url')) {
 	}
 }
 
-if(!function_exists('array_except')) {
-	function array_except(array $array, array $excepts) : array {
+if (!function_exists('array_except')) {
+	function array_except(array $array, array $excepts): array {
 		return (array_diff_key($array, array_flip($excepts)));
+	}
+}
+
+if (!function_exists('str_convert_attribute')) {
+	function str_convert_attribute(string $str): string {
+		$ar = array_map(function ($item) {
+			return ucfirst($item);
+		}, explode('_', $str));
+		return 'get' . implode('', $ar) . 'Attribute';
 	}
 }

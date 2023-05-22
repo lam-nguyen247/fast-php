@@ -21,8 +21,8 @@ class Compile {
 		foreach ($columns as $column) {
 			$column = (object)$column;
 			if (isset($column->timestamps) && $column->timestamps == 1) {
-				$this->rows[] = 'created_at TIMESTAMP';
-				$this->rows[] = 'updated_at TIMESTAMP';
+				$this->rows[] = 'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP';
+				$this->rows[] = 'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP';
 				continue;
 			}
 			$row = '';
@@ -33,6 +33,7 @@ class Compile {
 				$row .= $column->autoIncrement == 1 && $column->pk != 1 ? ' UNSIGNED' : '';
 				$row .= $column->unsigned == 1 ? ' UNSIGNED' : '';
 				$row .= $column->nullable == 1 ? ' NULL' : ' NOT NULL';
+				$row .= $column->unique ? ' UNIQUE' : '';
 				$row .= $column->default != '' ? " DEFAULT '$column->default'" : '';
 				$row .= $column->pk == 1 ? ' PRIMARY KEY' : '';
 				$row .= $column->autoIncrement == 1 ? ' AUTO_INCREMENT' : '';

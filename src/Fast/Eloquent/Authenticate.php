@@ -8,7 +8,6 @@ use Fast\Eloquent\Model;
 use ReflectionException;
 use Fast\Auth\AuthenticationException;
 use Fast\Http\Exceptions\AppException;
-use React\Cache\ArrayCache;
 
 abstract class Authenticate extends Model {
 	/**
@@ -52,22 +51,16 @@ abstract class Authenticate extends Model {
 
 		$jwt = app()->make(JWT::class);
 
-		$minutes = $customClaims['exp'] ?? config('jwt.exp');
-
-		$exp = strtotime('+ ' . $minutes . ' minutes');
-
 		$payload = [
-			'object' => $this->getData(),
-			'exp' => $exp,
+			$this->primaryKey => $this->{$this->primaryKey},
+			'exp' => strtotime('+ ' . $customClaims['exp'] ?? config('jwt.exp') . ' minutes'),
 		];
 
-		$token = $jwt->encode($payload, $this->trueFormatKey($key), $hash);
-
-		$this->token = $token;
+		$this->token = $jwt->encode($payload, $this->trueFormatKey($key), $hash);
 
 		return [
-			'token' => $token,
-			'exp' => $exp,
+			'token' => $this->token,
+			'exp' => $payload['exp'],
 			'type' => 'Bearer',
 		];
 	}

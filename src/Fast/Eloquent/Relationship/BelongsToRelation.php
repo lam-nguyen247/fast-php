@@ -7,7 +7,7 @@ use Fast\Http\Exceptions\AppException;
 use Fast\Database\QueryBuilder\QueryBuilder;
 use Fast\Database\QueryBuilder\QueryException;
 
-class HasOneRelation extends Relation {
+class BelongsToRelation extends Relation {
 	protected string $localKey = '';
 
 	protected string $localValue = '';
@@ -46,42 +46,42 @@ class HasOneRelation extends Relation {
 		return $this->remoteKey;
 	}
 
-	/**
-	 * @param string $value
-	 * @param Closure|null $callback
-	 * @return mixed
-	 * @throws AppException
-	 * @throws ReflectionException
-	 * @throws QueryException
-	 */
+  /**
+   * @param string $value
+   * @param Closure|null $callback
+   * @return mixed
+   * @throws AppException
+   * @throws ReflectionException
+   * @throws QueryException
+   */
 	public function getModelObject(string $value, ?Closure $callback = null): mixed {
 		$builder = $this->buildWhereCondition($value);
 
 		if (!is_null($callback)) {
 			$callback($builder);
 		}
-		return $builder->first();
+		return $builder->first()?->getData();
 	}
 
-	/**
-	 * @param string $method
-	 * @param array $args
-	 * @return mixed
-	 * @throws AppException
-	 * @throws ReflectionException
-	 */
+  /**
+   * @param string $method
+   * @param array $args
+   * @return mixed
+   * @throws AppException
+   * @throws ReflectionException
+   */
 	public function __call(string $method, array $args) {
 		return $this->buildWhereCondition($this->getLocalValue())->$method(...$args);
 	}
 
-	/**
-	 * @param string $value
-	 * @return QueryBuilder
-	 * @throws AppException
-	 * @throws ReflectionException
-	 */
+  /**
+   * @param string $value
+   * @return QueryBuilder
+   * @throws AppException
+   * @throws ReflectionException
+   */
 	public function buildWhereCondition(string $value): QueryBuilder {
-		$builder = app()->make($this->getModel())->where($this->getRemoteKey(), $value);
+		$builder = app()->make($this->getModel())->where($this->getLocalKey(), $value);
 		foreach ($this->getWhereCondition() as $where) {
 			$builder->where(array_shift($where), array_shift($where), array_shift($where));
 		}
