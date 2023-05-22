@@ -3,6 +3,7 @@
 namespace Fast\Console\Commands\Db;
 
 use Fast\Console\Command;
+use Fast\Http\Exceptions\AppException;
 
 class DbSeedCommand extends Command {
 	/**
@@ -32,8 +33,24 @@ class DbSeedCommand extends Command {
 	 * Handle the command
 	 *
 	 * @return void
+	 * @throws AppException
 	 */
 	public function handle(): void {
-		$this->output->printSuccess("Seeded successfully.");
+		$files = scandir(database_path('seed'), 1);
+		arsort($files);
+		foreach ($files as $file) {
+			if (strlen($file) > 5) {
+				include database_path("seed/{$file}");
+				$classes = get_declared_classes();
+				$class = end($classes);
+				$object = new $class;
+				if (method_exists($object, 'run')) {
+					$this->output->printSuccess("Running seed: $class");
+					$object->run();
+					$this->output->printSuccess("Ran seed: $class");
+				}
+			}
+		}
+		$this->output->printSuccess('Seeded successfully.');
 	}
 }

@@ -5,8 +5,8 @@ use Closure;
 use Fast\Application;
 use Fast\Container;
 use ReflectionException;
-use Fast\Pipeline\Pipeline;
 use Route;
+use Fast\Pipeline\Pipeline;
 use Fast\Http\Exceptions\AppException;
 use Fast\Contracts\Http\Kernel as HttpKernel;
 
@@ -61,9 +61,12 @@ class Kernel implements HttpKernel {
 	 */
 	protected function dispatchToRouter(): Closure {
 		return function () {
-			$route = new Route;
-
-			return $route->run();
+			try {
+				$route = new Route();
+				return $route->run();
+			} catch (AppException $exception) {
+				return $exception->render($exception);
+			}
 		};
 	}
 

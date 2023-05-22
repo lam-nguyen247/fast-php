@@ -23,17 +23,16 @@ abstract class FormRequest extends Request {
 	 * @throws AppException|ReflectionException
 	 */
 	public function executeValidate(): void {
+
 		if (!$this->authorize()) {
 			throw new UnauthorizedException();
 		}
-
 		$validator = app()->make('validator');
-		$validator->make(
+		$validator->makeValidate(
 			$this,
 			$this->rules(),
 			$this->messages()
 		);
-
 		if ($validator->isFailed()) {
 			throw new ValidationException($validator->errors());
 		}

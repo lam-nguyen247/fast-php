@@ -1,8 +1,11 @@
 <?php
 namespace Fast\Routing;
 
+use Closure;
 use ReflectionException;
+use Fast\Supports\Facades\Route;
 use Fast\Routing\RouteCollection;
+use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
 use Fast\Http\Exceptions\UnknownException;
 
@@ -22,6 +25,13 @@ class Router {
 	private array $routes = [];
 
 	/**
+	 * The route group attribute stack.
+	 *
+	 * @var array
+	 */
+	protected array $groupStack = [];
+
+	/**
 	 * Add routing
 	 *
 	 * @param string $methods
@@ -31,8 +41,10 @@ class Router {
 	 * @return RouteCollection
 	 */
 	private function addRoute(string $methods, string $uri, mixed $action): RouteCollection {
-		$router = new RouteCollection($methods, $uri, $this->name, $action, $this->middlewares, $this->prefix, $this->namespace);
-		$this->routes[] = $router;
+		$namespace = $this->namespace;
+		$uri = $this->prefix . '/' . $uri;
+		$router = new RouteCollection($methods, $uri, $this->name, $action, $this->middlewares, $this->prefix, $namespace);
+		$this->routes[$methods][$uri] = $router;
 		return $router;
 	}
 
@@ -62,21 +74,11 @@ class Router {
 
 	public function middleware(mixed $middleware): Router {
 		if (!is_array($middleware)) {
-			$this->middlewares[] = $middleware;
+			$this->middlewares[$middleware] = $middleware;
 		} else {
 			$this->middlewares = array_merge($this->middlewares, $middleware);
 		}
 		return $this;
-	}
-
-	public function register(): bool {
-		$this->middlewares = [];
-		$this->prefix = '';
-		$this->namespace = '';
-		$this->name = '';
-		$this->except = [];
-		$this->resources = [];
-		return true;
 	}
 
 	public function prefix(string $prefix): Router {
@@ -89,7 +91,10 @@ class Router {
 		return $this;
 	}
 
-	public function group(string $path): Router {
+	/**
+	 * @throws AppException
+	 */
+	public function path(string $path): Router {
 		if (file_exists($path)) {
 			require $path;
 			return $this;
@@ -97,6 +102,73 @@ class Router {
 		throw new AppException("$path not found");
 	}
 
+	/**
+	 * Create a route group with shared attributes.
+	 *
+	 * @param array $attributes
+	 * @param Closure|string $callback
+	 * @return void
+	 */
+	public function group(array $attributes, mixed $callback = null): void {
+		$this->updateGroupStack($attributes);
+		//register routes belong current group.
+		$this->loadRoutes($callback);
+		$this->updateBeforeGroupStack($attributes);
+	}
+
+	/**
+	 * Update the group stack with the given attributes.
+	 *
+	 * @param array $attributes
+	 * @return void
+	 */
+	protected function updateGroupStack(array $attributes): void {
+		$this->prefix = RouteGroup::formatPrefix($attributes['prefix'] ?? '', $this->prefix);
+		$this->namespace = RouteGroup::formatNamespace($attributes['namespace'] ?? '', $this->namespace);
+		if(isset($attributes['middleware'])){
+			$this->middlewares[$attributes['middleware']] = $attributes['middleware'];
+		}
+	}
+
+	/**
+	 * Update the group stack before finish loadRoutes.
+	 *
+	 * @param array $attributes
+	 * @return void
+	 */
+	protected function updateBeforeGroupStack(array $attributes): void {
+		if(isset($attributes['prefix'])) {
+			$this->prefix = str_replace($attributes['prefix'] . '/', '', $this->prefix);
+		}
+		if(isset($attributes['middleware'])){
+			array_pop($this->middlewares);
+		}
+		if(isset($attributes['namespace'])) {
+			$this->namespace = str_replace($attributes['namespace'], '', $this->namespace);
+		}
+	}
+
+	/**
+	 * Load the provided routes.
+	 *
+	 * @param string|Closure $routes
+	 * @return void
+	 */
+	protected function loadRoutes(string|Closure $routes): void {
+		if ($routes instanceof Closure) {
+			$routes($this);
+		} else {
+			(new RouteFileRegistrar($this))->register($routes);
+		}
+	}
+
+	/**
+	 * Register route
+	 *
+	 * @param string $uri
+	 * @param mixed $action
+	 * @return RouteResource
+	 */
 	public function resource(string $uri, mixed $action): RouteResource {
 		$resource = [
 			[
@@ -152,28 +224,9 @@ class Router {
 	 * @throws ReflectionException
 	 */
 	public function run(): mixed {
-		$routing = new Routing($this->collect());
+		$routing = new Routing($this->routes());
 
 		return $routing->find();
-	}
-
-	/**
-	 * Collect all routing defined
-	 *
-	 * @return array
-	 */
-	public function collect(): array {
-		$routes = [];
-
-		foreach ($this->routes() as $object) {
-			if ($object instanceof RouteResource) {
-				$routes = array_merge($routes, $object->parse());
-			} else {
-				$routes[] = $object;
-			}
-		}
-
-		return $routes;
 	}
 
 	/**
@@ -193,7 +246,7 @@ class Router {
 			__FUNCTION__,
 			__FUNCTION__,
 			$action,
-			__FUNCTION__,
+			(array)__FUNCTION__,
 			__FUNCTION__,
 			null
 		);

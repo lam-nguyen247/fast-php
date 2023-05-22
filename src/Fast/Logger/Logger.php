@@ -118,12 +118,11 @@ class Logger {
 	 *
 	 * @return int
 	 */
-	public function writeLog(string $level, mixed $message, ?string $directory = null, ?string $fileName = null, ?bool $byDate = null): int {
+	public function writeLog(string $level, mixed $message, ?string $directory = null, ?string $fileName = null): int {
 		$directory = !is_null($directory) ? $directory : $this->getDirectory();
-		$byDate = !is_null($byDate) ? $byDate : $this->isLogByDate();
 		$time = date('Y-m-d H:i:s');
-		$fileName = !is_null($fileName) ? $fileName : 'application';
-		$file = $byDate ? $fileName . '-' . date('Y-m-d') . '.log' : $fileName . '.log';
+		$fileName = !is_null($fileName) ? $fileName : $level;
+		$file = $fileName . '-' . date('Y-m-d') . '.log';
 
 		$endPoint = $directory . DIRECTORY_SEPARATOR . $file;
 		$message = "[{$level}] [{$time}] {$message}" . PHP_EOL;

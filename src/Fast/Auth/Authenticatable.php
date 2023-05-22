@@ -1,10 +1,12 @@
 <?php
 namespace Fast\Auth;
 
+use Log;
 use DB;
 use Hash;
 use Session;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Fast\Eloquent\Model;
 use ReflectionException;
 use Firebase\JWT\ExpiredException;
@@ -25,6 +27,7 @@ class Authenticatable implements Authentication {
 	/**
 	 * @throws AuthenticationException
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function attempt(array $options = []): bool {
 		$model = new $this->model;
@@ -32,28 +35,61 @@ class Authenticatable implements Authentication {
 		$table = $model->table();
 		$paramPassword = $options[$columnPassword];
 		unset($options[$columnPassword]);
-
-		$object = DB::table($table)->where($options)->first();
+		$object = DB::table($table)->select('password')->where($options)->first();
 		if (!$object || !Hash::check($paramPassword, $object->password)) {
 			return false;
 		}
-
 		return $this->setUserAuth(
 			$this->model::where($options)->firstOrFail()
 		);
 	}
 
 	/**
+	 */
+	public function user(): ?Model {
+		return $this->getObject();
+
+	}
+
+	/**
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function user(): ?Model {
-		if (!is_null($this->getObject())) {
-			return $this->getObject();
+	public function logout(): bool {
+		$guardDriver = $this->getConfigDriverFromGuard(
+			$this->getCurrentGuard()
+		);
+
+		switch ($guardDriver) {
+			case 'session':
+				Session::unset('user');
+				return true;
+			case 'jwt':
+				$this->user()->token = '';
+				$this->user()->save();
+				return true;
 		}
+		return false;
+	}
 
+	/**
+	 * Make true format for jwt key
+	 *
+	 * @param string $key
+	 *
+	 * @return string
+	 */
+	public function trueFormatKey(string $key): string {
+		return base64_decode(strtr($key, '-_', '+/'));
+	}
+
+	/**
+	 * @throws AppException
+	 * @throws AuthenticationException
+	 * @throws ReflectionException
+	 */
+	public function check(): bool {
 		$guardDriver = $this->getConfigDriverFromGuard($this->getCurrentGuard());
-
 		switch ($guardDriver) {
 			case 'session':
 				return Session::get('user');
@@ -76,50 +112,19 @@ class Authenticatable implements Authentication {
 				$bearerToken = str_replace('Bearer', '', $header['Authorization']);
 				try {
 					$jwt = app()->make(JWT::class);
-					$decode = $jwt->decode($bearerToken, $this->trueFormatKey($key), [$hash]);
-					$primaryKey = app()->make($this->model)->primaryKey();
-					return $this->model::findOrFail($decode->object->{$primaryKey});
+					$decode = $jwt->decode($bearerToken, new Key($this->trueFormatKey($key), $hash));
+					$model = new $this->model;
+					$user = $this->model::where('token', '<>', '')->where('id', '=', $decode->{$model->primaryKey()})->first();
+					if($user != null){
+						$this->setObject($user);
+					}
+					return (bool)$user;
 				} catch (ExpiredException|SignatureInvalidException $e) {
 					throw new AuthenticationException($e->getMessage());
 				}
 			default:
 				throw new AuthenticationException('Unknown authentication');
 		}
-	}
-
-	/**
-	 * @throws AppException
-	 */
-	public function logout(): void {
-		$guardDriver = $this->getConfigDriverFromGuard(
-			$this->getCurrentGuard()
-		);
-
-		switch ($guardDriver) {
-			case 'session':
-				Session::unset('user');
-				break;
-			case 'jwt':
-				break;
-		}
-	}
-
-	/**
-	 * Make true format for jwt key
-	 *
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	public function trueFormatKey(string $key): string {
-		return base64_decode(strtr($key, '-_', '+/'));
-	}
-
-	public function check(): bool {
-		if (!is_null($this->user()) && !empty($this->user())) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -130,7 +135,7 @@ class Authenticatable implements Authentication {
 	 * @return bool
 	 *
 	 * @throws AuthenticationException
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	private function setUserAuth(Model $user): bool {
 		$this->setObject($user);
@@ -141,12 +146,12 @@ class Authenticatable implements Authentication {
 
 		switch ($guardDriver) {
 			case 'session':
-				Session::set('user', $this->getObject());
+				Session::set('user', $this->getObject()->getData());
 				break;
 			case 'jwt':
 				break;
 			default:
-				throw new AuthenticationException("Unknown authentication");
+				throw new AuthenticationException('Unknown authentication');
 		}
 
 		return true;
@@ -159,8 +164,9 @@ class Authenticatable implements Authentication {
 	 *
 	 * @return $this
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
-	public function guard(string $guard = ""): Authenticatable {
+	public function guard(string $guard = ''): Authenticatable {
 		if (empty($guard)) {
 			$guard = $this->getDefaultGuard();
 		}
@@ -209,6 +215,7 @@ class Authenticatable implements Authentication {
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getConfigModelFromProvider(string $provider): string {
 		return config("auth.providers.{$provider}.model");
@@ -220,7 +227,7 @@ class Authenticatable implements Authentication {
 	 * @param string $guard
 	 *
 	 * @return string
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	protected function getConfigProviderFromGuard(string $guard): string {
 		return config("auth.guards.{$guard}.provider");
@@ -233,6 +240,7 @@ class Authenticatable implements Authentication {
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	protected function getConfigDriverFromGuard(string $guard): string {
 		return config("auth.guards.{$guard}.driver");
@@ -285,6 +293,7 @@ class Authenticatable implements Authentication {
 	 *
 	 * @return string
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	private function getDefaultGuard(): string {
 		return config('auth.defaults.guard');

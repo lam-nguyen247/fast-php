@@ -3,6 +3,9 @@
 namespace Fast\Eloquent;
 
 class Collection extends \ArrayObject {
+
+	protected array $items = [];
+
 	public function __construct(object|array $array = [], int $flags = 0, string $iteratorClass = 'ArrayIterator') {
 		$collections = [];
 		foreach ($array as $value) {
@@ -12,6 +15,7 @@ class Collection extends \ArrayObject {
 			$collections[] = $value;
 		}
 		parent::__construct($collections, $flags, $iteratorClass);
+		$this->items = $collections;
 	}
 
 	public function map(callable $callback): Collection {
@@ -42,7 +46,17 @@ class Collection extends \ArrayObject {
 		return $summed_data;
 	}
 
+	/**
+	 * Get all the items in the collection.
+	 *
+	 * @return array<TKey, TValue>
+	 */
+	public function all(): array {
+		return $this->items;
+	}
+
 	public function toArray(): array {
 		return $this->getArrayCopy();
 	}
+
 }

@@ -19,6 +19,7 @@ class Application {
 
 	/**
 	 * @throws AppException
+	 * @throws ReflectionException
 	 */
 	public function __construct(Container $container) {
 		$this->container = $container;
@@ -32,7 +33,7 @@ class Application {
 	}
 
 	/**
-	 * Register initial configuration providerisLoaded
+	 * Register initial configuration provider is Loaded
 	 *
 	 * @return void
 	 */
@@ -51,7 +52,6 @@ class Application {
 	public function setErrorHandler(): void {
 		set_error_handler(function () {
 			$handler = new ErrorHandler;
-
 			return $handler->errorHandler(...func_get_args());
 		});
 	}
@@ -107,9 +107,7 @@ class Application {
 		});
 		foreach ($cache as $item) {
 			$key = str_replace('.php', '', $item);
-
 			$value = require cache_path($item);
-
 			$this->container->make('config')->setConfig($key, $value);
 		}
 	}

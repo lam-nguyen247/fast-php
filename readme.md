@@ -4,6 +4,22 @@
    composer create-project lam.nguyen247/fast-framework:dev-master your-project-folder
 ```
 
+```bash
+   cp .env.example .env
+   php creator key:generate
+   php creator jwt:install
+   php creator config:cache
+   php creator migrate
+   php creator db:seed
+```
+_note: Create database before run migrate
+
+or run with ip and port custom
+
+```bash
+   php creator serve --host=192.168.1.1 --port=2407
+```
+
 ## About FastPHP Framework
 
 FastPHP is a web application framework designed with a focus on speed and efficiency. We believe that development should
@@ -107,66 +123,8 @@ _Don't be worry, we're known that, please choose your command and give argument 
 
 > Here is example: `php creator serve --help`
 
-## Task Scheduling
-
-Just add to your crontab
-
-`* * * * * cd FastPHP && php creator schedule:run >> /dev/null 2>&1`
-
-Example using in `App\Console\Kernel`
-
-```php
-<?php
-
-namespace App\Console;
-
-use App\Console\Commands\ExampleCommand;
-use Fast\Console\Kernel as ConsoleKernel;
-use Fast\Console\Scheduling\Schedule;
-
-class Kernel extends ConsoleKernel
-{
-    /**
-     * List of commands
-     * @var array $commands
-     */
-    protected array $commands = [
-        ExampleCommand::class
-    ];
-
-    public function schedule(Schedule $schedule): void
-    {
-        // Normal using
-        $schedule->command(ExampleCommand::class)->daily();
-        $schedule->command(ExampleCommand::class)->weekly();
-        $schedule->command(ExampleCommand::class)->monthly();
-        $schedule->command(ExampleCommand::class)->yearly();
-        $schedule->command(ExampleCommand::class)->dailyAt('13:30');
-        $schedule->command(ExampleCommand::class)->cron('* * * * *');
-
-        // Run with custom output log and cli
-        $schedule->command(ExampleCommand::class)
-               ->everyMinute()
-               ->output(storage_path('logs/schedule.log'))
-               ->cli('/usr/bin/php');
-    }
-}
-```
-
 ## How to start ?
 
-```bash
-   cp .env.example .env
-   php creator key:generate
-   php creator config:cache
-   php creator serve
-```
-
-or run with ip and port custom
-
-```bash
-   php creator serve --host=192.168.1.1 --port=2407
-```
 
 _Note: you can use argument --open to open it up on browser_
 
@@ -175,11 +133,3 @@ _Note: you can use argument --open to open it up on browser_
 ## License
 
 The FastPHP Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
-So, this is the fake framework from the laravel framework idea.
-
-If you want to become contributor, let's run:
-
-```bash
-   php creator development:enable
-```

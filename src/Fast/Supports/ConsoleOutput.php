@@ -115,7 +115,7 @@ class ConsoleOutput {
 	 * @return void
 	 */
 	public function print(string $msg): void {
-		echo $this->getColoredString($msg, "green", "black") . "\n";
+		echo $this->getColoredString($msg, "dark_gray", "black") . "\n";
 	}
 
 	/**

@@ -36,7 +36,7 @@ class MigrateCommand extends Command {
 	 * @throws AppException
 	 */
 	public function handle(): void {
-		foreach (scandir(database_path('migration'), 1) as $file) {
+		foreach (scandir(database_path('migration'), 0) as $file) {
 			if (strlen($file) > 5) {
 				include database_path("migration/{$file}");
 				$classes = get_declared_classes();

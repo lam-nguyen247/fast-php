@@ -8,6 +8,7 @@ use Fast\Session\Session;
 use Fast\Auth\Authenticatable;
 use Fast\Supports\Response\Response;
 use Fast\Http\Exceptions\AppException;
+use Fast\Supports\Arr;
 
 if (!function_exists('app')) {
 	/**
@@ -61,7 +62,7 @@ if (!function_exists('base_path')) {
 
 if (!function_exists('snake_case')) {
 	function snake_case(string $string): string {
-		$result = "";
+		$result = '';
 		for ($i = 0; $i < strlen($string); $i++) {
 			if (ctype_upper($string[$i])) {
 				$result .= $i === 0 ? strtolower($string[$i]) : '_' . strtolower($string[$i]);
@@ -559,7 +560,7 @@ if (!function_exists('writeCache')) {
 	 * @param string $file
 	 *
 	 * @return void
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function writeCache(string $folder, string $file): void {
 		$cacheDir = 'storage/cache/';
@@ -600,7 +601,7 @@ if (!function_exists('make_dir')) {
 	 * @param bool $recursive
 	 *
 	 * @return bool
-	 * @throws AppException
+	 * @throws AppException|ReflectionException
 	 */
 	function make_dir(string $dir, int $mode = 0777, bool $recursive = false): bool {
 		return mkdir(base_path($dir), $mode, $recursive);
@@ -737,6 +738,72 @@ if (!function_exists('get_client_ip')) {
 	}
 }
 
+if (!function_exists('data_get')) {
+	/**
+	 * Get an item from an array or object using "dot" notation.
+	 *
+	 * @param mixed $target
+	 * @param array|int|string|null $key
+	 * @param mixed|null $default
+	 * @return mixed
+	 */
+	function data_get(mixed $target, array|int|string|null $key, mixed $default = null): mixed {
+		if (is_null($key)) {
+			return $target;
+		}
+
+		$key = is_array($key) ? $key : explode('.', $key);
+
+		foreach ($key as $i => $segment) {
+			unset($key[$i]);
+
+			if (is_null($segment)) {
+				return $target;
+			}
+
+			if ($segment === '*') {
+				if ($target instanceof \Fast\Eloquent\Collection) {
+					$target = $target->all();
+				} elseif (!is_iterable($target)) {
+					return value($default);
+				}
+
+				$result = [];
+
+				foreach ($target as $item) {
+					$result[] = data_get($item, $key);
+				}
+
+				return in_array('*', $key) ? Arr::collapse($result) : $result;
+			}
+
+			if ((is_array($target) || $target instanceof ArrayAccess) && Arr::exists($target, $segment)) {
+				$target = $target[$segment];
+			} elseif (is_object($target) && isset($target->{$segment})) {
+				$target = $target->{$segment};
+			} else {
+				return value($default);
+			}
+		}
+
+		return $target;
+	}
+}
+
+
+if (!function_exists('value')) {
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @param mixed $value
+	 * @param mixed ...$args
+	 * @return mixed
+	 */
+	function value(mixed $value, ...$args): mixed {
+		return $value instanceof Closure ? $value(...$args) : $value;
+	}
+}
+
 if (!function_exists('format_url')) {
 	/**
 	 * Return the default value of the given value.
@@ -746,5 +813,20 @@ if (!function_exists('format_url')) {
 	 */
 	function format_url(string $str): string {
 		return preg_replace('/\/$/', '', $str);
+	}
+}
+
+if (!function_exists('array_except')) {
+	function array_except(array $array, array $excepts): array {
+		return (array_diff_key($array, array_flip($excepts)));
+	}
+}
+
+if (!function_exists('str_convert_attribute')) {
+	function str_convert_attribute(string $str): string {
+		$ar = array_map(function ($item) {
+			return ucfirst($item);
+		}, explode('_', $str));
+		return 'get' . implode('', $ar) . 'Attribute';
 	}
 }
