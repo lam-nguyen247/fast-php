@@ -113,7 +113,7 @@ class Authenticatable implements Authentication {
 					$jwt = app()->make(JWT::class);
 					$decode = $jwt->decode($bearerToken, new Key($this->trueFormatKey($key), $hash));
 					$model = new $this->model;
-					$user = $this->model::where('token', '<>', '')->where('id', '=', $decode->object->{$model->primaryKey()})->first();
+					$user = $this->model::where('token', '<>', '')->where('id', '=', $decode->{$model->primaryKey()})->first();
 					if($user != null){
 						$this->setObject($user);
 					}
