@@ -4,7 +4,6 @@ namespace Fast\Eloquent;
 
 use Hash;
 use Firebase\JWT\JWT;
-use Fast\Eloquent\Model;
 use ReflectionException;
 use Fast\Auth\AuthenticationException;
 use Fast\Http\Exceptions\AppException;
@@ -43,23 +42,17 @@ abstract class Authenticate extends Model {
 			throw new AuthenticationException('Please set hash type in config/jwt.php');
 		}
 
-		$modelId = $this->primaryKey();
-
-		if (is_null($this->{$modelId})) {
+		if (is_null($this->{$this->primaryKey()})) {
 			throw new AuthenticationException('Cannot generate tokens for the class that are not yet bound');
 		}
 
-		$jwt = app()->make(JWT::class);
-
 		$payload = [
 			$this->primaryKey => $this->{$this->primaryKey},
-			'exp' => strtotime('+ ' . $customClaims['exp'] ?? config('jwt.exp') . ' minutes'),
+			'exp' => strtotime('+ ' . ($customClaims['exp'] ?? config('jwt.exp')) . ' minutes'),
 		];
 
-		$this->token = $jwt->encode($payload, $this->trueFormatKey($key), $hash);
-
 		return [
-			'token' => $this->token,
+			'token' => $this->token = app()->make(JWT::class)->encode($payload, $this->trueFormatKey($key), $hash),
 			'exp' => $payload['exp'],
 			'type' => 'Bearer',
 		];
