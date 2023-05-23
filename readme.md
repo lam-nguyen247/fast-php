@@ -4,7 +4,7 @@
    composer create-project lam.nguyen247/fast-framework:dev-master your-project-folder
 ```
 
-## How to start ?
+## How to start
 
 ```bash
    cp .env.example .env
@@ -28,7 +28,7 @@ _Require PHP Version >= `8.0`_
 
 Let's run `php creator list` to see all available supported commands. Here is some available feature.
 
-**You're wanna making some things ?**
+**Example command**
 
 ```bash
    php creator make:command {Command name}
