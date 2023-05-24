@@ -5,16 +5,15 @@ namespace Fast\Http\Exceptions;
 use Exception;
 use Fast\Application;
 use Throwable;
-use ReflectionException;
+use ReflectionException;	
 
 class AppException extends Exception {
 	/**
 	 * @throws ReflectionException
 	 * @throws AppException
 	 */
-	public function __construct($message = "", $code = 0, Throwable $previous = null) {
+	public function __construct($message = '', $code = 0, Throwable $previous = null) {
 		$this->writeLog($message);
-
 		parent::__construct($message, $code, $previous);
 
 		if (PHP_SAPI === 'cli') {
@@ -35,6 +34,7 @@ class AppException extends Exception {
 				'message' => $exception->getMessage(),
 			], $this->code);
 		}
+		(new HttpResponseCode($this->code));
 		return app('view')->render('exception', compact('exception'));
 	}
 
