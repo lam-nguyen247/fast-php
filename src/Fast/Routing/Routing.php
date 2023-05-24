@@ -37,8 +37,6 @@ class Routing {
 	}
 
 	/**
-	 * @throws ReflectionException
-	 * @throws AppException
 	 */
 	public function getRequestURL(): string {
 		$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
@@ -46,11 +44,9 @@ class Routing {
 	}
 
 	/**
-	 * @throws ReflectionException
-	 * @throws AppException
 	 */
 	private function getRequestMethod(): string {
-		return $_SERVER['REQUEST_METHOD'] ?? "GET";
+		return $_SERVER['REQUEST_METHOD'] ?? 'GET';
 	}
 
 	/**
@@ -58,9 +54,8 @@ class Routing {
 	 *
 	 * @return mixed
 	 * @throws AppException
-	 * @throws ReflectionException
 	 */
 	private function handleNotFound(): mixed {
-		return app()->make('view')->render('404');
+		throw new RouteException();
 	}
 }

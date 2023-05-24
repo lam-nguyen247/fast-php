@@ -14,7 +14,7 @@ class UnknownException extends AppException {
 	 * @throws AppException
 	 * @throws ReflectionException
 	 */
-	public function __construct($message = 'Unknown !', $code = 400) {
+	public function __construct($message = 'Internal Server Error', $code = 500) {
 		parent::__construct($message, $code);
 	}
 }
